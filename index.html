@@ -33,7 +33,10 @@
           <p class="hero-detail">2027 Finals in Boston, Massachusetts, USA</p>
           <a class="button button-light" href="#about">Discover IPC <span>↘</span></a>
         </div>
-        <div class="hero-year">2027</div>
+        <div class="hero-year-container">
+          <img src="./final_IPC_website_files/harvard-logo.svg" alt="Harvard" class="hero-harvard-logo">
+          <div class="hero-year">2027</div>
+        </div>
       </section>
 
       <section id="about" class="about section">
@@ -42,7 +45,7 @@
           <h2>About the <span>International Policy Conference</span></h2>
         </div>
         <div class=”about-copy reveal”>
-          <p>The International Policy Conference, or IPC, was established in 2026 by a group of Harvard students and graduates in hopes of providing exposure to global perspectives to future leaders early in their education. <strong>IPC is open to both high school and collegiate students worldwide.</strong> We strive to encourage students to take some of the problems they might have seen in their communities and ask not just “what is the problem” but “why does it persist, how can we solve it, and who can we work with to change it.” IPC challenges students by delving deep into fields they might never have encountered in school, such as economics, international law, public health, environmental science, and more. In the process of developing research, synthesis, public speaking, negotiation, and persuasive communication skills, students will be given the unique opportunity to get their policy recommendations to the legislators whose vote influences real-world outcomes in their communities.</p>
+          <p>The International Policy Conference, or IPC, was established in 2026 by a group of Harvard students and graduates in hopes of providing exposure to global perspectives to future leaders early in their education. IPC is open to both high school and collegiate students worldwide. We strive to encourage students to take some of the problems they might have seen in their communities and ask not just “what is the problem” but “why does it persist, how can we solve it, and who can we work with to change it.” IPC challenges students by delving deep into fields they might never have encountered in school, such as economics, international law, public health, environmental science, and more. In the process of developing research, synthesis, public speaking, negotiation, and persuasive communication skills, students will be given the unique opportunity to get their policy recommendations to the legislators whose vote influences real-world outcomes in their communities.</p>
           <a class=”text-link” href=”#stages”>How the conference works <span>→</span></a>
         </div>
       </section>
@@ -69,64 +72,118 @@
 
         <div class="examples-content reveal">
           <div class="globe-container">
-            <svg viewBox="0 0 400 400" class="globe-svg">
-              <!-- Globe background -->
-              <circle cx="200" cy="200" r="180" fill="#e8f4f8" stroke="#2d5239" stroke-width="2"/>
+            <div class="globe-3d">
+              <svg viewBox="0 0 400 400" class="globe-svg">
+                <defs>
+                  <!-- Ocean gradient -->
+                  <radialGradient id="oceanGradient" cx="40%" cy="40%">
+                    <stop offset="0%" stop-color="#6bb6ff"/>
+                    <stop offset="50%" stop-color="#4a9dd9"/>
+                    <stop offset="100%" stop-color="#2e7db3"/>
+                  </radialGradient>
 
-              <!-- Continents (simplified shapes) -->
-              <!-- North America -->
-              <path d="M 80,80 Q 90,70 110,75 L 130,90 Q 140,100 145,115 L 140,130 Q 135,140 125,145 L 100,140 Q 85,135 80,125 Z" fill="#b8d4c8" opacity="0.7"/>
+                  <!-- Land gradient -->
+                  <radialGradient id="landGradient" cx="40%" cy="40%">
+                    <stop offset="0%" stop-color="#7bc47f"/>
+                    <stop offset="100%" stop-color="#5a9f5e"/>
+                  </radialGradient>
 
-              <!-- South America -->
-              <path d="M 130,240 L 145,250 Q 155,265 150,280 L 140,295 Q 130,300 120,295 L 115,275 Q 118,260 125,245 Z" fill="#b8d4c8" opacity="0.7"/>
+                  <!-- Shadow for 3D effect -->
+                  <radialGradient id="shadowGradient" cx="50%" cy="50%">
+                    <stop offset="70%" stop-color="rgba(0,0,0,0)"/>
+                    <stop offset="100%" stop-color="rgba(0,0,0,0.3)"/>
+                  </radialGradient>
 
-              <!-- Europe -->
-              <path d="M 200,75 L 215,78 Q 225,82 230,90 L 225,100 Q 220,105 210,103 L 200,95 Z" fill="#b8d4c8" opacity="0.7"/>
+                  <!-- Highlight for 3D effect -->
+                  <radialGradient id="highlightGradient" cx="35%" cy="35%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.4)"/>
+                    <stop offset="50%" stop-color="rgba(255,255,255,0.1)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                  </radialGradient>
+                </defs>
 
-              <!-- Africa -->
-              <path d="M 195,180 Q 205,175 220,180 L 230,200 Q 235,220 230,240 L 220,255 Q 210,260 200,255 L 195,230 Q 192,210 195,190 Z" fill="#b8d4c8" opacity="0.7"/>
+                <!-- Ocean sphere -->
+                <circle cx="200" cy="200" r="180" fill="url(#oceanGradient)"/>
 
-              <!-- Asia -->
-              <path d="M 245,95 Q 260,90 280,95 L 300,110 Q 315,125 320,145 L 315,165 Q 305,175 290,170 L 270,155 Q 255,135 250,115 Z" fill="#b8d4c8" opacity="0.7"/>
+                <!-- Continents with more realistic shapes -->
+                <!-- North America -->
+                <path d="M 85,85 Q 75,95 78,110 L 85,125 Q 95,140 108,145 L 125,150 Q 138,148 145,140 L 152,125 Q 155,108 150,95 L 140,82 Q 125,75 110,78 Z M 90,100 Q 88,110 92,120 L 100,130 Q 110,135 122,132 L 135,125 Q 138,115 135,105 L 128,95 Q 118,90 108,92 Z" fill="url(#landGradient)"/>
 
-              <!-- Australia -->
-              <path d="M 290,260 Q 305,255 320,265 L 325,280 Q 320,295 305,295 L 290,285 Q 285,275 290,265 Z" fill="#b8d4c8" opacity="0.7"/>
+                <!-- South America -->
+                <path d="M 128,238 Q 135,230 142,235 L 148,248 Q 152,262 150,278 L 145,292 Q 138,302 128,305 L 118,300 Q 112,285 115,270 L 120,252 Z M 132,250 Q 130,260 132,272 L 135,285 Q 138,292 142,290 L 145,280 Q 145,265 142,255 Z" fill="url(#landGradient)"/>
 
-              <!-- Latitude lines -->
-              <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
-              <ellipse cx="200" cy="200" rx="180" ry="120" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
-              <line x1="20" y1="200" x2="380" y2="200" stroke="#cbd5e0" stroke-width="1.5" opacity="0.5"/>
+                <!-- Europe -->
+                <path d="M 198,82 Q 205,78 215,82 L 225,88 Q 232,95 230,105 L 225,115 Q 218,120 208,118 L 200,112 Q 195,102 198,92 Z" fill="url(#landGradient)"/>
 
-              <!-- Longitude lines -->
-              <ellipse cx="200" cy="200" rx="60" ry="180" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
-              <ellipse cx="200" cy="200" rx="120" ry="180" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
-              <line x1="200" y1="20" x2="200" y2="380" stroke="#cbd5e0" stroke-width="1.5" opacity="0.5"/>
+                <!-- Africa -->
+                <path d="M 195,175 Q 205,168 218,172 L 228,182 Q 235,195 237,210 L 238,225 Q 235,242 228,255 L 218,265 Q 208,268 198,263 L 192,248 Q 188,230 190,212 L 193,195 Z M 205,185 Q 200,195 200,208 L 202,225 Q 205,240 212,250 L 220,255 Q 225,253 228,245 L 230,225 Q 228,205 222,192 Z" fill="url(#landGradient)"/>
 
-              <!-- Location markers with numbers -->
-              <!-- North America -->
-              <circle cx="120" cy="110" r="8" fill="#f2684e" class="location-dot"/>
-              <text x="120" y="115" text-anchor="middle" fill="white" font-size="12" font-weight="bold">1</text>
+                <!-- Asia -->
+                <path d="M 245,90 Q 258,85 272,88 L 288,95 Q 302,105 312,118 L 320,135 Q 322,150 318,165 L 310,178 Q 298,185 285,182 L 270,175 Q 258,165 250,150 L 245,130 Q 242,110 245,98 Z M 260,105 Q 255,118 255,132 L 258,148 Q 263,162 272,170 L 285,175 Q 295,173 303,165 L 310,150 Q 312,135 308,122 L 298,108 Q 285,100 272,102 Z" fill="url(#landGradient)"/>
 
-              <!-- Europe -->
-              <circle cx="220" cy="100" r="8" fill="#f2684e" class="location-dot"/>
-              <text x="220" y="105" text-anchor="middle" fill="white" font-size="12" font-weight="bold">2</text>
+                <!-- Australia -->
+                <path d="M 288,258 Q 298,253 310,258 L 320,268 Q 325,278 324,288 L 318,298 Q 308,302 298,298 L 288,288 Q 283,278 286,268 Z M 295,268 Q 293,275 295,283 L 302,290 Q 308,292 314,288 L 318,280 Q 318,272 314,266 Z" fill="url(#landGradient)"/>
 
-              <!-- Asia -->
-              <circle cx="300" cy="140" r="8" fill="#f2684e" class="location-dot"/>
-              <text x="300" y="145" text-anchor="middle" fill="white" font-size="12" font-weight="bold">3</text>
+                <!-- Longitude lines (subtle) -->
+                <ellipse cx="200" cy="200" rx="60" ry="180" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                <ellipse cx="200" cy="200" rx="120" ry="180" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                <line x1="200" y1="20" x2="200" y2="380" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
 
-              <!-- Africa -->
-              <circle cx="210" cy="220" r="8" fill="#f2684e" class="location-dot"/>
-              <text x="210" y="225" text-anchor="middle" fill="white" font-size="12" font-weight="bold">4</text>
+                <!-- Latitude lines (subtle) -->
+                <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                <ellipse cx="200" cy="200" rx="180" ry="120" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                <line x1="20" y1="200" x2="380" y2="200" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
 
-              <!-- South America -->
-              <circle cx="150" cy="270" r="8" fill="#f2684e" class="location-dot"/>
-              <text x="150" y="275" text-anchor="middle" fill="white" font-size="12" font-weight="bold">5</text>
+                <!-- 3D highlight overlay -->
+                <circle cx="200" cy="200" r="180" fill="url(#highlightGradient)" pointer-events="none"/>
 
-              <!-- Australia -->
-              <circle cx="310" cy="280" r="8" fill="#f2684e" class="location-dot"/>
-              <text x="310" y="285" text-anchor="middle" fill="white" font-size="12" font-weight="bold">6</text>
-            </svg>
+                <!-- 3D shadow overlay -->
+                <circle cx="200" cy="200" r="180" fill="url(#shadowGradient)" pointer-events="none"/>
+
+                <!-- Location markers with pulse animation -->
+                <!-- North America -->
+                <g class="location-marker" data-location="1">
+                  <circle cx="120" cy="110" r="12" fill="#f2684e" opacity="0.3" class="pulse-ring"/>
+                  <circle cx="120" cy="110" r="9" fill="#f2684e" class="location-dot"/>
+                  <text x="120" y="115" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
+                </g>
+
+                <!-- Europe -->
+                <g class="location-marker" data-location="2">
+                  <circle cx="220" cy="100" r="12" fill="#f2684e" opacity="0.3" class="pulse-ring"/>
+                  <circle cx="220" cy="100" r="9" fill="#f2684e" class="location-dot"/>
+                  <text x="220" y="105" text-anchor="middle" fill="white" font-size="13" font-weight="bold">2</text>
+                </g>
+
+                <!-- Asia -->
+                <g class="location-marker" data-location="3">
+                  <circle cx="300" cy="140" r="12" fill="#f2684e" opacity="0.3" class="pulse-ring"/>
+                  <circle cx="300" cy="140" r="9" fill="#f2684e" class="location-dot"/>
+                  <text x="300" y="145" text-anchor="middle" fill="white" font-size="13" font-weight="bold">3</text>
+                </g>
+
+                <!-- Africa -->
+                <g class="location-marker" data-location="4">
+                  <circle cx="210" cy="220" r="12" fill="#f2684e" opacity="0.3" class="pulse-ring"/>
+                  <circle cx="210" cy="220" r="9" fill="#f2684e" class="location-dot"/>
+                  <text x="210" y="225" text-anchor="middle" fill="white" font-size="13" font-weight="bold">4</text>
+                </g>
+
+                <!-- South America -->
+                <g class="location-marker" data-location="5">
+                  <circle cx="150" cy="270" r="12" fill="#f2684e" opacity="0.3" class="pulse-ring"/>
+                  <circle cx="150" cy="270" r="9" fill="#f2684e" class="location-dot"/>
+                  <text x="150" y="275" text-anchor="middle" fill="white" font-size="13" font-weight="bold">5</text>
+                </g>
+
+                <!-- Australia -->
+                <g class="location-marker" data-location="6">
+                  <circle cx="310" cy="280" r="12" fill="#f2684e" opacity="0.3" class="pulse-ring"/>
+                  <circle cx="310" cy="280" r="9" fill="#f2684e" class="location-dot"/>
+                  <text x="310" y="285" text-anchor="middle" fill="white" font-size="13" font-weight="bold">6</text>
+                </g>
+              </svg>
+            </div>
           </div>
 
           <div class="examples-list">
@@ -486,7 +543,7 @@
           <div class="documents-hero-content">
             <p class="eyebrow">Competition Resources</p>
             <h2>Sample Policy Briefs</h2>
-            <p class="documents-intro">Explore exemplary policy briefs from previous IPC cycles. These submissions demonstrate the research depth, analytical rigor, and persuasive communication expected at the finals level.</p>
+            <p class="documents-intro">Explore exemplary policy briefs developed in collaboration with the Harvard Kennedy School's Institute of Politics. These submissions demonstrate the research depth, analytical rigor, and persuasive communication expected at the finals level.</p>
           </div>
         </div>
 
@@ -680,6 +737,15 @@
           <!-- Student Leadership Column -->
           <div class="leadership-column">
             <h3 class="column-header">Student Leadership</h3>
+
+            <div class="leader-profile">
+              <img src="./final_IPC_website_files/hugh-portrait.jpeg" alt="Hugh Hankenson">
+              <div>
+                <p class="eyebrow">Chair</p>
+                <h4>Hugh Hankenson</h4>
+                <p class="leader-school">Harvard College ‘26, University of Oxford ‘28, Harvard Law School ‘31</p>
+              </div>
+            </div>
 
             <div class="leader-profile">
               <img src="./final_IPC_website_files/zinia-portrait.jpeg" alt="Zinia Khattar">
