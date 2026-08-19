@@ -19,7 +19,7 @@
       </a>
       <button class="menu-button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
       <nav aria-label="Main navigation">
-        <a href="#about">About</a><a href="#examples">Examples</a><a href="#categories">Categories</a><a href="#stages">Stages</a><a href="#requirements">Requirements</a><a href="#awards">Awards</a><a href="#leadership">Leadership</a>
+        <a href="#about">About</a><a href="#categories">Categories</a><a href="#stages">Stages</a><a href="#documents">Documents</a><a href="#requirements">Requirements</a><a href="#leadership">Leadership</a>
         <a class="nav-cta" href="#contact">Contact</a>
       </nav>
     </header>
@@ -41,9 +41,23 @@
           <p class="eyebrow">Our mission</p>
           <h2>About the <span>International Policy Conference</span></h2>
         </div>
-        <div class="about-copy reveal">
-          <p>The International Policy Conference, or IPC, was established in 2026 by a group of Harvard students and graduates in hopes of providing exposure to global perspectives to future leaders early in their education. We strive to encourage students to take some of the problems they might have seen in their communities and ask not just “what is the problem” but “why does it persist, how can we solve it, and who can we work with to change it.” IPC challenges students by delving deep into fields they might never have encountered in school, such as economics, international law, public health, environmental science, and more. In the process of developing research, synthesis, public speaking, negotiation, and persuasive communication skills, students will be given the unique opportunity to get their policy recommendations to the legislators whose vote influences real-world outcomes in their communities.</p>
-          <a class="text-link" href="#stages">How the conference works <span>→</span></a>
+        <div class=”about-copy reveal”>
+          <p>The International Policy Conference, or IPC, was established in 2026 by a group of Harvard students and graduates in hopes of providing exposure to global perspectives to future leaders early in their education. <strong>IPC is open to both high school and collegiate students worldwide.</strong> We strive to encourage students to take some of the problems they might have seen in their communities and ask not just “what is the problem” but “why does it persist, how can we solve it, and who can we work with to change it.” IPC challenges students by delving deep into fields they might never have encountered in school, such as economics, international law, public health, environmental science, and more. In the process of developing research, synthesis, public speaking, negotiation, and persuasive communication skills, students will be given the unique opportunity to get their policy recommendations to the legislators whose vote influences real-world outcomes in their communities.</p>
+          <a class=”text-link” href=”#stages”>How the conference works <span>→</span></a>
+        </div>
+      </section>
+
+      <section id="categories" class="categories section">
+        <div class="section-heading reveal"><p class="eyebrow">A world of questions</p><h2><span>Eight</span> Policy Categories</h2></div>
+        <div class="category-grid">
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-economy.jpg" alt="Government building"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/harvard.webp" alt="University campus"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/flags.jpg" alt="International flags"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-housing.jpg" alt="City skyline"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-rights.jpg" alt="Civil rights demonstration"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></article>
         </div>
       </section>
 
@@ -56,18 +70,37 @@
         <div class="examples-content reveal">
           <div class="globe-container">
             <svg viewBox="0 0 400 400" class="globe-svg">
-              <!-- Globe circle -->
+              <!-- Globe background -->
               <circle cx="200" cy="200" r="180" fill="#e8f4f8" stroke="#2d5239" stroke-width="2"/>
 
+              <!-- Continents (simplified shapes) -->
+              <!-- North America -->
+              <path d="M 80,80 Q 90,70 110,75 L 130,90 Q 140,100 145,115 L 140,130 Q 135,140 125,145 L 100,140 Q 85,135 80,125 Z" fill="#b8d4c8" opacity="0.7"/>
+
+              <!-- South America -->
+              <path d="M 130,240 L 145,250 Q 155,265 150,280 L 140,295 Q 130,300 120,295 L 115,275 Q 118,260 125,245 Z" fill="#b8d4c8" opacity="0.7"/>
+
+              <!-- Europe -->
+              <path d="M 200,75 L 215,78 Q 225,82 230,90 L 225,100 Q 220,105 210,103 L 200,95 Z" fill="#b8d4c8" opacity="0.7"/>
+
+              <!-- Africa -->
+              <path d="M 195,180 Q 205,175 220,180 L 230,200 Q 235,220 230,240 L 220,255 Q 210,260 200,255 L 195,230 Q 192,210 195,190 Z" fill="#b8d4c8" opacity="0.7"/>
+
+              <!-- Asia -->
+              <path d="M 245,95 Q 260,90 280,95 L 300,110 Q 315,125 320,145 L 315,165 Q 305,175 290,170 L 270,155 Q 255,135 250,115 Z" fill="#b8d4c8" opacity="0.7"/>
+
+              <!-- Australia -->
+              <path d="M 290,260 Q 305,255 320,265 L 325,280 Q 320,295 305,295 L 290,285 Q 285,275 290,265 Z" fill="#b8d4c8" opacity="0.7"/>
+
               <!-- Latitude lines -->
-              <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.5"/>
-              <ellipse cx="200" cy="200" rx="180" ry="120" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.5"/>
-              <line x1="20" y1="200" x2="380" y2="200" stroke="#cbd5e0" stroke-width="1.5" opacity="0.6"/>
+              <ellipse cx="200" cy="200" rx="180" ry="60" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
+              <ellipse cx="200" cy="200" rx="180" ry="120" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
+              <line x1="20" y1="200" x2="380" y2="200" stroke="#cbd5e0" stroke-width="1.5" opacity="0.5"/>
 
               <!-- Longitude lines -->
-              <ellipse cx="200" cy="200" rx="60" ry="180" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.5"/>
-              <ellipse cx="200" cy="200" rx="120" ry="180" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.5"/>
-              <line x1="200" y1="20" x2="200" y2="380" stroke="#cbd5e0" stroke-width="1.5" opacity="0.6"/>
+              <ellipse cx="200" cy="200" rx="60" ry="180" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
+              <ellipse cx="200" cy="200" rx="120" ry="180" fill="none" stroke="#cbd5e0" stroke-width="1" opacity="0.4"/>
+              <line x1="200" y1="20" x2="200" y2="380" stroke="#cbd5e0" stroke-width="1.5" opacity="0.5"/>
 
               <!-- Location markers with numbers -->
               <!-- North America -->
@@ -151,20 +184,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="categories" class="categories section">
-        <div class="section-heading reveal"><p class="eyebrow">A world of questions</p><h2><span>Eight</span> Policy Categories</h2></div>
-        <div class="category-grid">
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-economy.jpg" alt="Government building"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/harvard.webp" alt="University campus"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/flags.jpg" alt="International flags"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-housing.jpg" alt="City skyline"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-rights.jpg" alt="Civil rights demonstration"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></article>
         </div>
       </section>
 
@@ -462,13 +481,252 @@
         <div class="awards-inner reveal"><p class="eyebrow">Recognition</p><h2>Awards <em>tiers</em></h2><p class="awards-copy">Teams advance through six recognition levels. Final placements are determined by composite scores across all judged stages.</p><div class="award-grid"><article class="award gold"><span class="award-place">1st place</span><h3>Gold Medal</h3><p>Champion team of the session</p><b>Top team</b></article><article class="award silver"><span class="award-place">2nd place</span><h3>Silver Medal</h3><p>Runner-up team of the session</p><b>Top 2</b></article><article class="award bronze"><span class="award-place">3rd place</span><h3>Bronze Medal</h3><p>Third-place team of the session</p><b>Top 3</b></article><article class="award finalist"><span class="award-place">Finals</span><h3>Finalist</h3><p>Invited to the live finals round</p><b>Top 8 teams</b></article><article class="award mention"><span class="award-place">Recognition</span><h3>Honorable Mention</h3><p>Strong performance across stages</p><b>Top 15%</b></article><article class="award distinction"><span class="award-place">Recognition</span><h3>Distinction</h3><p>Commended for quality of work</p><b>Top 25%</b></article></div><p class="award-note">All recognized teams receive a certificate of achievement. Final placements are determined by the committee’s composite score after integrated video and paper adjudication.</p></div>
       </section>
 
-      <section class="resources section" id="resources">
-        <div class="section-heading reveal"><p class="eyebrow">Participant center</p><h2>Everything you need to <span>prepare</span></h2></div>
-        <div class="resource-grid">
-          <article class="resource-card reveal"><span>01</span><h3>Competition Guide</h3><p>A complete introduction to the policy challenge, each stage, eligibility, and the standards that shape strong work.</p><a href="#stages">Explore the process <b>→</b></a></article>
-          <article class="resource-card reveal"><span>02</span><h3>Policy Brief Guide</h3><p>Clear expectations for research, evidence, structure, citations, and persuasive policy writing.</p><a href="#stages">View requirements <b>→</b></a></article>
-          <article class="resource-card reveal"><span>03</span><h3>Judging Rubric</h3><p>Understand how judges assess problem definition, evidence, feasibility, equity, and communication.</p><a href="#awards">Review recognition <b>→</b></a></article>
-          <article class="resource-card reveal"><span>04</span><h3>Frequently Asked Questions</h3><p>Find guidance on teams, submission format, judging, finals, and what happens after registration.</p><a href="#faq">Read FAQs <b>→</b></a></article>
+      <section class="documents section" id="documents">
+        <div class="section-heading centered reveal">
+          <p class="eyebrow">Participant Resources</p>
+          <h2>Competition Documents <em>&amp;</em> Guidelines</h2>
+        </div>
+
+        <div class="documents-grid reveal">
+          <!-- Official Rules & Regulations -->
+          <div class="doc-category">
+            <h3 class="doc-category-title">Official Rules & Regulations</h3>
+            <div class="doc-list">
+              <div class="doc-item">
+                <div class="doc-icon">📋</div>
+                <div class="doc-content">
+                  <h4>Complete Competition Rulebook</h4>
+                  <p>Comprehensive guide covering eligibility, team formation, submission requirements, and all competition rules</p>
+                  <span class="doc-meta">PDF • 42 pages • Updated Aug 2026</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">⚖️</div>
+                <div class="doc-content">
+                  <h4>Academic Integrity Policy</h4>
+                  <p>Detailed guidelines on plagiarism, AI tool usage, faculty advisor roles, and conflict of interest disclosures</p>
+                  <span class="doc-meta">PDF • 8 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">📊</div>
+                <div class="doc-content">
+                  <h4>Judging Criteria & Rubrics</h4>
+                  <p>Complete scoring rubrics for all stages with criterion descriptions and point allocations</p>
+                  <span class="doc-meta">PDF • 12 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Templates & Examples -->
+          <div class="doc-category">
+            <h3 class="doc-category-title">Templates & Examples</h3>
+            <div class="doc-list">
+              <div class="doc-item">
+                <div class="doc-icon">📝</div>
+                <div class="doc-content">
+                  <h4>Policy Brief Template</h4>
+                  <p>Structured template with all required sections, formatting guidelines, and word count targets</p>
+                  <span class="doc-meta">DOCX • Google Docs compatible</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">🏆</div>
+                <div class="doc-content">
+                  <h4>Sample Winning Policy Brief (2026)</h4>
+                  <p>Gold medal submission on healthcare policy with judge annotations and feedback</p>
+                  <span class="doc-meta">PDF • 18 pages • Score: 94/100</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">🎥</div>
+                <div class="doc-content">
+                  <h4>Sample Video Pitch (Finalist)</h4>
+                  <p>9-minute finalist video pitch on environmental policy with technical quality notes</p>
+                  <span class="doc-meta">MP4 • 180 MB • Score: 88/100</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">📖</div>
+                <div class="doc-content">
+                  <h4>Annotated Example Briefs (6 Categories)</h4>
+                  <p>Sample briefs across different policy categories with strengths and improvement areas marked</p>
+                  <span class="doc-meta">ZIP • 6 PDFs • 85 MB</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Research & Writing Guides -->
+          <div class="doc-category">
+            <h3 class="doc-category-title">Research & Writing Guides</h3>
+            <div class="doc-list">
+              <div class="doc-item">
+                <div class="doc-icon">🔍</div>
+                <div class="doc-content">
+                  <h4>Policy Research Guide</h4>
+                  <p>How to find credible sources, interpret data, distinguish correlation from causation, and build evidence</p>
+                  <span class="doc-meta">PDF • 24 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">✍️</div>
+                <div class="doc-content">
+                  <h4>Policy Writing Style Guide</h4>
+                  <p>Best practices for clear, persuasive policy writing with examples of strong vs. weak arguments</p>
+                  <span class="doc-meta">PDF • 16 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">📚</div>
+                <div class="doc-content">
+                  <h4>Citation & Bibliography Guide</h4>
+                  <p>Proper citation formats, reference list requirements, and how to avoid common mistakes</p>
+                  <span class="doc-meta">PDF • 10 pages • Chicago/APA styles</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">🗂️</div>
+                <div class="doc-content">
+                  <h4>Recommended Research Databases</h4>
+                  <p>Curated list of policy databases, think tanks, government sources, and academic journals</p>
+                  <span class="doc-meta">PDF • 8 pages • 100+ sources</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Production Resources -->
+          <div class="doc-category">
+            <h3 class="doc-category-title">Video Production Resources</h3>
+            <div class="doc-list">
+              <div class="doc-item">
+                <div class="doc-icon">🎬</div>
+                <div class="doc-content">
+                  <h4>Video Pitch Production Guide</h4>
+                  <p>Technical requirements, equipment recommendations, editing tips, and common pitfalls to avoid</p>
+                  <span class="doc-meta">PDF • 20 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">🎤</div>
+                <div class="doc-content">
+                  <h4>Public Speaking for Policy</h4>
+                  <p>How to present complex policy ideas clearly, manage pace, and engage a generalist audience</p>
+                  <span class="doc-meta">PDF • 14 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">🎨</div>
+                <div class="doc-content">
+                  <h4>Presentation Slide Template</h4>
+                  <p>Professional PowerPoint/Google Slides template with data visualization examples</p>
+                  <span class="doc-meta">PPTX • 25 slides</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Finals Preparation -->
+          <div class="doc-category">
+            <h3 class="doc-category-title">Finals Preparation</h3>
+            <div class="doc-list">
+              <div class="doc-item">
+                <div class="doc-icon">🎯</div>
+                <div class="doc-content">
+                  <h4>Live Pitch Preparation Guide</h4>
+                  <p>How to prepare for the 12-minute live presentation and executive Q&A session</p>
+                  <span class="doc-meta">PDF • 16 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">❓</div>
+                <div class="doc-content">
+                  <h4>Sample Executive Questions</h4>
+                  <p>100+ example questions from past Q&A sessions with suggested response strategies</p>
+                  <span class="doc-meta">PDF • 22 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">📍</div>
+                <div class="doc-content">
+                  <h4>Boston Finals Logistics Guide</h4>
+                  <p>Venue information, schedule, accommodation recommendations, and what to bring</p>
+                  <span class="doc-meta">PDF • 12 pages • Map included</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Reference -->
+          <div class="doc-category">
+            <h3 class="doc-category-title">Quick Reference</h3>
+            <div class="doc-list">
+              <div class="doc-item">
+                <div class="doc-icon">📅</div>
+                <div class="doc-content">
+                  <h4>2027 Competition Timeline</h4>
+                  <p>All key dates, deadlines, and milestones for the 2027 competition cycle</p>
+                  <span class="doc-meta">PDF • 2 pages • Printable calendar</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">✅</div>
+                <div class="doc-content">
+                  <h4>Submission Checklist</h4>
+                  <p>Step-by-step checklist for each stage to ensure nothing is missed before submission</p>
+                  <span class="doc-meta">PDF • 4 pages • Printable</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+
+              <div class="doc-item">
+                <div class="doc-icon">💬</div>
+                <div class="doc-content">
+                  <h4>Frequently Asked Questions</h4>
+                  <p>Comprehensive FAQ covering eligibility, team formation, judging, and more</p>
+                  <span class="doc-meta">PDF • 10 pages</span>
+                </div>
+                <a href="#" class="doc-download">Download</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="documents-note reveal">
+          <p><strong>Note:</strong> All documents are regularly updated. Check back frequently for the latest versions. Documents marked with a download link will be available once registration opens for the 2027 cycle.</p>
         </div>
       </section>
 
