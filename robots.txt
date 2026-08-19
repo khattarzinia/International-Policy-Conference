@@ -1,0 +1,16 @@
+# robots.txt for International Policy Conference
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://internationalpolicyconference.org/sitemap.xml
+
+# Disallow crawling of certain file types
+Disallow: /*.json$
+Disallow: /*.css$
+Disallow: /*.js$
+
+# Allow specific important files
+Allow: /final_IPC_website_files/ipc-logo.png
+Allow: /documents/*.pdf
