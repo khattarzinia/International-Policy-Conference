@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular background -->
+  <circle cx="32" cy="32" r="32" fill="#213c2b"/>
+
+  <!-- IPC text in center -->
+  <text x="32" y="40" font-family="Playfair Display, Georgia, serif" font-size="28" font-weight="700" fill="#f5efe3" text-anchor="middle" letter-spacing="-0.5">IPC</text>
+</svg>
