@@ -30,13 +30,11 @@
         <div class="hero-copy reveal in-view">
           <p class="eyebrow">A global policy challenge for the next generation</p>
           <h1>International<br><em>Policy</em> Conference</h1>
-          <p class="hero-detail">Finals at Harvard</p>
+          <p class="hero-detail">Finals at Harvard University in Cambridge, Massachusetts, USA</p>
           <a class="button button-light" href="#about">Discover IPC <span>↘</span></a>
         </div>
-        <div class="hero-year-container">
-          <img src="./final_IPC_website_files/harvard-logo.svg" alt="Harvard" class="hero-harvard-logo">
-          <div class="hero-year">2027</div>
-        </div>
+        <img src="./final_IPC_website_files/harvard-logo.svg" alt="Harvard" class="hero-harvard-logo">
+        <div class="hero-year">2027</div>
       </section>
 
       <section id="about" class="about section">
@@ -73,145 +71,109 @@
         <div class="examples-content reveal">
           <div class="globe-container">
             <div class="globe-3d">
-              <svg viewBox="0 0 500 500" class="globe-svg">
+              <svg viewBox="0 0 800 800" class="globe-svg">
                 <defs>
-                  <!-- Deep ocean gradient for realism -->
-                  <radialGradient id="oceanGrad" cx="35%" cy="35%">
-                    <stop offset="0%" stop-color="#a8d8ff"/>
-                    <stop offset="30%" stop-color="#4fa3d1"/>
-                    <stop offset="70%" stop-color="#2171b5"/>
-                    <stop offset="100%" stop-color="#08519c"/>
+                  <!-- Ocean gradient -->
+                  <radialGradient id="oceanGradient" cx="40%" cy="40%">
+                    <stop offset="0%" stop-color="#5eb3d6"/>
+                    <stop offset="70%" stop-color="#3d8db5"/>
+                    <stop offset="100%" stop-color="#2b6a8f"/>
                   </radialGradient>
 
-                  <!-- 3D sphere shading -->
-                  <radialGradient id="sphereShading" cx="35%" cy="30%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
-                    <stop offset="40%" stop-color="rgba(255,255,255,0.15)"/>
-                    <stop offset="70%" stop-color="rgba(0,0,0,0)"/>
-                    <stop offset="95%" stop-color="rgba(0,0,0,0.4)"/>
-                    <stop offset="100%" stop-color="rgba(0,0,0,0.6)"/>
-                  </radialGradient>
-
-                  <!-- Atmospheric glow -->
-                  <radialGradient id="atmosphere" cx="50%" cy="50%">
-                    <stop offset="88%" stop-color="rgba(100,180,255,0)"/>
-                    <stop offset="95%" stop-color="rgba(100,180,255,0.3)"/>
-                    <stop offset="100%" stop-color="rgba(100,180,255,0.6)"/>
-                  </radialGradient>
-
-                  <!-- Glossy highlight -->
-                  <radialGradient id="glossy" cx="32%" cy="28%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
-                    <stop offset="20%" stop-color="rgba(255,255,255,0.3)"/>
+                  <!-- 3D shading overlay -->
+                  <radialGradient id="sphereLight" cx="38%" cy="35%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
                     <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+                    <stop offset="85%" stop-color="rgba(0,0,0,0)"/>
+                    <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
                   </radialGradient>
                 </defs>
 
-                <!-- Atmosphere outer glow -->
-                <circle cx="250" cy="250" r="220" fill="url(#atmosphere)"/>
+                <!-- Base ocean circle -->
+                <circle cx="400" cy="400" r="320" fill="url(#oceanGradient)" stroke="#2b6a8f" stroke-width="2"/>
 
-                <!-- Base ocean sphere -->
-                <circle cx="250" cy="250" r="200" fill="url(#oceanGrad)"/>
+                <!-- Continents in green -->
+                <!-- North America -->
+                <path d="M 200,150 Q 180,140 170,155 L 160,180 Q 155,210 165,240 L 180,265 Q 195,280 215,285 L 240,285 Q 260,280 275,265 L 290,240 Q 300,210 295,180 L 285,155 Q 270,140 250,145 L 225,150 Q 210,152 200,150 Z" fill="#52b788" opacity="0.92"/>
 
-                <!-- Realistic continents based on actual geography -->
-                <!-- North America - more detailed -->
-                <path d="M 145,90 Q 140,85 135,88 L 125,95 Q 118,105 115,118 L 112,135 Q 112,150 118,165 L 125,180 Q 135,192 145,198 L 158,202 Q 168,200 175,195 L 182,185 Q 188,175 190,162 L 192,145 Q 190,128 185,115 L 178,102 Q 168,92 158,90 Z M 150,110 Q 145,118 143,130 L 143,145 Q 145,158 152,168 L 162,178 Q 170,182 178,178 L 183,168 Q 186,155 186,142 L 184,125 Q 180,113 172,106 Z" fill="#6ba368" opacity="0.95"/>
-
-                <!-- Central America bridge -->
-                <path d="M 145,198 L 150,205 Q 152,212 148,218 L 142,225 Q 138,228 135,225 L 132,218 Q 130,210 135,205 Z" fill="#7db87a" opacity="0.95"/>
-
-                <!-- South America - elongated shape -->
-                <path d="M 148,228 Q 155,225 162,230 L 168,242 Q 172,258 172,275 L 170,295 Q 165,312 158,325 L 148,335 Q 138,338 130,332 L 124,320 Q 120,305 120,288 L 122,268 Q 126,248 135,238 Z M 145,248 Q 140,260 138,275 L 138,295 Q 140,310 148,320 L 155,324 Q 160,322 164,315 L 167,298 Q 168,280 165,265 Z" fill="#6ba368" opacity="0.95"/>
+                <!-- South America -->
+                <path d="M 220,300 Q 210,295 200,305 L 190,330 Q 185,360 190,395 L 200,440 Q 210,475 230,500 L 250,515 Q 265,515 275,500 L 285,475 Q 290,450 290,420 L 285,380 Q 280,345 270,320 L 255,305 Q 240,298 220,300 Z" fill="#52b788" opacity="0.92"/>
 
                 <!-- Greenland -->
-                <path d="M 205,55 Q 215,52 225,58 L 232,68 Q 235,80 232,92 L 225,102 Q 215,106 205,102 L 198,92 Q 195,80 198,68 Z" fill="#e8f0e8" opacity="0.9"/>
+                <path d="M 340,110 Q 320,105 310,120 L 305,145 Q 305,170 315,190 L 330,205 Q 350,210 370,205 L 385,190 Q 395,170 395,145 L 390,120 Q 380,105 360,110 L 350,110 Z" fill="#a8dadc" opacity="0.85"/>
 
-                <!-- Europe - detailed -->
-                <path d="M 255,95 Q 262,92 270,95 L 278,102 Q 285,110 288,120 L 290,132 Q 288,142 282,150 L 272,156 Q 262,158 253,154 L 246,146 Q 242,136 242,125 L 244,112 Q 248,102 255,98 Z" fill="#88b584" opacity="0.95"/>
+                <!-- Europe -->
+                <path d="M 410,200 Q 395,195 385,205 L 378,225 Q 375,245 380,265 L 390,285 Q 405,295 425,295 L 445,290 Q 460,280 465,260 L 468,235 Q 465,215 455,205 L 435,197 Q 420,195 410,200 Z" fill="#52b788" opacity="0.92"/>
 
-                <!-- Scandinavia -->
-                <path d="M 262,75 Q 268,70 275,73 L 282,82 Q 285,92 282,102 L 275,110 Q 268,112 262,108 L 257,98 Q 254,88 257,80 Z" fill="#7db87a" opacity="0.95"/>
+                <!-- Africa -->
+                <path d="M 400,300 Q 385,295 375,310 L 365,340 Q 360,375 365,415 L 375,460 Q 390,495 410,520 L 435,535 Q 460,538 480,525 L 500,500 Q 510,470 512,435 L 510,390 Q 505,350 490,325 L 470,305 Q 450,295 425,300 L 410,302 Z" fill="#52b788" opacity="0.92"/>
 
-                <!-- Africa - realistic shape -->
-                <path d="M 245,160 Q 253,155 262,158 L 272,165 Q 280,175 285,188 L 290,205 Q 292,225 290,245 L 285,268 Q 278,288 268,302 L 258,312 Q 248,316 238,311 L 230,300 Q 224,285 222,268 L 220,248 Q 220,228 225,210 L 232,190 Q 238,172 245,165 Z M 255,178 Q 248,188 244,202 L 242,220 Q 242,240 245,260 L 250,280 Q 256,295 265,304 L 272,308 Q 278,306 283,298 L 288,280 Q 292,260 292,238 L 290,215 Q 286,195 278,182 Z" fill="#c9a876" opacity="0.95"/>
+                <!-- Asia -->
+                <path d="M 465,140 Q 445,135 430,145 L 415,165 Q 408,190 410,220 L 418,255 Q 430,285 450,305 L 475,320 Q 505,330 535,325 L 565,315 Q 590,300 605,275 L 615,245 Q 618,210 610,180 L 595,155 Q 575,138 550,140 L 520,145 Q 490,145 465,140 Z" fill="#52b788" opacity="0.92"/>
 
-                <!-- Middle East -->
-                <path d="M 280,148 Q 290,145 300,150 L 308,160 Q 312,172 310,184 L 304,195 Q 295,200 286,196 L 280,186 Q 276,174 278,162 Z" fill="#d4b896" opacity="0.95"/>
-
-                <!-- Asia - large detailed landmass -->
-                <path d="M 285,90 Q 298,85 312,88 L 330,95 Q 348,105 362,120 L 375,138 Q 382,158 384,178 L 382,200 Q 375,220 362,235 L 345,248 Q 328,256 310,254 L 292,248 Q 276,238 265,224 L 258,208 Q 254,190 255,172 L 260,152 Q 268,130 280,112 Z M 305,110 Q 295,125 290,142 L 288,162 Q 288,182 295,200 L 305,218 Q 318,232 335,240 L 352,245 Q 365,244 375,235 L 382,218 Q 386,200 386,180 L 382,158 Q 375,138 362,125 Z" fill="#7db87a" opacity="0.95"/>
-
-                <!-- Southeast Asia peninsula -->
-                <path d="M 340,248 L 345,260 Q 348,272 345,284 L 338,295 Q 330,298 324,293 L 320,282 Q 318,270 322,260 Z" fill="#88b584" opacity="0.95"/>
+                <!-- Southeast Asia Islands -->
+                <ellipse cx="560" cy="420" rx="35" ry="25" fill="#52b788" opacity="0.92"/>
+                <ellipse cx="600" cy="450" rx="28" ry="20" fill="#52b788" opacity="0.92"/>
 
                 <!-- Australia -->
-                <path d="M 360,310 Q 372,305 385,310 L 398,320 Q 406,332 408,346 L 406,360 Q 398,372 385,378 L 372,380 Q 360,376 352,366 L 346,352 Q 343,338 348,325 Z M 372,325 Q 365,332 363,343 L 364,356 Q 368,366 378,371 L 388,373 Q 396,370 401,362 L 404,348 Q 403,335 396,327 Z" fill="#c9a876" opacity="0.95"/>
+                <path d="M 580,500 Q 560,495 545,510 L 535,535 Q 530,565 540,595 L 555,620 Q 575,635 600,635 L 630,630 Q 655,615 665,590 L 670,560 Q 668,530 655,515 L 635,502 Q 610,495 580,500 Z" fill="#52b788" opacity="0.92"/>
 
-                <!-- Grid lines for globe effect -->
-                <g opacity="0.2" stroke="#ffffff" stroke-width="0.8" fill="none">
-                  <ellipse cx="250" cy="250" rx="200" ry="80"/>
-                  <ellipse cx="250" cy="250" rx="200" ry="130"/>
-                  <ellipse cx="250" cy="250" rx="200" ry="165"/>
-                  <ellipse cx="250" cy="250" rx="80" ry="200"/>
-                  <ellipse cx="250" cy="250" rx="130" ry="200"/>
-                  <ellipse cx="250" cy="250" rx="165" ry="200"/>
-                  <line x1="250" y1="50" x2="250" y2="450"/>
-                  <line x1="50" y1="250" x2="450" y2="250"/>
+                <!-- Latitude/longitude grid lines -->
+                <g opacity="0.15" stroke="#ffffff" stroke-width="1.5" fill="none">
+                  <ellipse cx="400" cy="400" rx="320" ry="120"/>
+                  <ellipse cx="400" cy="400" rx="320" ry="200"/>
+                  <ellipse cx="400" cy="400" rx="320" ry="260"/>
+                  <ellipse cx="400" cy="400" rx="120" ry="320"/>
+                  <ellipse cx="400" cy="400" rx="200" ry="320"/>
+                  <ellipse cx="400" cy="400" rx="260" ry="320"/>
+                  <line x1="400" y1="80" x2="400" y2="720"/>
+                  <line x1="80" y1="400" x2="720" y2="400"/>
                 </g>
 
-                <!-- 3D shading overlay -->
-                <circle cx="250" cy="250" r="200" fill="url(#sphereShading)" pointer-events="none"/>
+                <!-- 3D lighting overlay -->
+                <circle cx="400" cy="400" r="320" fill="url(#sphereLight)" pointer-events="none"/>
 
-                <!-- Glossy highlight -->
-                <ellipse cx="220" cy="210" rx="80" ry="60" fill="url(#glossy)" pointer-events="none"/>
-
-                <!-- Location markers with enhanced styling -->
+                <!-- Location markers -->
                 <!-- North America -->
                 <g class="location-marker" data-location="1">
-                  <circle cx="165" cy="145" r="15" fill="#f2684e" opacity="0.25" class="pulse-ring"/>
-                  <circle cx="165" cy="145" r="11" fill="#f2684e"/>
-                  <circle cx="165" cy="145" r="9" fill="#ff8c70"/>
-                  <text x="165" y="151" text-anchor="middle" fill="white" font-size="14" font-weight="bold">1</text>
+                  <circle cx="230" cy="220" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="230" cy="220" r="14" fill="#f2684e"/>
+                  <text x="230" y="227" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text>
                 </g>
 
                 <!-- Europe -->
                 <g class="location-marker" data-location="2">
-                  <circle cx="268" cy="125" r="15" fill="#f2684e" opacity="0.25" class="pulse-ring"/>
-                  <circle cx="268" cy="125" r="11" fill="#f2684e"/>
-                  <circle cx="268" cy="125" r="9" fill="#ff8c70"/>
-                  <text x="268" y="131" text-anchor="middle" fill="white" font-size="14" font-weight="bold">2</text>
+                  <circle cx="425" cy="250" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="425" cy="250" r="14" fill="#f2684e"/>
+                  <text x="425" y="257" text-anchor="middle" fill="white" font-size="18" font-weight="bold">2</text>
                 </g>
 
                 <!-- Asia -->
                 <g class="location-marker" data-location="3">
-                  <circle cx="345" cy="170" r="15" fill="#f2684e" opacity="0.25" class="pulse-ring"/>
-                  <circle cx="345" cy="170" r="11" fill="#f2684e"/>
-                  <circle cx="345" cy="170" r="9" fill="#ff8c70"/>
-                  <text x="345" y="176" text-anchor="middle" fill="white" font-size="14" font-weight="bold">3</text>
+                  <circle cx="530" cy="230" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="530" cy="230" r="14" fill="#f2684e"/>
+                  <text x="530" y="237" text-anchor="middle" fill="white" font-size="18" font-weight="bold">3</text>
                 </g>
 
                 <!-- Africa -->
                 <g class="location-marker" data-location="4">
-                  <circle cx="260" cy="240" r="15" fill="#f2684e" opacity="0.25" class="pulse-ring"/>
-                  <circle cx="260" cy="240" r="11" fill="#f2684e"/>
-                  <circle cx="260" cy="240" r="9" fill="#ff8c70"/>
-                  <text x="260" y="246" text-anchor="middle" fill="white" font-size="14" font-weight="bold">4</text>
+                  <circle cx="440" cy="400" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="440" cy="400" r="14" fill="#f2684e"/>
+                  <text x="440" y="407" text-anchor="middle" fill="white" font-size="18" font-weight="bold">4</text>
                 </g>
 
                 <!-- South America -->
                 <g class="location-marker" data-location="5">
-                  <circle cx="150" cy="285" r="15" fill="#f2684e" opacity="0.25" class="pulse-ring"/>
-                  <circle cx="150" cy="285" r="11" fill="#f2684e"/>
-                  <circle cx="150" cy="285" r="9" fill="#ff8c70"/>
-                  <text x="150" y="291" text-anchor="middle" fill="white" font-size="14" font-weight="bold">5</text>
+                  <circle cx="250" cy="400" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="250" cy="400" r="14" fill="#f2684e"/>
+                  <text x="250" y="407" text-anchor="middle" fill="white" font-size="18" font-weight="bold">5</text>
                 </g>
 
                 <!-- Australia -->
                 <g class="location-marker" data-location="6">
-                  <circle cx="380" cy="345" r="15" fill="#f2684e" opacity="0.25" class="pulse-ring"/>
-                  <circle cx="380" cy="345" r="11" fill="#f2684e"/>
-                  <circle cx="380" cy="345" r="9" fill="#ff8c70"/>
-                  <text x="380" y="351" text-anchor="middle" fill="white" font-size="14" font-weight="bold">6</text>
+                  <circle cx="605" cy="560" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="605" cy="560" r="14" fill="#f2684e"/>
+                  <text x="605" y="567" text-anchor="middle" fill="white" font-size="18" font-weight="bold">6</text>
                 </g>
               </svg>
             </div>
