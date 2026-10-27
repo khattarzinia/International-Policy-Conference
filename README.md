@@ -3,9 +3,9 @@ The International Policy Conference, or IPC, was established in 2026 by a group 
 
 ## Written submission portal
 
-`submit.html` accepts a policy brief and participant/team details, records academic-integrity certification and processing consent, and provides a private receipt. `submissions.html` lets organizers download original files, view screening results, record notes, and update review status.
+`submit.html` accepts a policy brief and participant/team details, records academic-integrity certification and processing consent, and provides a private receipt. `submissions.html` gives organizers two independent checks: shared wording across submissions, and AI likelihood. Organizers can inspect matching passages, download originals, record notes, and update review status.
 
-Supported uploads are PDF, DOCX, and UTF-8 TXT, up to 4 MB. PDFs are limited to 80 pages for processing. Scanned/image-only PDFs are saved for manual review when text cannot be extracted. Encrypted or damaged documents are rejected with a useful error. The current portal handles written briefs; video uploads, plagiarism comparison, judging rubrics, participant accounts, and email notifications are outside this implementation.
+Supported uploads are PDF, DOCX, and UTF-8 TXT, up to 4 MB. PDFs are limited to 80 pages for processing. Scanned/image-only PDFs are saved for manual review when text cannot be extracted. Encrypted or damaged documents are rejected with a useful error. The current portal handles written briefs; video uploads, web-wide plagiarism comparison, judging rubrics, participant accounts, and email notifications are outside this implementation.
 
 ### Run locally
 
@@ -19,7 +19,15 @@ npm run dev
 
 Open `http://localhost:4318/submit.html`. The generated `.env.local` contains the organizer password used at `submissions.html`; it is ignored by Git and must stay private. Local submissions and original files persist in `.local/ipc/submissions.sqlite`, with private filesystem permissions. Local mode refuses to run on Vercel or with `NODE_ENV=production`.
 
-The local preview uses real persistent storage. AI scanning is disabled until a real provider key and explicit daily allowance are configured; pending screening always displays a blank score. No simulated scores or fallback heuristics are used in the application.
+The local preview uses real persistent storage. Cross-submission comparison runs after a brief is saved. AI scanning is disabled until a trained model service (or an explicitly selected external provider) and daily allowance are configured; pending screening always displays a blank score. No simulated scores or heuristic fallback detector are used in the application.
+
+### Cross-submission comparison
+
+`lib/similarity.js` compares normalized wording against other saved IPC briefs. It finds substantive shared phrases of at least 10 words, excludes standard headings, recognizable citation markers, and late reference sections, and reports the share of eligible target-body words covered by matches. Overlapping matches from multiple sources count only once. Similarity is directional: the percentage describes the selected brief's body, so a short brief copied into a longer one can produce different percentages in each direction.
+
+The organizer sees each matching entry and side-by-side excerpts with original character offsets. Long excerpts are shortened for display; the complete matching ranges still contribute to the score. A reference section is excluded only after a conservative late standalone heading. Quoted prose can legitimately match, so reviewers must inspect context. This is a wording comparison within IPC's collection, not an internet search, semantic paraphrase detector, or plagiarism verdict.
+
+Comparison results are available only through the signed organizer session at `POST /api/admin/compare`. Public receipts never include another entrant's title or passages. The stored summary includes the time and number of eligible entries compared. When the submission collection changes, the inbox marks old summaries **Needs refresh** and withholds their stale percentage; use **Compare submissions** to refresh. The complete comparison corpus is paginated independently of the organizer inbox's display limit. Incoming briefs are not used for model training by default.
 
 ### Deploy the backend
 
@@ -31,13 +39,34 @@ The website needs a Node-capable host such as Vercel for `/api/*`. GitHub Pages 
 4. Deploy this repository using its `vercel.json`. The build publishes only allowlisted assets under `public/`; server source, database files, and settings are excluded. API responses are never cached.
 5. Check receipt lookup, organizer sign-in, private downloads, and persistence after a fresh deployment before opening submissions. Access without an organizer session must return 401. Verify anonymous Supabase credentials cannot read either table or storage files.
 
-No live IPC database or detector account is provisioned by these files. Production setup requires the relevant account owner and credentials. The SQL and REST adapter have local/contract tests, but must also be verified against the dedicated live project.
+The setup files do not provision accounts automatically. The development IPC database has separately been created in JohnnyPei's Supabase organization; its schema, private bucket, server-only access grants, update functions, scan claims, and rate limiting were verified against live Postgres. Hosting still needs the project's server secret and IPC's hosting access. Verify the complete hosted file-upload and private-download flow before opening real entries.
 
 ### AI screening
 
-The portal supports [GPTZero](https://docs.gptzero.me/api-reference/) and [Sapling](https://sapling.ai/docs/api/detector/). Check the selected provider's pricing and privacy terms before enabling it. Only the extracted brief text is sent to the provider; contact details are excluded from the API payload. Names or personal details written inside the brief remain part of that text.
+The default integration uses IPC's own experimental text model, served by `ml/server.py`. See [the model workflow](ml/README.md) for training, evaluation, provenance, and setup. The model must be a completed encoder fine-tune before the service will load it. Only public labeled training data is used by the prototype; it is not claimed to be validated on IPC policy briefs.
 
-To enable a configured provider, set all three:
+Configure the local service in `.env.local`, then run it separately from the website:
+
+```sh
+IPC_AI_PROVIDER=local
+IPC_AI_ENDPOINT=http://127.0.0.1:4319
+IPC_MODEL_DIR=.local/ml-model
+IPC_MODEL_TOKEN=your-unique-random-service-token
+IPC_ENABLE_AI_SCANS=true
+IPC_MAX_SCANS_PER_DAY=100
+```
+
+```sh
+npm run model:serve
+```
+
+The token must contain at least 24 characters; `npm run setup` generates it for new installations. Keep the model service running alongside `npm run dev`. A production deployment must use an authenticated HTTPS model endpoint. HTTP loopback is allowed only for local development, and the model service itself binds to loopback. Python dependencies, datasets and model weights are kept out of the Vercel website bundle and all public files.
+
+The own-model score is **experimental model confidence**, not a calibrated authorship probability or percentage of AI-written words. The response records checkpoint version and analyzed text coverage. Long documents are sampled across windows if they exceed the model's bounded workload; partial coverage is shown explicitly. A missing model or service outage produces no score. No entry is automatically rejected by either check.
+
+Optional external integrations remain available for [GPTZero](https://docs.gptzero.me/api-reference/) and [Sapling](https://sapling.ai/docs/api/detector/). Check the selected provider's pricing and privacy terms before enabling it. Only the extracted brief text is sent to the provider; contact details are excluded from the API payload. Names or personal details written inside the brief remain part of that text.
+
+To explicitly select an external provider:
 
 ```sh
 IPC_AI_PROVIDER=gptzero
@@ -60,6 +89,6 @@ npm test
 npm run build
 ```
 
-Tests cover real SQLite persistence, original-file retrieval, real PDF/DOCX extraction, malformed and forged archives, receipt isolation, consent checks, organizer sessions, cross-origin protection, provider request formats, absent/invalid detector results, quota limits, and concurrent scans. Provider transports in automated tests are controlled fixtures; live detector scoring requires a real key and is not claimed by a passing test.
+Tests cover real SQLite persistence, original-file retrieval, real PDF/DOCX extraction, malformed and forged archives, receipt isolation, consent checks, organizer sessions, cross-origin protection, substantive phrase matches, excluded references, multi-source coverage, comparisons beyond the inbox limit, private comparison evidence, model-service provenance and coverage checks, absent/invalid detector results, quota limits, and concurrent scans. Provider transports in automated tests are controlled fixtures; real model inference is separately verified against the trained checkpoint.
 
 The current organizer inbox loads the most recent 500 entries. Uploads are limited to 10 attempts per hour per network address and 200 per day overall; organizer sign-in is limited to 8 attempts per 15 minutes. Adjust these limits deliberately for a large event. Shared organizer access uses an 8-hour HttpOnly session; use a unique strong password and rotate it and the session secret when organizer access changes. Establish IPC's retention/deletion process before collecting live entries; no automatic deletion policy is assumed.

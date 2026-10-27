@@ -6,6 +6,9 @@
   let selectedId = null;
   let detectorConfigured = false;
   let loading = false;
+  let sessionGeneration = 0;
+  const comparisons = new Map();
+  const comparisonsInProgress = new Set();
 
   function el(tag, className, text) {
     const node = document.createElement(tag);
@@ -42,9 +45,13 @@
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? '' : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
   };
-  const hasScore = scan => scan?.status === 'completed' && typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent);
+  const hasScore = scan => scan?.status === 'completed' && typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent) && scan.scorePercent >= 0 && scan.scorePercent <= 100;
+  const experimentalScore = scan => scan?.experimental === true || scan?.scoreType === 'model_confidence';
+  const hasOverlap = comparison => comparison?.status === 'completed' && !comparison.stale && comparison.comparedCount > 0 && typeof comparison.matchedWordPercent === 'number' && Number.isFinite(comparison.matchedWordPercent) && comparison.matchedWordPercent >= 0 && comparison.matchedWordPercent <= 100;
+  const coverage = scan => typeof scan?.coveragePercent === 'number' && Number.isFinite(scan.coveragePercent) ? Math.max(0, Math.min(100, scan.coveragePercent)) : null;
+  const aiHeading = scan => experimentalScore(scan) ? 'AI likelihood (experimental)' : scan?.provider === 'GPTZero' ? 'Fully AI-written probability' : scan?.provider === 'Sapling' ? 'AI probability' : 'AI likelihood';
   function scanLabel(scan) {
-    if (hasScore(scan)) return `${scan.provider || 'AI scan'} · Complete`;
+    if (hasScore(scan)) return `${scan.provider || 'AI scan'} · ${experimentalScore(scan) ? 'Experimental' : 'Complete'}`;
     if (scan?.status === 'failed' || scan?.status === 'error') return 'Scan needs retry';
     if (scan?.status === 'manual_review') return 'Manual screening needed';
     if (scan?.status === 'pending_configuration' || scan?.status === 'not_configured') return 'Provider not connected';
@@ -52,8 +59,11 @@
   }
 
   function showLogin() {
+    sessionGeneration++;
     submissions = [];
     selectedId = null;
+    comparisons.clear();
+    comparisonsInProgress.clear();
     byId('submission-list').replaceChildren();
     renderPlaceholder();
     byId('admin-workspace').hidden = true;
@@ -64,7 +74,7 @@
 
   function renderPlaceholder() {
     const placeholder = el('div', 'detail-placeholder');
-    placeholder.append(el('span', '', '↗'), el('h2', '', 'Room for good judgment.'), el('p', '', 'Select a brief to review its file, screening result, and submission details.'));
+    placeholder.append(el('span', '', '↗'), el('h2', '', 'Room for good judgment.'), el('p', '', 'Select a brief to compare it with other entries, inspect AI likelihood, and record your review.'));
     placeholder.firstChild.setAttribute('aria-hidden', 'true');
     byId('review-detail').replaceChildren(placeholder);
   }
@@ -93,14 +103,20 @@
       button.setAttribute('aria-label', `Review ${entry.title}`);
       button.setAttribute('aria-pressed', String(entry.id === selectedId));
       button.append(el('strong', '', entry.title), el('span', 'submission-meta', `${entry.contactName} · ${entry.institution}`), el('span', 'submission-meta', entry.category));
-      button.addEventListener('click', () => { selectedId = entry.id; renderList(); renderDetail(entry); });
+      button.addEventListener('click', () => selectEntry(entry));
       titleCell.append(button);
       const scanCell = el('td');
       scanCell.append(el('span', 'score-value', hasScore(entry.scan) ? `${entry.scan.scorePercent.toFixed(1)}%` : '—'), el('span', 'scan-label', scanLabel(entry.scan)));
+      if (experimentalScore(entry.scan) && hasScore(entry.scan)) scanCell.append(el('span', 'scan-label', 'Model confidence'));
+      if (coverage(entry.scan) !== null && coverage(entry.scan) < 100) scanCell.append(el('span', 'scan-label partial-coverage-label', `${coverage(entry.scan).toFixed(1)}% of text analyzed`));
       if (entry.scan?.classification) scanCell.append(el('span', 'scan-label', `Classification: ${entry.scan.classification}`));
+      const comparison = comparisons.get(entry.id) || entry.comparisonSummary;
+      const similarityCell = el('td');
+      const comparisonLabel = comparison?.stale ? 'Needs refresh' : comparison?.status === 'completed' ? comparison.comparedCount === 0 ? 'No other entries' : `${comparison.comparedCount} entries compared` : comparison?.status === 'insufficient_text' ? 'Not enough text' : 'Not compared';
+      similarityCell.append(el('span', 'score-value', hasOverlap(comparison) ? `${comparison.matchedWordPercent.toFixed(1)}%` : '—'), el('span', 'scan-label', comparisonLabel));
       const statusCell = el('td');
       statusCell.append(el('span', `status-badge status-${Object.hasOwn(statuses, entry.status) ? entry.status : 'received'}`, statuses[entry.status] || 'Received'), el('span', 'submission-meta', dateLabel(entry.createdAt)));
-      row.append(titleCell, scanCell, statusCell);
+      row.append(titleCell, similarityCell, scanCell, statusCell);
       list.append(row);
     }
   }
@@ -110,6 +126,120 @@
     submissions = submissions.map(existing => existing.id === entry.id ? entry : existing);
     renderList();
     renderDetail(entry);
+  }
+
+  function selectEntry(entry) {
+    selectedId = entry.id;
+    renderList();
+    renderDetail(entry);
+  }
+
+  function comparisonPanel(entry) {
+    const panel = el('section', 'screening-panel comparison-panel');
+    panel.setAttribute('aria-label', 'Cross-submission comparison');
+    panel.dataset.submissionId = entry.id;
+    const render = () => {
+      panel.replaceChildren();
+      const comparison = comparisons.get(entry.id);
+      const summary = comparison || entry.comparisonSummary;
+      const header = el('div', 'analysis-heading');
+      header.append(el('span', 'analysis-number', '01'), el('h3', '', 'Across submissions'));
+      panel.append(header);
+      const running = comparisonsInProgress.has(entry.id);
+      const button = el('button', 'portal-button button-secondary compare-submissions-button', running ? 'Comparing…' : 'Compare submissions ↗');
+      button.type = 'button';
+      button.disabled = running;
+      panel.append(el('div', 'screening-score', hasOverlap(summary) ? `${summary.matchedWordPercent.toFixed(1)}%` : '—'));
+      panel.append(el('p', 'comparison-definition', 'Share of this brief’s eligible body words in substantive phrases also found in other IPC submissions.'));
+      if (summary?.analyzedAt) panel.append(el('p', 'analysis-meta', `Compared ${dateLabel(summary.analyzedAt)} · ${summary.comparedCount || 0} other ${summary.comparedCount === 1 ? 'entry' : 'entries'}`));
+      if (summary?.stale) panel.append(el('p', '', 'The submission collection has changed. Compare again to refresh this result.'));
+      else if (summary?.status === 'insufficient_text') panel.append(el('p', '', 'There is not enough readable body text for a meaningful comparison. Review the original file.'));
+      else if (summary?.status === 'completed' && summary.comparedCount === 0) panel.append(el('p', '', 'There are no other eligible entries to compare yet. Run this again after more submissions arrive.'));
+      else if (!summary) panel.append(el('p', '', 'No comparison has run for this brief yet.'));
+      else if (!comparison) panel.append(el('p', '', 'A saved comparison summary is shown. Compare again to load its matching passages against the current submissions.'));
+      panel.append(button);
+      const message = el('p', 'comparison-message');
+      message.setAttribute('role', 'status');
+      message.setAttribute('aria-live', 'polite');
+      if (running) message.textContent = 'Comparing the saved brief with the current submission collection…';
+      panel.append(message);
+      if (comparison) {
+        if (comparison.message) panel.append(el('p', '', comparison.message));
+        if (comparison.analyzedWords !== undefined) panel.append(el('p', 'analysis-meta', `${comparison.analyzedWords} body words analyzed${comparison.excludedReferences ? ' · References excluded' : ''}`));
+        if (comparison.status === 'completed' && comparison.comparedCount > 0 && !comparison.matches?.length) panel.append(el('p', 'comparison-empty', 'No substantive shared phrases found in the entries compared.'));
+        const matches = Array.isArray(comparison.matches) ? comparison.matches : [];
+        for (const match of matches) {
+          const article = el('article', 'comparison-match');
+          const matchHeader = el('div', 'match-heading');
+          matchHeader.append(el('h4', '', match.title || 'Untitled submission'));
+          if (typeof match.overlapPercent === 'number' && Number.isFinite(match.overlapPercent)) matchHeader.append(el('span', 'match-score', `${match.overlapPercent.toFixed(1)}%`));
+          article.append(matchHeader, el('p', 'analysis-meta', [match.category, typeof match.sharedWordCount === 'number' ? `${match.sharedWordCount} shared words` : null].filter(Boolean).join(' · ')));
+          const actions = el('div', 'match-actions');
+          const related = submissions.find(candidate => candidate.id === match.submissionId);
+          if (related) {
+            const select = el('button', 'text-button', 'Review this entry ↗');
+            select.type = 'button';
+            select.addEventListener('click', () => { selectEntry(related); byId('review-detail').scrollIntoView({ block: 'start', behavior: 'smooth' }); });
+            actions.append(select);
+          }
+          const download = el('a', 'text-button', 'Download source brief ↓');
+          download.href = `/api/admin/download?id=${encodeURIComponent(String(match.submissionId || ''))}`;
+          actions.append(download);
+          article.append(actions);
+          const passages = Array.isArray(match.passages) ? match.passages : [];
+          if (passages.length) {
+            const passagesDetail = el('details', 'matching-passages');
+            const summary = el('summary', '', `${passages.length} matching ${passages.length === 1 ? 'passage' : 'passages'} shown`);
+            passagesDetail.append(summary);
+            for (const passage of passages) {
+              const pair = el('div', 'passage-pair');
+              const target = el('div', 'passage-side');
+              target.append(el('h5', '', 'This brief'), el('blockquote', '', passage.targetText || ''));
+              const source = el('div', 'passage-side');
+              source.append(el('h5', '', 'Other submission'), el('blockquote', '', passage.sourceText || ''));
+              pair.append(target, source);
+              passagesDetail.append(pair);
+            }
+            article.append(passagesDetail);
+          }
+          panel.append(article);
+        }
+      }
+      panel.append(el('p', 'analysis-caveat', 'Compare again when new entries arrive. Shared text needs context: quotations, common sources, and collaboration can explain overlap. This checks IPC submissions, not the wider internet, and does not establish plagiarism.'));
+      button.addEventListener('click', async () => {
+        if (comparisonsInProgress.has(entry.id)) return;
+        comparisonsInProgress.add(entry.id);
+        const requestGeneration = sessionGeneration;
+        render();
+        try {
+          const result = await post('/api/admin/compare', { id: entry.id });
+          if (requestGeneration !== sessionGeneration) return;
+          const value = result.comparison;
+          if (!value || !['completed', 'insufficient_text'].includes(value.status) || !Array.isArray(value.matches)) throw new Error('No usable comparison result was returned. Please try again.');
+          comparisons.set(entry.id, value);
+          const loaded = submissions.find(candidate => candidate.id === entry.id);
+          if (loaded) loaded.comparisonSummary = { status: value.status, matchedWordPercent: value.matchedWordPercent, comparedCount: value.comparedCount, analyzedAt: value.analyzedAt, corpusTotal: value.corpusTotal, stale: false };
+          comparisonsInProgress.delete(entry.id);
+          renderList();
+          const activePanel = byId('review-detail').querySelector('.comparison-panel');
+          if (selectedId === entry.id && activePanel?.dataset.submissionId === entry.id) activePanel.replaceWith(comparisonPanel(loaded || entry));
+        } catch (error) {
+          if (requestGeneration !== sessionGeneration) return;
+          comparisonsInProgress.delete(entry.id);
+          if (error.status === 401) { showLogin(); notice('login-error', 'Your session ended. Please sign in again.', true); return; }
+          const activePanel = byId('review-detail').querySelector('.comparison-panel');
+          if (selectedId === entry.id && activePanel?.dataset.submissionId === entry.id) {
+            const freshPanel = comparisonPanel(submissions.find(candidate => candidate.id === entry.id) || entry);
+            activePanel.replaceWith(freshPanel);
+            const notice = freshPanel.querySelector('.comparison-message');
+            notice.textContent = error.message;
+            notice.classList.add('error');
+          }
+        }
+      });
+    };
+    render();
+    return panel;
   }
 
   function renderDetail(entry) {
@@ -129,8 +259,19 @@
     if (!detectorConfigured) scanButton.title = 'Connect an AI screening provider before scanning.';
     actions.append(download, scanButton);
     detail.append(actions);
+    detail.append(comparisonPanel(entry));
     const screening = el('section', 'screening-panel');
-    screening.append(el('h3', '', entry.scan?.provider === 'GPTZero' ? 'Fully AI-written probability' : 'AI probability'), el('div', 'screening-score', hasScore(entry.scan) ? `${entry.scan.scorePercent.toFixed(1)}%` : '—'), el('p', '', scanLabel(entry.scan)));
+    const screeningHeading = el('div', 'analysis-heading');
+    screeningHeading.append(el('span', 'analysis-number', '02'), el('h3', '', aiHeading(entry.scan)));
+    screening.append(screeningHeading, el('div', 'screening-score', hasScore(entry.scan) ? `${entry.scan.scorePercent.toFixed(1)}%` : '—'), el('p', '', scanLabel(entry.scan)));
+    if (experimentalScore(entry.scan)) {
+      screening.append(el('p', 'experimental-note', 'Experimental model confidence. This has not been validated on IPC policy briefs and is not a calibrated probability.'));
+      const validation = entry.scan?.validationSummary;
+      if (typeof validation === 'string') screening.append(el('p', '', validation));
+      else if (validation && typeof validation.message === 'string') screening.append(el('p', '', validation.message));
+    }
+    const analyzedCoverage = coverage(entry.scan);
+    if (analyzedCoverage !== null) screening.append(el('p', analyzedCoverage < 100 ? 'partial-coverage-note' : 'analysis-meta', `${analyzedCoverage < 100 ? 'Partial analysis: ' : ''}${analyzedCoverage.toFixed(1)}% of this brief’s text was analyzed.${analyzedCoverage < 100 ? ' The score covers only the analyzed text.' : ''}`));
     const classifications = { ai: 'AI writing', mixed: 'Mixed human and AI writing', human: 'Human writing' };
     if (classifications[entry.scan?.classification]) screening.append(el('p', '', `Provider classification: ${classifications[entry.scan.classification]}`));
     if (typeof entry.scan?.mixedScorePercent === 'number') screening.append(el('p', '', `Mixed-writing probability: ${entry.scan.mixedScorePercent.toFixed(1)}%`));
@@ -214,6 +355,7 @@
       const result = await request('/api/admin/submissions');
       if (!Array.isArray(result.submissions)) throw new Error('The service returned an invalid submission list.');
       submissions = result.submissions;
+      for (const entry of submissions) if (entry.comparisonSummary?.stale) comparisons.delete(entry.id);
       detectorConfigured = result.detectorConfigured === true;
       byId('admin-login').hidden = true;
       byId('admin-workspace').hidden = false;
@@ -223,7 +365,7 @@
       const selected = submissions.find(entry => entry.id === selectedId);
       if (selected) renderDetail(selected);
       else { selectedId = null; renderPlaceholder(); }
-      notice('admin-status', detectorConfigured ? '' : 'AI screening is pending: connect a provider to run scans. Entries remain available for manual review.');
+      notice('admin-status', detectorConfigured ? '' : 'AI likelihood is pending: connect the screening model to run it. You can still compare submissions and review the original briefs.');
     } catch (error) {
       if (error.status === 401) { showLogin(); if (!initial) notice('login-error', 'Your session ended. Please sign in again.', true); }
       else if (byId('admin-workspace').hidden) notice('login-error', error.message, true);

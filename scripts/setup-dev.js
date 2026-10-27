@@ -5,7 +5,9 @@ const config = [
   'IPC_LOCAL_STORAGE=true', 'IPC_DATA_DIR=.local/ipc', 'IPC_ACCEPT_SUBMISSIONS=true',
   'IPC_ORIGIN=http://localhost:4318', `IPC_ADMIN_PASSWORD=${randomBytes(24).toString('base64url')}`,
   `IPC_SESSION_SECRET=${randomBytes(36).toString('base64url')}`,
-  'IPC_ENABLE_AI_SCANS=false', 'IPC_MAX_SCANS_PER_DAY=0', '',
+  'IPC_ENABLE_AI_SCANS=false', 'IPC_MAX_SCANS_PER_DAY=0', 'IPC_AI_PROVIDER=local',
+  'IPC_AI_ENDPOINT=http://127.0.0.1:4319', `IPC_MODEL_TOKEN=${randomBytes(36).toString('base64url')}`,
+  'IPC_MODEL_DIR=.local/ml-model', '',
 ].join('\n');
 try {
   await writeFile('.env.local', config, { mode: 0o600, flag: 'wx' });

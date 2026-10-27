@@ -32,6 +32,11 @@
   function scanDescription(scan) {
     if (!scan) return 'Your brief is saved and awaiting organizer review.';
     if (scan.status === 'completed') {
+      if (scan.experimental === true || scan.scoreType === 'model_confidence') {
+        const score = typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent) ? ` AI likelihood: ${scan.scorePercent.toFixed(1)}%.` : '';
+        const partial = typeof scan.coveragePercent === 'number' && Number.isFinite(scan.coveragePercent) && scan.coveragePercent < 100 ? ` Only ${scan.coveragePercent.toFixed(1)}% of this brief’s text was analyzed.` : '';
+        return `Experimental AI screening complete${scan.provider ? ` with ${scan.provider}` : ''}.${score}${partial} This is model confidence, not a calibrated probability or the percentage of words written by AI. The model has not been validated on IPC policy briefs. An organizer will review the result alongside your work.`;
+      }
       const label = scan.provider === 'GPTZero' ? 'Fully AI-written probability' : 'AI probability';
       const score = typeof scan.scorePercent === 'number' ? ` ${label}: ${scan.scorePercent.toFixed(1)}%.` : '';
       const classifications = { ai: 'AI writing', mixed: 'mixed human and AI writing', human: 'human writing' };
@@ -40,7 +45,7 @@
       const confidence = scan.confidenceCategory ? ` Confidence: ${scan.confidenceCategory === 'reject' ? 'too low to classify reliably' : scan.confidenceCategory}.` : '';
       return `AI screening complete${scan.provider ? ` with ${scan.provider}` : ''}.${score}${classification}${mixed}${confidence} The IPC team will review the result alongside your brief.`;
     }
-    if (scan.status === 'pending_configuration' || scan.status === 'not_configured') return 'Your brief is saved. AI screening is pending while the IPC team sets up its screening provider.';
+    if (scan.status === 'pending_configuration' || scan.status === 'not_configured') return 'Your brief is saved. AI screening is pending while the IPC team connects its screening model.';
     if (scan.status === 'failed' || scan.status === 'error') return 'Your brief is saved. Automated screening could not finish; the IPC team can retry it and review your entry.';
     if (scan.status === 'manual_review') return 'Your brief is saved and needs a manual screening review by the IPC team.';
     return scan.message || 'Your brief is saved. Screening and organizer review are pending.';
@@ -82,8 +87,10 @@
       const megabytes = (config.maxFileBytes || 4 * 1024 * 1024) / 1024 / 1024;
       byId('file-hint').textContent = `PDF, DOCX, or TXT · Maximum ${megabytes.toFixed(megabytes % 1 ? 1 : 0)} MB · PDFs up to 80 pages`;
       byId('detector-disclosure').textContent = config.detectorConfigured
-        ? `Screening provider: ${config.detectorProvider || 'the IPC screening service'}. The brief’s text is sent to this provider for analysis.`
-        : 'An AI screening provider has not been connected yet. Your brief will be saved with screening pending and may be screened once the IPC team connects its provider.';
+        ? config.detectorExperimental
+          ? `Screening model: ${config.detectorProvider || 'IPC detector'}. This experimental model estimates AI likelihood; it has not been validated on IPC policy briefs. Submitted briefs are not used to train it by default.`
+          : `Screening provider: ${config.detectorProvider || 'the IPC screening service'}. The brief’s text is sent to this provider for analysis.`
+        : 'The AI screening model has not been connected yet. Your brief will be saved with screening pending and may be analyzed once the IPC team connects it. Submitted briefs are not used to train the model by default.';
       if (!config.storageReady) {
         setNotice(byId('portal-status'), 'The submission portal is being prepared. Please check back or contact the IPC team.', true);
       } else if (!config.acceptingSubmissions) {
@@ -127,7 +134,7 @@
       const data = await request('/api/submissions', { method: 'POST', body: new FormData(form) });
       const receipt = data.submission;
       if (!receipt?.receiptCode) throw new Error('The service did not return a receipt. Please contact the IPC team before resubmitting.');
-      savedReceipt = { ...receipt, email: byId('email').value.trim() };
+      savedReceipt = { title: receipt.title, receiptCode: receipt.receiptCode, createdAt: receipt.createdAt, status: receipt.status, scan: receipt.scan, email: byId('email').value.trim() };
       byId('receipt-title').textContent = receipt.title;
       byId('receipt-code').textContent = receipt.receiptCode;
       byId('receipt-time').textContent = `Saved ${dateLabel(receipt.createdAt)}`;
