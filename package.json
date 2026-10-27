@@ -1,0 +1,17 @@
+{
+  "name": "ipc-submissions",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "24.x" },
+  "scripts": {
+    "setup": "node scripts/setup-dev.js",
+    "dev": "node --env-file-if-exists=.env.local scripts/dev-server.js",
+    "test": "node --test tests/*.test.js",
+    "check": "node scripts/check.js",
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "mammoth": "1.13.0",
+    "unpdf": "1.9.1"
+  }
+}
