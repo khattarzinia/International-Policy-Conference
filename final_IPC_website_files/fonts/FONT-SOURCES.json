@@ -1,0 +1,26 @@
+[
+  {
+    "family": "Archivo",
+    "weight": "400 900",
+    "file": "archivo-variable.woff2",
+    "source": "https://fonts.gstatic.com/s/archivo/v25/k3kPo8UDI-1M0wlSV9XAw6lQkqWY8Q82sLydOxKsv4Rn.woff2"
+  },
+  {
+    "family": "IBM Plex Mono",
+    "weight": "400",
+    "file": "ibm-plex-mono-400.woff2",
+    "source": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n1i8q131nj-o.woff2"
+  },
+  {
+    "family": "IBM Plex Mono",
+    "weight": "500",
+    "file": "ibm-plex-mono-500.woff2",
+    "source": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgsAXHNk.woff2"
+  },
+  {
+    "family": "IBM Plex Sans",
+    "weight": "400 700",
+    "file": "ibm-plex-sans-variable.woff2",
+    "source": "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYbSB4Zh.woff2"
+  }
+]

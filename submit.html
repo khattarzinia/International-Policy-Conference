@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Submit your policy brief to the International Policy Conference and keep track of its review.">
+  <title>Submit your policy brief · IPC</title>
+  <link rel="icon" type="image/png" href="./final_IPC_website_files/ipc-logo.png">
+  <link rel="preload" href="./final_IPC_website_files/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./final_IPC_website_files/fonts/ibm-plex-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./final_IPC_website_files/styles.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/refinements.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/submissions.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/design.css">
+  <script src="./final_IPC_website_files/submissions.js" defer></script>
+</head>
+<body class="portal-body">
+  <a class="skip-link" href="#submission-main">Skip to submission</a>
+  <header class="site-header portal-header">
+    <a class="brand" href="./index.html" aria-label="International Policy Conference home"><img class="brand-logo" src="./final_IPC_website_files/ipc-logo.png" alt=""><span>International Policy<br>Conference</span></a>
+    <a class="portal-back" href="./index.html#requirements">Competition requirements <span aria-hidden="true">↗</span></a>
+  </header>
+  <main id="submission-main" class="portal-layout">
+    <aside class="submission-intro">
+      <div class="portal-kicker"><span class="kicker-line"></span> Participant portal</div>
+      <h1>Ideas into<br><em>action.</em></h1>
+      <p class="intro-copy">Your research. Your recommendation.<br>Your contribution to the conversation.</p>
+      <div class="paper-illustration" aria-hidden="true"><div class="illustration-label">IPC / POLICY BRIEF</div><div class="paper-title">A case<br>for change.</div><div class="paper-rule"></div><div class="paper-line"></div><div class="paper-line short"></div><div class="paper-line"></div><span class="paper-seal">IPC</span></div>
+      <div class="intro-checklist">
+        <p class="eyebrow">Before you submit</p>
+        <p><span aria-hidden="true">01</span> Review the <a href="./index.html#requirements">brief requirements</a>.</p>
+        <p><span aria-hidden="true">02</span> Prepare a PDF, DOCX, or TXT file.</p>
+        <p><span aria-hidden="true">03</span> Keep your receipt for future updates.</p>
+      </div>
+      <p class="intro-contact">Need a hand?<br><a href="mailto:internationalpolicyconference@gmail.com">Contact the IPC team ↗</a></p>
+    </aside>
+    <div class="submission-workspace">
+      <div class="workspace-heading"><p class="eyebrow">Written submissions</p><h2>Submit your<br>policy brief.</h2><p>Competing individually or as a team? Start here.</p></div>
+      <div id="portal-status" class="portal-notice" role="status" aria-live="polite">Checking submission availability…</div>
+      <noscript><p class="portal-notice notice-error">Please enable JavaScript to submit a brief. For help, contact internationalpolicyconference@gmail.com.</p></noscript>
+      <form id="submission-form" novalidate>
+        <fieldset id="submission-fields" disabled>
+          <section class="form-section" aria-labelledby="contact-heading">
+            <div class="form-section-title"><span>01</span><h3 id="contact-heading">About you</h3><p>* Required</p></div>
+            <div class="field-grid">
+              <div class="field"><label for="contactName">Contact name <span aria-hidden="true">*</span></label><input id="contactName" name="contactName" autocomplete="name" maxlength="120" required></div>
+              <div class="field"><label for="email">Email address <span aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required><p class="field-hint">Use this address to look up your receipt.</p></div>
+              <div class="field"><label for="institution">School or university <span aria-hidden="true">*</span></label><input id="institution" name="institution" autocomplete="organization" maxlength="180" required></div>
+              <div class="field"><label for="country">Country or region <span aria-hidden="true">*</span></label><input id="country" name="country" autocomplete="country-name" maxlength="100" required></div>
+              <div class="field full-width"><label for="teamName">Team name <span class="optional">Optional for individuals</span></label><input id="teamName" name="teamName" maxlength="160"></div>
+              <div class="field full-width"><label for="teamMembers">Other team members <span class="optional">Optional</span></label><textarea id="teamMembers" name="teamMembers" rows="2" maxlength="2000" placeholder="Names of the other contributors"></textarea></div>
+            </div>
+          </section>
+          <section class="form-section" aria-labelledby="brief-heading">
+            <div class="form-section-title"><span>02</span><h3 id="brief-heading">Your policy brief</h3></div>
+            <div class="field-grid">
+              <div class="field full-width"><label for="title">Brief title <span aria-hidden="true">*</span></label><input id="title" name="title" maxlength="240" required></div>
+              <div class="field full-width"><label for="category">Policy category <span aria-hidden="true">*</span></label><select id="category" name="category" required><option value="">Choose a category</option></select></div>
+              <div class="field full-width"><label for="brief">Upload your brief <span aria-hidden="true">*</span></label><div class="upload-area"><span class="upload-symbol" aria-hidden="true">↑</span><strong id="file-label">Choose your policy brief</strong><span id="file-hint">PDF, DOCX, or TXT · Maximum 4 MB</span><input id="brief" name="brief" type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" aria-describedby="file-hint file-feedback" required></div><p class="field-hint" id="file-feedback" aria-live="polite">Choose a file with selectable text so it can be screened.</p></div>
+              <div class="field full-width"><label for="conflicts">Connections or conflicts of interest <span class="optional">If applicable</span></label><textarea id="conflicts" name="conflicts" rows="3" maxlength="3000" placeholder="Disclose any familial, professional, or personal connection to organizations cited or analyzed."></textarea></div>
+            </div>
+          </section>
+          <section class="form-section" aria-labelledby="integrity-heading">
+            <div class="form-section-title"><span>03</span><h3 id="integrity-heading">Academic integrity</h3></div>
+            <div class="integrity-explainer"><p>IPC may compare your brief with other submissions and estimate AI likelihood. Both checks support organizer review; neither establishes misconduct.</p><p id="detector-disclosure">Checking the screening service…</p></div>
+            <label class="check-field"><input type="checkbox" name="integrityAccepted" id="integrityAccepted" value="true" required><span>I certify that all written work is entirely our own. AI language model tools have not drafted or substantively written any portion of this brief, and advisors have not drafted, substantially edited, or revised our text. <span aria-hidden="true">*</span></span></label>
+            <label class="check-field"><input type="checkbox" name="processingAccepted" id="processingAccepted" value="true" required><span>I agree to IPC storing this submission and contact details for competition review, comparing the brief with other IPC submissions, and analyzing its text with IPC’s screening model or the disclosed external screening provider. Submitted briefs are not used to train the model by default. <span aria-hidden="true">*</span></span></label>
+            <div class="form-trap" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+          </section>
+          <div id="submission-error" class="portal-notice notice-error" role="alert" hidden></div>
+          <div class="submit-row"><p>Keep a copy of your brief.<br>We’ll show a receipt once it is saved.</p><button class="portal-button" id="submit-button" type="submit">Submit brief <span aria-hidden="true">↗</span></button></div>
+        </fieldset>
+      </form>
+      <section id="submission-success" class="receipt-card" aria-labelledby="receipt-heading" tabindex="-1" hidden>
+        <span class="receipt-check" aria-hidden="true">✓</span><p class="eyebrow">Submission received</p><h2 id="receipt-heading">You’re on record.</h2><p id="receipt-title" class="receipt-title"></p><div class="receipt-reference"><span>Your receipt code</span><strong id="receipt-code"></strong></div><p>Save this code and use the email address you submitted with to check your entry below.</p><div id="receipt-scan" class="portal-notice"></div><p id="receipt-time" class="field-hint"></p><button type="button" class="portal-button button-secondary" id="download-receipt">Save receipt <span aria-hidden="true">↓</span></button>
+      </section>
+      <details class="lookup-section" id="lookup-section"><summary>Already submitted? Check your entry <span aria-hidden="true">+</span></summary><form id="receipt-form"><div class="field-grid"><div class="field"><label for="lookup-email">Submission email</label><input id="lookup-email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="lookup-code">Receipt code</label><input id="lookup-code" name="receiptCode" autocomplete="off" required></div></div><button class="portal-button button-secondary" id="lookup-button" type="submit">Find submission <span aria-hidden="true">→</span></button><div id="lookup-result" class="portal-notice" role="status" aria-live="polite" hidden></div></form></details>
+      <div class="portal-footnote"><span>International Policy Conference</span><a href="./submissions.html">Organizer access ↗</a></div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* The route layer crosses section and WebGL boundaries without intercepting input. */
+.page-routes{position:fixed;inset:0;width:100%;height:100svh;z-index:20;overflow:hidden;pointer-events:none;contain:strict;--route-speed:4.8s}
+.page-routes *{pointer-events:none}
+.page-route-line{stroke:#f46747;stroke-width:.8;opacity:.22;vector-effect:non-scaling-stroke}
+.page-route-flight,.page-route-echo{stroke:#f16a46;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:36 964;animation:page-route-flow var(--route-speed) linear infinite;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px #ff886c45);opacity:.85}
+.page-route-echo{stroke:#d4a072;stroke-width:1.2;stroke-dasharray:17 983;animation-duration:calc(var(--route-speed) * 1.25);opacity:.65}
+.page-route-dock{fill:#f16a46;stroke:#f0e5c550;stroke-width:4;paint-order:stroke;opacity:.65}
+.page-route-escape{transition:opacity .3s}
+.page-route-escape .page-route-line{stroke-width:1;opacity:.28}
+.page-route-escape .page-route-flight{stroke:#ff8c69;stroke-width:3;stroke-dasharray:48 952;animation-duration:3.5s;opacity:.95}
+.page-route-headline .page-route-flight{stroke:#ffd1a5}
+.page-route-category .page-route-line,.page-route-stage .page-route-line{opacity:.16}
+.page-route-category .page-route-flight,.page-route-stage .page-route-flight{animation-duration:5.7s;stroke-width:2}
+.page-route-spine .page-route{opacity:0;transition:opacity .5s}
+.page-route-spine .page-route.is-visible{opacity:.75}
+.page-route-spine .page-route-flight,.page-route-spine .page-route-echo{animation-play-state:paused}
+.page-route-spine .page-route.is-visible .page-route-flight,.page-route-spine .page-route.is-visible .page-route-echo{animation-play-state:running}
+.page-route-spine .page-route-dock{r:2;opacity:.55}
+.page-route-fragment{stroke:#ffe4b5;stroke-width:4;stroke-linecap:round;stroke-dasharray:70 1030;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 7px #f5704db0)}
+.page-motion-paused .page-route-flight,.page-motion-paused .page-route-echo{animation-play-state:paused!important}
+.page-reduced-motion .page-route-flight,.page-reduced-motion .page-route-echo{animation:none!important;display:none}
+.page-reduced-motion .page-route-line{opacity:.12}
+@keyframes page-route-flow{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@media(max-width:1000px){.page-route-escape .page-route-line{opacity:.18}.page-route-escape .page-route-flight{stroke-width:2.2}.page-route-escape .page-route-echo{display:none}.page-route-fragment{stroke-width:3}.page-route-spine .page-route{opacity:.6}.page-route-line{stroke-width:.65}.page-route-flight{stroke-width:1.5}.page-route-dock{stroke-width:3;r:2}}
+@media(prefers-reduced-motion:reduce){.page-route-flight,.page-route-echo,.page-route-fragment{display:none!important;animation:none!important}.page-route-spine .page-route,.page-route-escape{transition:none}}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Submission review · IPC</title>
+  <link rel="icon" type="image/png" href="./final_IPC_website_files/ipc-logo.png">
+  <link rel="preload" href="./final_IPC_website_files/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./final_IPC_website_files/fonts/ibm-plex-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./final_IPC_website_files/styles.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/refinements.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/submissions.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/design.css">
+  <script src="./final_IPC_website_files/submissions-admin.js" defer></script>
+</head>
+<body class="portal-body admin-body">
+  <a class="skip-link" href="#admin-main">Skip to review workspace</a>
+  <header class="site-header portal-header"><a class="brand" href="./index.html" aria-label="International Policy Conference home"><img class="brand-logo" src="./final_IPC_website_files/ipc-logo.png" alt=""><span>International Policy<br>Conference</span></a><div class="admin-header-actions"><a class="portal-back" href="./submit.html">Participant portal ↗</a><button class="text-button" type="button" id="logout-button" hidden>Sign out</button></div></header>
+  <main id="admin-main" class="admin-main">
+    <section id="admin-login" class="admin-login" aria-labelledby="login-heading"><p class="eyebrow">Organizer access</p><h1 id="login-heading">A closer look.</h1><p>Sign in to compare policy briefs, inspect AI likelihood, and record your review.</p><form id="login-form"><div class="field"><label for="admin-password">Organizer password</label><input id="admin-password" name="password" type="password" autocomplete="current-password" required></div><button class="portal-button" id="login-button" type="submit">Enter review workspace <span aria-hidden="true">→</span></button><p id="login-error" class="portal-notice notice-error" role="alert" hidden></p></form><p class="field-hint">Access is restricted to the IPC organizing team.</p></section>
+    <section id="admin-workspace" hidden>
+      <div class="admin-heading"><div><p class="eyebrow">IPC / Review workspace</p><h1>Policy briefs.</h1></div><button class="portal-button button-secondary" type="button" id="refresh-button">Refresh <span aria-hidden="true">↻</span></button></div>
+      <div class="review-summary" aria-label="Submission summary"><div><strong id="total-count">0</strong><span>Submissions loaded</span></div><div><strong id="pending-count">0</strong><span>Awaiting review</span></div><div><strong id="screened-count">0</strong><span>AI checks complete</span></div></div>
+      <div class="admin-integrity-note"><span aria-hidden="true">↳</span><p>Two separate checks: shared phrases across IPC submissions, and AI likelihood. Both need human judgment. Similarity can reflect shared sources; an AI score does not prove authorship.</p></div>
+      <div id="admin-status" class="portal-notice" role="status" aria-live="polite" hidden></div>
+      <div class="review-toolbar"><div class="field"><label for="review-search">Find a submission</label><input id="review-search" type="search" placeholder="Title, name, school, or email"></div><div class="field"><label for="review-filter">Review status</label><select id="review-filter"><option value="all">All submissions</option><option value="received">Received</option><option value="under_review">Under review</option><option value="shortlisted">Shortlisted</option><option value="not_selected">Not selected</option></select></div><p id="result-count" aria-live="polite"></p></div>
+      <div class="review-grid"><section class="submission-list-wrap" aria-label="Submissions"><div class="review-table-scroll"><table class="review-table"><thead><tr><th scope="col">Policy brief</th><th scope="col">Shared text</th><th scope="col">AI likelihood</th><th scope="col">Review</th></tr></thead><tbody id="submission-list"></tbody></table></div><p class="empty-state" id="empty-state" hidden>No submissions to show yet.</p></section><aside class="review-detail" id="review-detail" aria-label="Selected submission"><div class="detail-placeholder"><span aria-hidden="true">↗</span><h2>Room for<br>good judgment.</h2><p>Select a brief to compare it with other entries, inspect AI likelihood, and record your review.</p></div></aside></div>
+    </section>
+    <noscript><p class="portal-notice notice-error">Please enable JavaScript to use the review workspace.</p></noscript>
+  </main>
+</body>
+</html>
