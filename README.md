@@ -7,7 +7,7 @@ The International Policy Conference, or IPC, was established in 2026 by a group 
 
 Supported uploads are PDF, DOCX, and UTF-8 TXT, up to 4 MB. PDFs are limited to 80 pages for processing. Scanned/image-only PDFs are saved for manual review when text cannot be extracted. Encrypted or damaged documents are rejected with a useful error. The current portal handles written briefs; video uploads, web-wide plagiarism comparison, judging rubrics, participant accounts, and email notifications are outside this implementation.
 
-The homepage uses locally hosted Archivo and IBM Plex fonts with an editorial cream, forest and coral design. Its globe renders real Natural Earth geography, supports dragging and keyboard navigation, and connects six country examples to the policy list. Animation pauses offscreen and respects reduced-motion preferences; a useful fallback remains when canvas or map data is unavailable. Font and geography licenses are included beside the assets.
+The homepage uses locally hosted Archivo and IBM Plex fonts with an editorial cream, forest and coral design. A locally hosted Three.js scene fills the policy-example section with lit Natural Earth geography, raised routes and selectable country markers. Country selection turns the globe, switches the policy story and highlights its corresponding category; six category links enter the same scene. Geography stays north-up during selection, while dragging and arrow keys allow free exploration. Three.js loads when the scene approaches the viewport. Animation pauses offscreen and respects reduced-motion preferences; policy controls still work when WebGL or textures are unavailable. Font, Three.js and geography licenses are included beside the assets.
 
 ### Run locally
 

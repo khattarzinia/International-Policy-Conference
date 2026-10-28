@@ -1,402 +1,343 @@
-import { geoGraticule10, geoInterpolate, geoOrthographic, geoPath, geoRotation } from './globe-assets/d3-geo-3.1.1.js';
-
-const mount = document.querySelector('#ipc-globe');
+// One Three.js scene shared by the country stories and policy-category links.
+const mount = document.getElementById('ipc-globe');
 const PLACES = [
-  { id: '1', code: 'US', country: 'United States', topic: 'Healthcare', coordinates: [-98.58, 39.83], description: 'Expanding rural healthcare access through telehealth infrastructure.' },
-  { id: '2', code: 'EU', country: 'European Union', topic: 'Environment', coordinates: [4.35, 50.85], description: 'Reducing emissions leakage through carbon border adjustments.' },
-  { id: '3', code: 'IN', country: 'India', topic: 'Education', coordinates: [78.96, 20.59], description: 'Expanding digital literacy for girls in underserved districts.' },
-  { id: '4', code: 'KE', country: 'Kenya', topic: 'Economic policy', coordinates: [37.9, -0.02], description: 'Supporting financial inclusion through mobile banking regulation.' },
-  { id: '5', code: 'BR', country: 'Brazil', topic: 'Housing', coordinates: [-51.93, -14.24], description: 'Encouraging mixed-income housing through zoning reform.' },
-  { id: '6', code: 'AU', country: 'Australia', topic: 'Technology', coordinates: [133.78, -25.27], description: 'Strengthening accountability for AI in public-sector decisions.' },
+  { id: '1', country: 'United States', short: 'United States', lon: -98.58, lat: 39.83 },
+  { id: '2', country: 'European Union', short: 'European Union', lon: 4.35, lat: 50.85 },
+  { id: '3', country: 'India', short: 'India', lon: 78.96, lat: 20.59 },
+  { id: '4', country: 'Kenya', short: 'Kenya', lon: 37.9, lat: -0.02 },
+  { id: '5', country: 'Brazil', short: 'Brazil', lon: -51.93, lat: -14.24 },
+  { id: '6', country: 'Australia', short: 'Australia', lon: 133.78, lat: -25.27 },
 ];
-const TO_RADIANS = Math.PI / 180;
-const GRATICULE = geoGraticule10();
-const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
-const wrap = value => ((value + 180) % 360 + 360) % 360 - 180;
+const HOST = { lon: -71.1097, lat: 42.3736 };
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const ease = t => 1 - (1 - t) ** 4;
 
-function element(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
+if (mount) setupWorld(mount);
 
-function decodeLand(topology) {
-  if (topology?.type !== 'Topology' || !topology.objects?.land || !Array.isArray(topology.arcs)) throw new Error('Invalid geographic data');
-  const { scale, translate } = topology.transform;
-  const cache = new Map();
-  const arc = index => {
-    const key = index < 0 ? ~index : index;
-    if (!cache.has(key)) {
-      let x = 0;
-      let y = 0;
-      cache.set(key, topology.arcs[key].map(point => {
-        x += point[0]; y += point[1];
-        return [x * scale[0] + translate[0], y * scale[1] + translate[1]];
-      }));
-    }
-    const points = cache.get(key);
-    return index < 0 ? [...points].reverse() : points;
-  };
-  const ring = indexes => indexes.flatMap((index, position) => position ? arc(index).slice(1) : arc(index));
-  const geometry = object => {
-    if (object.type === 'GeometryCollection') return { type: 'GeometryCollection', geometries: object.geometries.map(geometry) };
-    if (object.type === 'Polygon') return { type: 'Polygon', coordinates: object.arcs.map(ring) };
-    if (object.type === 'MultiPolygon') return { type: 'MultiPolygon', coordinates: object.arcs.map(polygon => polygon.map(ring)) };
-    throw new Error('Unsupported geography');
-  };
-  return geometry(topology.objects.land);
-}
-
-function createAtlas(container) {
+function setupWorld(container) {
+  const section = container.closest('.world-section');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const state = { yaw: -12, pitch: -20, roll: -9, selected: '2', hovered: null, paused: motion.matches,
-    reduced: motion.matches, visible: false, focused: false, dragging: false, width: 0, height: 0,
-    radius: 0, cx: 0, cy: 0, raf: 0, last: 0, lastPaint: 0, land: null, tween: null,
-    velocity: 0, markers: [], pointer: null, hoverPoint: null, dirty: true };
-  container.classList.add('ipc-atlas');
+  const pause = section.querySelector('.world-motion');
+  const reset = section.querySelector('.world-reset');
+  const status = section.querySelector('.world-status');
+  const state = { selected: '2', paused: motion.matches, reduced: motion.matches, visible: false,
+    loading: false, ready: false, failed: false, viewer: null };
   container.dataset.globeState = 'loading';
-
-  const top = element('div', 'atlas-topline');
-  const stamp = element('span', 'atlas-stamp', 'IPC / WORLD VIEW');
-  const coordinates = element('span', 'atlas-coordinates', '18° N · 12° E');
-  top.append(stamp, coordinates);
-  const stage = element('div', 'atlas-stage');
-  const canvas = element('canvas', 'atlas-canvas');
-  canvas.tabIndex = 0;
-  canvas.setAttribute('role', 'img');
-  canvas.setAttribute('aria-label', 'Rotating geographic globe. Drag to explore, or use the arrow keys to rotate. Use the country buttons to explore policy examples.');
-  canvas.setAttribute('aria-describedby', 'atlas-instructions');
-  canvas.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight ArrowUp ArrowDown Home');
-  const instructions = element('p', 'atlas-sr-only', 'Use left and right arrows to rotate east and west. Use up and down arrows to tilt. Home resets the view. Select a country below for a policy example.');
-  instructions.id = 'atlas-instructions';
-  const tooltip = element('div', 'atlas-tooltip');
-  tooltip.hidden = true;
-  const fallback = element('p', 'atlas-fallback', 'Explore six policy perspectives using the country buttons below.');
-  fallback.hidden = true;
-  stage.append(canvas, tooltip, fallback, instructions);
-
-  const controls = element('div', 'atlas-controls');
-  const gesture = element('span', 'atlas-gesture', 'DRAG TO EXPLORE');
-  const pause = element('button', 'atlas-control atlas-motion-control');
-  pause.type = 'button';
-  const pauseIcon = element('span', 'atlas-motion-icon');
-  pauseIcon.setAttribute('aria-hidden', 'true');
-  const pauseText = element('span');
-  pause.append(pauseIcon, pauseText);
-  const reset = element('button', 'atlas-control atlas-reset', 'Reset view ↺');
-  reset.type = 'button';
-  reset.setAttribute('aria-label', 'Reset globe view');
-  controls.append(gesture, pause, reset);
-
-  const selectors = element('div', 'atlas-selectors');
-  selectors.setAttribute('role', 'group');
-  selectors.setAttribute('aria-label', 'Policy example locations');
-  const buttons = new Map();
-  for (const place of PLACES) {
-    const button = element('button', 'atlas-place');
-    button.type = 'button';
-    button.dataset.countryId = place.id;
-    button.setAttribute('aria-label', `${place.country}: ${place.topic}`);
-    button.setAttribute('aria-pressed', String(place.id === state.selected));
-    button.append(element('span', 'atlas-place-index', `0${place.id}`), element('span', 'atlas-place-code', place.code));
-    button.addEventListener('click', () => select(place.id));
-    button.addEventListener('focus', () => select(place.id));
-    selectors.append(button);
-    buttons.set(place.id, button);
-  }
-  const detail = element('div', 'atlas-detail');
-  detail.setAttribute('aria-live', 'polite');
-  detail.setAttribute('aria-atomic', 'true');
-  const label = element('span', 'atlas-detail-label');
-  const country = element('strong', 'atlas-detail-country');
-  const description = element('p', 'atlas-detail-description');
-  detail.append(label, country, description);
-  const footer = element('div', 'atlas-footer');
-  footer.append(element('span', '', 'ILLUSTRATIVE POLICY PERSPECTIVES'), element('span', '', 'NATURAL EARTH / 110M'));
-  container.replaceChildren(top, stage, controls, selectors, detail, footer);
-
-  const ctx = canvas.getContext('2d', { alpha: true });
-  const projection = geoOrthographic().precision(0.45).clipAngle(90);
-  const path = ctx ? geoPath(projection, ctx) : null;
-  const routes = PLACES.filter(place => place.id !== '2').map((place, index) => {
-    const interpolate = geoInterpolate(PLACES[1].coordinates, place.coordinates);
-    return { target: place.id, phase: index * 0.17, points: Array.from({ length: 49 }, (_, i) => {
-      const t = i / 48;
-      return { coordinate: interpolate(t), lift: Math.sin(t * Math.PI) * 0.14, t };
-    }) };
-  });
-
-  function updateControls() {
+  pause.disabled = true; reset.disabled = true;
+  const updateMotion = () => {
     pause.setAttribute('aria-pressed', String(state.paused));
-    pause.disabled = state.reduced || !ctx || !state.land;
-    reset.disabled = !ctx || !state.land;
-    pause.setAttribute('aria-label', state.reduced ? 'Automatic globe rotation disabled for reduced motion' : state.paused ? 'Resume globe rotation' : 'Pause globe rotation');
-    pauseText.textContent = state.reduced ? 'Motion off' : state.paused ? 'Resume' : 'Pause';
-    pauseIcon.dataset.paused = String(state.paused);
-    container.dataset.globeState = state.land ? state.paused ? 'paused' : 'running' : container.dataset.globeState;
-  }
-
-  function select(id, notify = true) {
-    const place = PLACES.find(item => item.id === String(id));
+    pause.setAttribute('aria-label', state.reduced ? 'Globe motion disabled for reduced motion' : state.paused ? 'Resume globe rotation' : 'Pause globe rotation');
+    pause.innerHTML = state.reduced ? '<span aria-hidden="true">Ⅱ</span> Motion off' : state.paused ? '<span aria-hidden="true">▷</span> Resume motion' : '<span aria-hidden="true">Ⅱ</span> Pause motion';
+    pause.disabled = state.reduced || !state.ready;
+  };
+  const select = (id, notify = false) => {
+    const place = PLACES.find(p => p.id === String(id));
     if (!place) return;
-    const changed = state.selected !== place.id;
     state.selected = place.id;
-    state.velocity = 0;
-    const targetYaw = -place.coordinates[0];
-    const targetPitch = -place.coordinates[1];
-    const deltaYaw = wrap(targetYaw - state.yaw);
-    state.tween = state.reduced ? null : { fromYaw: state.yaw, fromPitch: state.pitch, fromRoll: state.roll,
-      yaw: state.yaw + deltaYaw, pitch: targetPitch, start: performance.now(), duration: 900 };
-    if (state.reduced) { state.yaw = targetYaw; state.pitch = targetPitch; state.roll = 0; }
-    for (const [key, button] of buttons) button.setAttribute('aria-pressed', String(key === place.id));
-    label.textContent = `0${place.id} / ${place.topic}`;
-    country.textContent = place.country;
-    description.textContent = place.description;
-    if (notify && changed) document.dispatchEvent(new CustomEvent('ipc:country-select', { detail: { id: place.id, country: place.country } }));
-    requestDraw();
+    container.dataset.selectedCountry = place.id;
+    state.viewer?.select(place.id);
+    if (notify) document.dispatchEvent(new CustomEvent('ipc:country-select', { detail: { id: place.id, country: place.country } }));
+  };
+  document.addEventListener('ipc:country-focus', event => select(event.detail?.id));
+  pause.addEventListener('click', () => { state.paused = !state.paused; updateMotion(); state.viewer?.pauseChange(); });
+  reset.addEventListener('click', () => state.viewer?.select(state.selected));
+  motion.addEventListener('change', event => {
+    state.reduced = event.matches;
+    if (event.matches) state.paused = true;
+    updateMotion(); state.viewer?.motionChange();
+  });
+  const fail = () => {
+    state.failed = true; state.ready = false;
+    container.dataset.globeState = 'fallback';
+    pause.disabled = true; reset.disabled = true;
+    status.textContent = 'The 3D view is unavailable. All six policy examples can still be explored with the country buttons.';
+    state.viewer?.stop();
+  };
+  const load = async () => {
+    if (state.loading) return;
+    state.loading = true;
+    try {
+      const THREE = await import('./globe-assets/three-0.186.1/three.module.js');
+      if (state.failed) return;
+      state.viewer = await createScene(THREE, container, state, id => select(id, true), fail);
+      if (state.failed) { state.viewer.stop(); return; }
+      state.ready = true; container.dataset.globeState = 'ready';
+      container.dataset.engine = `Three.js r${THREE.REVISION}`;
+      pause.disabled = state.reduced; reset.disabled = false;
+      updateMotion(); state.viewer.select(state.selected, true); state.viewer.draw();
+    } catch { fail(); }
+  };
+  new IntersectionObserver(entries => {
+    state.visible = entries.some(entry => entry.isIntersecting);
+    if (state.visible) { load(); state.viewer?.draw(); }
+    else state.viewer?.suspend();
+  }, { rootMargin: '120px' }).observe(container);
+  document.addEventListener('visibilitychange', () => document.hidden ? state.viewer?.suspend() : state.viewer?.draw());
+  updateMotion();
+  select('2');
+}
+
+async function createScene(T, container, state, onSelect, onFailure) {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'world-canvas'; canvas.tabIndex = 0;
+  canvas.setAttribute('role', 'img');
+  canvas.setAttribute('aria-label', 'Interactive 3D globe. Drag to rotate. Select a country marker to explore its policy question. Arrow keys rotate; Home recenters the selected country.');
+  canvas.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight ArrowUp ArrowDown Home');
+  const renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+  renderer.setClearColor(0x102e2b, 0);
+  renderer.outputColorSpace = T.SRGBColorSpace;
+  renderer.toneMapping = T.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.35;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+  container.append(canvas);
+  const pins = document.createElement('div'); pins.className = 'world-pins'; container.append(pins);
+  const scene = new T.Scene();
+  const camera = new T.PerspectiveCamera(34, 1, 0.1, 20);
+  camera.position.set(0, 0, 4.2);
+  const world = new T.Group(); scene.add(world);
+  const position = (lon, lat, radius = 1) => {
+    const a = lon * Math.PI / 180, b = lat * Math.PI / 180;
+    return new T.Vector3(Math.cos(b) * Math.cos(a), Math.sin(b), -Math.cos(b) * Math.sin(a)).multiplyScalar(radius);
+  };
+  const [colorMap, landMask] = await Promise.all([
+    new T.TextureLoader().loadAsync(new URL('./globe-assets/textures/earth-policy.png', import.meta.url).href),
+    new T.TextureLoader().loadAsync(new URL('./globe-assets/textures/earth-landmask.png', import.meta.url).href),
+  ]).catch(error => { renderer.dispose(); throw error; });
+  colorMap.colorSpace = T.SRGBColorSpace;
+  colorMap.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const earthMaterial = new T.MeshStandardMaterial({ map: colorMap, bumpMap: landMask, bumpScale: .018,
+    roughness: .76, metalness: .08, color: 0xf7f4e9 });
+  const earth = new T.Mesh(new T.SphereGeometry(1, 96, 64), earthMaterial);
+  world.add(earth);
+  scene.add(new T.AmbientLight(0x9fae9c, 1.9));
+  const sun = new T.DirectionalLight(0xfff0d2, 3.6); sun.position.set(-2.5, 3.5, 4); scene.add(sun);
+  const edge = new T.DirectionalLight(0x91b7a7, 2.8); edge.position.set(3, .5, -2); scene.add(edge);
+  const fill = new T.DirectionalLight(0x6c9583, .7); fill.position.set(0, -3, 2); scene.add(fill);
+  const atmosphere = new T.Mesh(new T.SphereGeometry(1.035, 64, 48), new T.ShaderMaterial({
+    uniforms: { tint: { value: new T.Color(0x8da98e) } },
+    vertexShader: 'varying vec3 vNormal; varying vec3 vView; void main(){vec4 p=modelViewMatrix*vec4(position,1.0);vNormal=normalize(normalMatrix*normal);vView=normalize(-p.xyz);gl_Position=projectionMatrix*p;}',
+    fragmentShader: 'uniform vec3 tint; varying vec3 vNormal; varying vec3 vView; void main(){float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),3.8);gl_FragColor=vec4(tint,rim*.35);}',
+    transparent: true, depthWrite: false, blending: T.AdditiveBlending,
+  }));
+  world.add(atmosphere);
+
+  const markers = [];
+  const hitTargets = [];
+  const markerGeometry = new T.SphereGeometry(.009, 12, 8);
+  const markerMaterial = new T.MeshBasicMaterial({ color: 0xffcda6 });
+  const ringGeometry = new T.RingGeometry(.018, .020, 40);
+  const normalZ = new T.Vector3(0, 0, 1);
+  for (const place of [...PLACES, { ...HOST, id: 'host', country: 'Cambridge · Finals 2027', short: 'Cambridge · Finals 2027' }]) {
+    const anchor = position(place.lon, place.lat, 1.014);
+    const dot = new T.Mesh(markerGeometry, markerMaterial); dot.position.copy(anchor); world.add(dot);
+    const ring = new T.Mesh(ringGeometry, new T.MeshBasicMaterial({ color: 0xf96b48, transparent: true, opacity: .8, side: T.DoubleSide, depthWrite: false }));
+    ring.position.copy(position(place.lon, place.lat, 1.016)); ring.quaternion.setFromUnitVectors(normalZ, anchor.clone().normalize()); world.add(ring);
+    const button = document.createElement(place.id === 'host' ? 'span' : 'button');
+    button.className = `world-pin${place.id === 'host' ? ' world-pin-host' : ''}`;
+    button.textContent = place.short;
+    button.dataset.markerId = place.id;
+    button.hidden = true;
+    if (place.id !== 'host') {
+      button.type = 'button'; button.setAttribute('aria-label', `Explore ${place.country} policy example`);
+      button.setAttribute('aria-pressed', String(place.id === state.selected));
+      button.addEventListener('click', () => onSelect(place.id));
+      const hit = new T.Mesh(new T.SphereGeometry(.045, 8, 6), new T.MeshBasicMaterial({ colorWrite: false, depthWrite: false }));
+      hit.position.copy(anchor); hit.userData.countryId = place.id; world.add(hit); hitTargets.push(hit);
+    }
+    pins.append(button);
+    markers.push({ place, anchor, dot, ring, button });
   }
 
-  function screenPoint(coordinate, rotation, lift = 0) {
-    const point = rotation(coordinate);
-    const longitude = point[0] * TO_RADIANS;
-    const latitude = point[1] * TO_RADIANS;
-    const z = Math.cos(latitude) * Math.cos(longitude);
-    return { x: state.cx + Math.cos(latitude) * Math.sin(longitude) * state.radius * (1 + lift),
-      y: state.cy - Math.sin(latitude) * state.radius * (1 + lift), z };
+  // These arcs connect policy perspectives, not participant or chapter locations.
+  const routes = [];
+  const makeCurve = (from, to, lift) => {
+    const a = position(from.lon, from.lat), b = position(to.lon, to.lat);
+    const angle = a.angleTo(b);
+    const points = Array.from({ length: 73 }, (_, i) => {
+      const t = i / 72;
+      const v = angle < .001 ? a.clone() : a.clone().multiplyScalar(Math.sin((1 - t) * angle)).add(b.clone().multiplyScalar(Math.sin(t * angle))).divideScalar(Math.sin(angle));
+      return v.normalize().multiplyScalar(1.016 + Math.sin(Math.PI * t) * lift);
+    });
+    return new T.CatmullRomCurve3(points);
+  };
+  for (const place of PLACES) {
+    const curve = makeCurve(HOST, place, .12 + Math.abs(place.lon - HOST.lon) / 1000);
+    const material = new T.MeshBasicMaterial({ color: 0xf76b49, transparent: true, opacity: .17, depthWrite: false });
+    const line = new T.Mesh(new T.TubeGeometry(curve, 100, .0014, 4, false), material); world.add(line);
+    const bead = new T.Mesh(new T.SphereGeometry(.006, 8, 6), new T.MeshBasicMaterial({ color: 0xffb68b }));
+    world.add(bead);
+    routes.push({ id: place.id, curve, line, bead, material, phase: Number(place.id) / 6 });
   }
 
-  function paint(time) {
-    if (!ctx || !state.width || !state.land) return;
-    const { width: w, height: h, radius: r, cx, cy } = state;
-    const rotation = geoRotation([state.yaw, state.pitch, state.roll]);
-    projection.translate([cx, cy]).scale(r).rotate([state.yaw, state.pitch, state.roll]);
-    ctx.clearRect(0, 0, w, h);
+  // Sparse raised land points gives the surface physical depth as it turns.
+  const points = [];
+  const maskCanvas = document.createElement('canvas'); maskCanvas.width = 360; maskCanvas.height = 180;
+  const maskContext = maskCanvas.getContext('2d', { willReadFrequently: true });
+  if (maskContext) {
+    maskContext.drawImage(landMask.image, 0, 0, 360, 180);
+    const pixels = maskContext.getImageData(0, 0, 360, 180).data;
+    for (let lat = -75; lat < 81; lat += 2.5) {
+      const step = 2.5 / Math.max(.25, Math.cos(lat * Math.PI / 180));
+      for (let lon = -180; lon < 180; lon += step) {
+        const x = clamp(Math.floor(lon + 180), 0, 359), y = clamp(Math.floor(90 - lat), 0, 179);
+        if (pixels[(y * 360 + x) * 4] < 160) continue;
+        const v = position(lon, lat, 1.004); points.push(v.x, v.y, v.z);
+      }
+    }
+    const geometry = new T.BufferGeometry(); geometry.setAttribute('position', new T.Float32BufferAttribute(points, 3));
+    world.add(new T.Points(geometry, new T.PointsMaterial({ color: 0xfff5d3, size: .0035, transparent: true, opacity: .32, depthWrite: false })));
+  }
 
-    // A quiet cartographic frame makes the sphere feel suspended in space.
-    ctx.save();
-    ctx.strokeStyle = 'rgba(233,232,222,0.09)';
-    ctx.lineWidth = 0.7;
-    ctx.beginPath();
-    ctx.moveTo(cx - r * 1.22, cy); ctx.lineTo(cx + r * 1.22, cy);
-    ctx.moveTo(cx, cy - r * 1.2); ctx.lineTo(cx, cy + r * 1.2);
-    ctx.stroke();
-    ctx.translate(cx, cy); ctx.rotate(-0.32);
-    ctx.beginPath(); ctx.ellipse(0, 0, r * 1.22, r * 0.36, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(233,232,222,0.23)'; ctx.stroke();
-    ctx.restore();
-
-    const atmosphere = ctx.createRadialGradient(cx, cy, r * 0.97, cx, cy, r * 1.085);
-    atmosphere.addColorStop(0, 'rgba(191,216,190,0.22)');
-    atmosphere.addColorStop(1, 'rgba(191,216,190,0)');
-    ctx.fillStyle = atmosphere; ctx.beginPath(); ctx.arc(cx, cy, r * 1.085, 0, Math.PI * 2); ctx.fill();
-    const ocean = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.4, r * 0.1, cx, cy, r);
-    ocean.addColorStop(0, '#264b43'); ocean.addColorStop(0.63, '#143930'); ocean.addColorStop(1, '#082321');
-    ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = ocean; ctx.fill();
-
-    ctx.beginPath(); path(GRATICULE);
-    ctx.strokeStyle = 'rgba(206,225,202,0.12)'; ctx.lineWidth = 0.55; ctx.stroke();
-    const landColor = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
-    landColor.addColorStop(0, '#83947e'); landColor.addColorStop(0.6, '#59705f'); landColor.addColorStop(1, '#354f45');
-    ctx.beginPath(); path(state.land); ctx.fillStyle = landColor; ctx.fill();
-    ctx.strokeStyle = 'rgba(233,232,222,0.63)'; ctx.lineWidth = 0.65; ctx.stroke();
-
-    const shade = ctx.createRadialGradient(cx - r * 0.38, cy - r * 0.35, r * 0.12, cx + r * 0.12, cy + r * 0.06, r * 1.18);
-    shade.addColorStop(0, 'rgba(7,22,20,0)'); shade.addColorStop(0.65, 'rgba(7,22,20,0.04)'); shade.addColorStop(1, 'rgba(3,14,13,0.67)');
-    ctx.fillStyle = shade; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(233,232,222,0.46)'; ctx.lineWidth = 0.8; ctx.stroke();
-
+  let raf = 0, lastPaint = 0, width = 0, height = 0, tween = null, disposed = false;
+  let pointer = null, dragging = false, hovered = false, focused = false;
+  let resumeAt = 0, frameCount = 0;
+  const idleBase = new T.Quaternion();
+  const raycaster = new T.Raycaster(), mouse = new T.Vector2();
+  const projected = new T.Vector3(), worldPoint = new T.Vector3(), normal = new T.Vector3();
+  const dragRotation = new T.Quaternion();
+  const rotationAxis = new T.Vector3(0, 1, 0), pitchAxis = new T.Vector3(1, 0, 0);
+  const targetFor = id => {
+    const p = PLACES.find(place => place.id === id);
+    // Apply longitude first, then latitude: this preserves geographic north.
+    const yaw = new T.Quaternion().setFromAxisAngle(rotationAxis, -p.lon * Math.PI / 180 - Math.PI / 2);
+    const tilt = new T.Quaternion().setFromAxisAngle(pitchAxis, p.lat * Math.PI / 180 - .18);
+    return tilt.multiply(yaw);
+  };
+  world.quaternion.copy(targetFor(state.selected));
+  idleBase.copy(world.quaternion);
+  const rememberPose = (delay = 600) => { idleBase.copy(world.quaternion); resumeAt = performance.now() + delay; };
+  const isActive = () => !disposed && state.ready && state.visible && !document.hidden && !state.failed;
+  function render(time) {
+    world.updateMatrixWorld(true);
+    const stageBounds = container.getBoundingClientRect();
+    for (const m of markers) {
+      worldPoint.copy(m.anchor).applyQuaternion(world.quaternion);
+      normal.copy(camera.position).sub(worldPoint).normalize();
+      const visible = worldPoint.clone().normalize().dot(normal) > .04;
+      projected.copy(worldPoint).project(camera);
+      const x = (projected.x * .5 + .5) * width, y = (-projected.y * .5 + .5) * height;
+      const viewportX = stageBounds.left + x;
+      const onStage = visible && x > 12 && x < width - 12 && viewportX > 16 && viewportX < innerWidth - 16 && y > 25 && y < height - 25;
+      m.button.hidden = !onStage;
+      if (onStage) {
+        m.button.style.left = `${x}px`; m.button.style.top = `${y}px`;
+        m.button.classList.toggle('is-left', viewportX > innerWidth - 160);
+      }
+      const active = m.place.id === state.selected;
+      m.ring.visible = active || m.place.id === 'host';
+      m.ring.scale.setScalar(active && !state.reduced && !state.paused ? 1 + .2 * Math.sin(time * .0025) : 1);
+      m.ring.material.opacity = active ? .85 : .35;
+      m.dot.scale.setScalar(active ? 1.5 : .85);
+      if (m.place.id !== 'host') m.button.setAttribute('aria-pressed', String(active));
+    }
     for (const route of routes) {
-      const active = route.target === state.selected || state.selected === '2';
-      ctx.beginPath();
-      let started = false;
-      for (const item of route.points) {
-        const point = screenPoint(item.coordinate, rotation, item.lift);
-        if (point.z < 0.01) { started = false; continue; }
-        if (started) ctx.lineTo(point.x, point.y); else ctx.moveTo(point.x, point.y);
-        started = true;
-      }
-      ctx.setLineDash(active ? [] : [2, 5]);
-      ctx.lineWidth = active ? 1.2 : 0.7;
-      ctx.strokeStyle = active ? 'rgba(240,100,72,0.72)' : 'rgba(232,232,220,0.24)';
-      ctx.stroke(); ctx.setLineDash([]);
-      if (!state.reduced) {
-        const progress = ((time * 0.000055 + route.phase) % 1);
-        const item = route.points[Math.min(48, Math.floor(progress * 48))];
-        const particle = screenPoint(item.coordinate, rotation, item.lift);
-        if (particle.z > 0.03) {
-          ctx.beginPath(); ctx.arc(particle.x, particle.y, active ? 2.1 : 1.3, 0, Math.PI * 2);
-          ctx.fillStyle = active ? '#f7b091' : '#dae1cd'; ctx.fill();
-        }
-      }
+      const active = route.id === state.selected;
+      route.material.opacity = active ? .88 : .16;
+      route.bead.visible = active;
+      const t = state.reduced || state.paused ? .48 : (time * .00009 + route.phase) % 1;
+      route.bead.position.copy(route.curve.getPoint(t));
+      route.bead.scale.setScalar(active ? 1.5 : 1);
     }
-
-    state.markers.length = 0;
-    for (const place of PLACES) {
-      const point = screenPoint(place.coordinates, rotation);
-      if (point.z <= 0.015) continue;
-      const active = place.id === state.selected || place.id === state.hovered;
-      state.markers.push({ ...point, place });
-      if (active) {
-        ctx.beginPath(); ctx.arc(point.x, point.y, 13, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(240,100,72,0.15)'; ctx.fill();
-        ctx.strokeStyle = 'rgba(247,176,145,0.6)'; ctx.lineWidth = 0.7; ctx.stroke();
-      }
-      ctx.beginPath(); ctx.arc(point.x, point.y, active ? 4.2 : 3.1, 0, Math.PI * 2);
-      ctx.fillStyle = active ? '#ff9b79' : '#edeee0'; ctx.fill();
-      ctx.strokeStyle = '#0c2b26'; ctx.lineWidth = 1.5; ctx.stroke();
-      if (active) {
-        ctx.font = '500 9px "IBM Plex Mono", monospace';
-        ctx.fillStyle = '#f2eee3'; ctx.textBaseline = 'middle';
-        const alignRight = point.x > cx + r * 0.6;
-        ctx.textAlign = alignRight ? 'right' : 'left';
-        ctx.fillText(place.code, point.x + (alignRight ? -18 : 18), point.y);
-      }
-    }
-    ctx.fillStyle = 'rgba(233,232,222,0.38)'; ctx.font = '500 8px "IBM Plex Mono", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('N', cx, cy - r * 1.15); ctx.fillText('S', cx, cy + r * 1.15);
-    const latitude = Math.round(-state.pitch);
-    const longitude = Math.round(-wrap(state.yaw));
-    coordinates.textContent = `${Math.abs(latitude)}° ${latitude >= 0 ? 'N' : 'S'} · ${Math.abs(longitude)}° ${longitude >= 0 ? 'E' : 'W'}`;
-    if (state.hovered) positionTooltip();
+    renderer.render(scene, camera);
     canvas.dataset.globeReady = 'true';
+    canvas.dataset.frames = String(++frameCount);
   }
-
   function animate(time) {
-    state.raf = 0;
-    if (!state.visible || document.hidden || !state.land) return;
-    const elapsed = state.last ? Math.min(time - state.last, 64) : 16;
-    state.last = time;
-    if (state.tween) {
-      const t = clamp((time - state.tween.start) / state.tween.duration, 0, 1);
-      const eased = 1 - (1 - t) ** 3;
-      state.yaw = state.tween.fromYaw + (state.tween.yaw - state.tween.fromYaw) * eased;
-      state.pitch = state.tween.fromPitch + (state.tween.pitch - state.tween.fromPitch) * eased;
-      state.roll = state.tween.fromRoll * (1 - eased);
-      if (t === 1) state.tween = null;
-    } else if (!state.paused && !state.reduced && !state.dragging && !state.focused && !state.hovered) {
-      state.yaw = wrap(state.yaw + elapsed * 0.0018 + state.velocity * elapsed / 16);
-      state.velocity *= 0.92;
+    raf = 0;
+    if (!isActive()) return;
+    if (tween) {
+      const t = clamp((time - tween.start) / 1200, 0, 1);
+      world.quaternion.slerpQuaternions(tween.from, tween.to, ease(t));
+      if (t === 1) { tween = null; rememberPose(2500); }
+    } else if (!state.paused && !state.reduced && !dragging && !hovered && !focused && time > resumeAt) {
+      // Keep the selected country in view while giving the scene a gentle drift.
+      world.quaternion.copy(idleBase);
+      dragRotation.setFromAxisAngle(rotationAxis, Math.sin((time - resumeAt) * .0003) * .14);
+      world.quaternion.premultiply(dragRotation);
     }
-    if (state.dirty || time - state.lastPaint >= 32 || state.dragging || state.tween || state.reduced || state.paused) {
-      paint(time); state.lastPaint = time; state.dirty = false;
-    }
-    if (state.tween || state.dragging || (!state.paused && !state.reduced && !state.focused && !state.hovered)) state.raf = requestAnimationFrame(animate);
+    if (time - lastPaint > 32 || tween || dragging || state.paused || state.reduced) { render(time); lastPaint = time; }
+    if (tween || dragging || (!state.paused && !state.reduced)) raf = requestAnimationFrame(animate);
   }
-
-  function requestDraw() {
-    state.dirty = true;
-    if (state.raf || !state.visible || document.hidden || !state.land) return;
-    state.raf = requestAnimationFrame(animate);
+  function draw() { if (isActive() && !raf) { raf = requestAnimationFrame(animate); } }
+  function suspend() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+  function select(id, immediate = false) {
+    if (!PLACES.some(p => p.id === id)) return;
+    const target = targetFor(id);
+    tween = state.reduced || immediate ? null : { from: world.quaternion.clone(), to: target, start: performance.now() };
+    if (!tween) { world.quaternion.copy(target); rememberPose(2500); }
+    draw();
   }
-
   function resize() {
-    const rect = stage.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    const ratio = Math.min(devicePixelRatio || 1, 2);
-    state.width = rect.width; state.height = rect.height;
-    state.radius = Math.min(rect.width, rect.height) * 0.39;
-    state.cx = rect.width / 2; state.cy = rect.height / 2;
-    canvas.width = Math.round(rect.width * ratio); canvas.height = Math.round(rect.height * ratio);
-    if (ctx) ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    requestDraw();
+    const rect = container.getBoundingClientRect(); width = rect.width; height = rect.height;
+    if (!width || !height) return;
+    camera.aspect = width / height;
+    camera.position.z = width < 600 ? 4.0 : 3.9;
+    camera.updateProjectionMatrix(); renderer.setSize(width, height, false); draw();
   }
-
-  function markerAt(event) {
+  function hit(event) {
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left; const y = event.clientY - rect.top;
-    return state.markers.find(marker => Math.hypot(marker.x - x, marker.y - y) < 17);
+    mouse.set((event.clientX - rect.left) / rect.width * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+    raycaster.setFromCamera(mouse, camera);
+    const earthHit = raycaster.intersectObject(earth)[0];
+    const markerHit = raycaster.intersectObjects(hitTargets)[0];
+    return markerHit && (!earthHit || markerHit.distance < earthHit.distance + .025) ? markerHit.object.userData.countryId : null;
   }
-
-  function positionTooltip() {
-    const marker = state.markers.find(item => item.place.id === state.hovered);
-    if (!marker) { tooltip.hidden = true; return; }
-    tooltip.textContent = `${marker.place.country} / ${marker.place.topic}`;
-    tooltip.hidden = false;
-    tooltip.style.left = `${clamp(marker.x, 95, state.width - 95)}px`;
-    tooltip.style.top = `${Math.max(12, marker.y - 28)}px`;
-  }
-
   canvas.addEventListener('pointerdown', event => {
     if (event.button !== 0) return;
-    state.pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY };
-    state.dragging = true; state.tween = null; state.velocity = 0; state.hovered = null; tooltip.hidden = true;
-    canvas.setPointerCapture(event.pointerId);
-    container.classList.add('is-dragging');
-    requestDraw();
+    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY, type: event.pointerType };
+    tween = null;
   });
   canvas.addEventListener('pointermove', event => {
-    if (state.dragging && state.pointer?.id === event.pointerId) {
-      const delta = event.clientX - state.pointer.x;
-      state.yaw = wrap(state.yaw + delta * 0.3);
-      state.pitch = clamp(state.pitch - (event.clientY - state.pointer.y) * 0.25, -75, 75);
-      state.velocity = delta * 0.035;
-      state.pointer.x = event.clientX; state.pointer.y = event.clientY;
-      requestDraw();
-    } else {
-      const marker = markerAt(event);
-      const id = marker?.place.id || null;
-      if (state.hovered !== id) {
-        state.hovered = id;
-        canvas.classList.toggle('is-over-marker', !!id);
-        tooltip.hidden = !id;
-        positionTooltip(); requestDraw();
+    if (pointer?.id === event.pointerId) {
+      const totalX = event.clientX - pointer.startX, totalY = event.clientY - pointer.startY;
+      if (!dragging && pointer.type === 'touch' && Math.abs(totalY) > Math.abs(totalX) && Math.abs(totalY) > 7) { pointer = null; return; }
+      if (!dragging && Math.hypot(totalX, totalY) > 5) {
+        dragging = true; canvas.setPointerCapture(event.pointerId); container.classList.add('is-dragging');
       }
+      if (dragging) {
+        dragRotation.setFromAxisAngle(rotationAxis, (event.clientX - pointer.x) * .006); world.quaternion.premultiply(dragRotation);
+        dragRotation.setFromAxisAngle(pitchAxis, (event.clientY - pointer.y) * .006); world.quaternion.premultiply(dragRotation);
+        pointer.x = event.clientX; pointer.y = event.clientY; resumeAt = performance.now() + 1000; draw();
+      }
+    } else {
+      hovered = !!hit(event); container.classList.toggle('is-hovering', hovered);
     }
   });
   const release = event => {
-    if (!state.pointer || state.pointer.id !== event.pointerId) return;
-    const distance = Math.hypot(event.clientX - state.pointer.startX, event.clientY - state.pointer.startY);
-    state.dragging = false; state.pointer = null; container.classList.remove('is-dragging');
+    if (pointer?.id !== event.pointerId) return;
+    if (!dragging && event.type === 'pointerup') { const id = hit(event); if (id) onSelect(id); }
+    pointer = null; dragging = false; container.classList.remove('is-dragging');
+    rememberPose();
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
-    if (distance < 7 && event.type === 'pointerup') { const marker = markerAt(event); if (marker) select(marker.place.id); }
-    requestDraw();
+    draw();
   };
-  canvas.addEventListener('pointerup', release);
-  canvas.addEventListener('pointercancel', release);
-  canvas.addEventListener('pointerleave', () => { state.hovered = null; tooltip.hidden = true; requestDraw(); });
+  canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
+  canvas.addEventListener('pointerleave', () => { hovered = false; container.classList.remove('is-hovering'); draw(); });
+  canvas.addEventListener('focus', () => { focused = true; draw(); });
+  canvas.addEventListener('blur', () => { focused = false; draw(); });
+  pins.addEventListener('focusin', () => { focused = true; draw(); });
+  pins.addEventListener('focusout', event => { if (!pins.contains(event.relatedTarget)) { focused = false; draw(); } });
   canvas.addEventListener('keydown', event => {
-    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home'].includes(event.key)) return;
-    event.preventDefault(); state.tween = null; state.velocity = 0;
-    if (event.key === 'ArrowLeft') state.yaw -= 12;
-    if (event.key === 'ArrowRight') state.yaw += 12;
-    if (event.key === 'ArrowUp') state.pitch = clamp(state.pitch + 10, -75, 75);
-    if (event.key === 'ArrowDown') state.pitch = clamp(state.pitch - 10, -75, 75);
-    if (event.key === 'Home') { state.yaw = -12; state.pitch = -20; state.roll = -9; }
-    requestDraw();
+    if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(event.key)) return;
+    event.preventDefault(); tween = null;
+    if (event.key === 'Home') select(state.selected);
+    else {
+      const horizontal = ['ArrowLeft','ArrowRight'].includes(event.key);
+      dragRotation.setFromAxisAngle(horizontal ? rotationAxis : pitchAxis, (['ArrowLeft','ArrowUp'].includes(event.key) ? -1 : 1) * .16);
+      world.quaternion.premultiply(dragRotation); draw();
+      rememberPose();
+    }
   });
-  container.addEventListener('focusin', event => { state.focused = !pause.contains(event.target) && !reset.contains(event.target); requestDraw(); });
-  container.addEventListener('focusout', event => { if (!container.contains(event.relatedTarget)) { state.focused = false; state.last = 0; requestDraw(); } });
-  pause.addEventListener('click', () => { state.paused = !state.paused; state.velocity = 0; updateControls(); requestDraw(); });
-  reset.addEventListener('click', () => { state.yaw = -12; state.pitch = -20; state.roll = -9; state.tween = null; state.velocity = 0; requestDraw(); });
-  document.addEventListener('ipc:country-focus', event => select(event.detail?.id));
-  document.addEventListener('visibilitychange', () => { state.last = 0; if (document.hidden && state.raf) { cancelAnimationFrame(state.raf); state.raf = 0; } else requestDraw(); });
-  motion.addEventListener('change', event => { state.reduced = event.matches; if (event.matches) { state.paused = true; state.tween = null; } updateControls(); requestDraw(); });
-  new ResizeObserver(resize).observe(stage);
-  new IntersectionObserver(entries => {
-    state.visible = entries.some(entry => entry.isIntersecting);
-    state.last = 0;
-    if (!state.visible && state.raf) { cancelAnimationFrame(state.raf); state.raf = 0; }
-    requestDraw();
-  }, { rootMargin: '60px' }).observe(container);
-
-  updateControls();
-  // Set the initial lens without moving the deliberately composed default view.
-  label.textContent = '02 / Environment'; country.textContent = PLACES[1].country; description.textContent = PLACES[1].description;
-  if (!ctx) {
-    canvas.hidden = true; fallback.hidden = false; container.dataset.globeState = 'fallback';
-    pause.disabled = true; reset.disabled = true;
-    return;
-  }
-  fetch(new URL('./globe-assets/land-110m.json', import.meta.url))
-    .then(response => { if (!response.ok) throw new Error('Map data unavailable'); return response.json(); })
-    .then(topology => { state.land = decodeLand(topology); updateControls(); resize(); requestDraw(); })
-    .catch(() => {
-      canvas.hidden = true; fallback.hidden = false; container.dataset.globeState = 'fallback';
-      pause.disabled = true; reset.disabled = true;
-    });
+  canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); onFailure(); });
+  const observer = new ResizeObserver(resize); observer.observe(container); resize();
+  const stop = () => {
+    if (disposed) return;
+    suspend(); disposed = true; observer.disconnect();
+    scene.traverse(object => { object.geometry?.dispose(); if (object.material) for (const material of Array.isArray(object.material) ? object.material : [object.material]) material.dispose(); });
+    colorMap.dispose(); landMask.dispose(); renderer.dispose();
+  };
+  window.addEventListener('pagehide', event => { if (!event.persisted) stop(); });
+  return { select, draw, suspend, stop,
+    pauseChange() { rememberPose(); draw(); },
+    motionChange() { if (state.reduced) { tween = null; world.quaternion.copy(targetFor(state.selected)); } rememberPose(); draw(); } };
 }
-
-if (mount) createAtlas(mount);

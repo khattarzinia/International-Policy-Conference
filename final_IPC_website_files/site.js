@@ -23,16 +23,35 @@
     document.querySelectorAll('.ipc-home .reveal').forEach(node => observer.observe(node));
   }
   const selectCountry = id => {
-    document.querySelectorAll('.example-item[data-example]').forEach(node => {
-      const active = node.dataset.example === String(id);
+    const selected = String(id);
+    if (!/^[1-6]$/.test(selected)) return;
+    if (!document.querySelector(`.world-story[data-example="${selected}"]`)) return;
+    document.querySelectorAll('.world-story[data-example]').forEach(node => {
+      const active = node.dataset.example === selected;
+      node.hidden = !active;
       node.classList.toggle('is-active', active);
-      node.querySelector('.example-select')?.setAttribute('aria-pressed', String(active));
     });
+    document.querySelectorAll('.world-country[data-country-focus]').forEach(node => {
+      const active = node.dataset.countryFocus === selected;
+      node.classList.toggle('is-active', active);
+      node.setAttribute('aria-pressed', String(active));
+    });
+    document.querySelectorAll('.category-card[data-world-example]').forEach(node => node.classList.toggle('is-world-active', node.dataset.worldExample === selected));
+    const section = document.getElementById('examples');
+    if (section) section.dataset.activeCountry = selected;
   };
   document.addEventListener('ipc:country-select', event => selectCountry(event.detail?.id));
-  document.querySelectorAll('[data-country-focus]').forEach(control => control.addEventListener('click', () => {
-    const id = control.dataset.countryFocus;
+  document.querySelectorAll('[data-country-focus],[data-world-jump]').forEach(control => control.addEventListener('click', () => {
+    const id = control.dataset.countryFocus || control.dataset.worldJump;
     selectCountry(id);
     document.dispatchEvent(new CustomEvent('ipc:country-focus', { detail: { id } }));
   }));
+  const countries = [...document.querySelectorAll('.world-country')];
+  countries.forEach((control, index) => control.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? countries.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + countries.length) % countries.length;
+    countries[next].focus(); countries[next].click();
+  }));
+  selectCountry('2');
 })();
