@@ -38,6 +38,8 @@
     <link rel="stylesheet" href="./final_IPC_website_files/extended.css">
     <link rel="stylesheet" href="./final_IPC_website_files/design.css">
     <link rel="stylesheet" href="./final_IPC_website_files/globe.css">
+    <link rel="stylesheet" href="./final_IPC_website_files/immersive.css">
+    <link rel="stylesheet" href="./final_IPC_website_files/page-routes.css">
     <style>.hero-copy.reveal { opacity: 1; transform: none; }</style>
 
     <!-- Structured Data (Schema.org) -->
@@ -105,41 +107,42 @@
     </header>
 
     <main id="main-content">
-      <section class="hero" aria-labelledby="hero-title">
+      <section class="hero immersive-hero" aria-labelledby="hero-title" data-chapter="00">
+        <span class="hero-monogram" aria-hidden="true">IPC</span>
         <div class="hero-copy">
           <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> International Policy Conference</p>
-          <h1 id="hero-title">Think<br>beyond<br><em>borders.</em></h1>
+          <h1 id="hero-title" data-route-anchor="hero-title">Think<br>beyond<br><em>borders.</em></h1>
           <p class="hero-detail">A global policy competition for high school and collegiate students. Bring the questions from your community to a worldwide conversation.</p>
           <div class="hero-actions"><a class="button button-coral" href="#stages">Explore the competition <span aria-hidden="true">↗</span></a><a class="hero-text-link" href="#requirements">Read the requirements <span aria-hidden="true">↓</span></a></div>
         </div>
-        <div class="hero-visual" aria-label="Cambridge, Massachusetts, host city of the Spring 2027 finals">
-          <div class="hero-photo"><img src="./assets/lowell-house-hires.jpg" alt="Historic campus architecture in Cambridge, Massachusetts" fetchpriority="high"><div class="hero-photo-shade"></div><span class="hero-photo-label">Cambridge, Massachusetts</span><span class="hero-photo-mark" aria-hidden="true">↗</span></div>
+        <div class="hero-visual" data-route-anchor="hero-image" aria-label="Cambridge, Massachusetts, host city of the Spring 2027 finals">
+          <div class="hero-photo"><img src="./assets/lowell-house-hires.jpg" alt="Historic campus architecture in Cambridge, Massachusetts" fetchpriority="high"><div class="hero-photo-shade"></div><span class="hero-photo-label">Cambridge, Massachusetts</span><span class="hero-photo-mark" aria-hidden="true">↗</span><svg class="hero-photo-routes" viewBox="0 0 1000 800" fill="none" aria-hidden="true"><path class="hero-photo-route" d="M-40 610C220 610 140 90 510 120S720 690 1050 190"/><path class="hero-photo-route hero-photo-route-secondary" d="M-20 700C180 650 330 350 570 365S800 500 1030 65"/><circle cx="510" cy="120" r="7"/><circle cx="570" cy="365" r="7"/><circle cx="785" cy="449" r="5"/></svg></div>
           <div class="hero-edition"><span>Spring<br>Finals</span><strong>2027</strong><span class="edition-line" aria-hidden="true"></span><span>Local questions.<br>Global perspectives.</span></div>
         </div>
         <div class="hero-index"><p><span>01 / EXPLORE</span>Eight policy fields</p><p><span>02 / DEVELOP</span>Research into recommendations</p><p><span>03 / PRESENT</span>Make your case</p><a href="#about" aria-label="Scroll to learn about IPC">Scroll to discover <span aria-hidden="true">↓</span></a></div>
       </section>
 
-      <section id="about" class="about section">
+      <section id="about" class="about section" data-chapter="01">
         <div class="section-heading reveal">
           <p class="eyebrow">01 / Our mission</p>
-          <h2>Good questions.<br><span>Lasting perspectives.</span></h2>
+          <h2 data-route-anchor="mission-title">Good questions.<br><span>Lasting perspectives.</span></h2>
         </div>
         <div class="about-copy reveal">
           <p class="mission-lead">The International Policy Conference was established in 2026 by a group of Harvard students and graduates to bring global perspectives to future leaders early in their education.</p><p>Open to high school and collegiate students worldwide, IPC asks students to look beyond “what is the problem” and consider why it persists, how to solve it, and who can help change it.</p><p>Through economics, international law, public health, environmental science, and more, students develop research, synthesis, public speaking, negotiation, and persuasive communication skills—with the opportunity to get their recommendations to legislators whose votes influence real-world outcomes in their communities.</p><a class="text-link" href="#categories">Find your policy field <span aria-hidden="true">↗</span></a>
         </div>
       </section>
 
-      <section id="categories" class="categories section">
-        <div class="section-heading reveal"><p class="eyebrow">02 / Choose your question</p><h2>Eight fields.<br><span>One shared future.</span></h2></div>
+      <section id="categories" class="categories section" data-chapter="02">
+        <div class="section-heading reveal"><p class="eyebrow">02 / Choose your question</p><h2 data-route-anchor="categories-title">Eight fields.<br><span>One shared future.</span></h2></div>
         <div class="category-grid">
-          <article class="category-card reveal" id="policy-field-01" data-world-example="1"><span class="category-index" aria-hidden="true">01</span><img loading="lazy" src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p><a class="category-world-link" href="#examples" data-world-jump="1">Explore on the globe <span aria-hidden="true">↗</span></a></article>
-          <article class="category-card reveal" id="policy-field-02" data-world-example="2"><span class="category-index" aria-hidden="true">02</span><img loading="lazy" src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p><a class="category-world-link" href="#examples" data-world-jump="2">Explore on the globe <span aria-hidden="true">↗</span></a></article>
-          <article class="category-card reveal" id="policy-field-03" data-world-example="4"><span class="category-index" aria-hidden="true">03</span><img loading="lazy" src="./final_IPC_website_files/category-economy.jpg" alt="Government building"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p><a class="category-world-link" href="#examples" data-world-jump="4">Explore on the globe <span aria-hidden="true">↗</span></a></article>
-          <article class="category-card reveal" id="policy-field-04" data-world-example="6"><span class="category-index" aria-hidden="true">04</span><img loading="lazy" src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p><a class="category-world-link" href="#examples" data-world-jump="6">Explore on the globe <span aria-hidden="true">↗</span></a></article>
-          <article class="category-card reveal" id="policy-field-05" data-world-example="3"><span class="category-index" aria-hidden="true">05</span><img loading="lazy" src="./final_IPC_website_files/harvard.webp" alt="University campus"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p><a class="category-world-link" href="#examples" data-world-jump="3">Explore on the globe <span aria-hidden="true">↗</span></a></article>
-          <article class="category-card reveal" id="policy-field-06"><span class="category-index" aria-hidden="true">06</span><img loading="lazy" src="./final_IPC_website_files/flags.jpg" alt="International flags"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></article>
-          <article class="category-card reveal" id="policy-field-07" data-world-example="5"><span class="category-index" aria-hidden="true">07</span><img loading="lazy" src="./final_IPC_website_files/category-housing.jpg" alt="City skyline"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p><a class="category-world-link" href="#examples" data-world-jump="5">Explore on the globe <span aria-hidden="true">↗</span></a></article>
-          <article class="category-card reveal" id="policy-field-08"><span class="category-index" aria-hidden="true">08</span><img loading="lazy" src="./final_IPC_website_files/category-rights.jpg" alt="Civil rights demonstration"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></article>
+          <article class="category-card reveal" id="policy-field-01" data-route-anchor="category-01" data-world-example="1"><span class="category-index" aria-hidden="true">01</span><img loading="lazy" src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p><a class="category-world-link" href="#examples" data-world-jump="1">Explore on the globe <span aria-hidden="true">↗</span></a></article>
+          <article class="category-card reveal" id="policy-field-02" data-route-anchor="category-02" data-world-example="2"><span class="category-index" aria-hidden="true">02</span><img loading="lazy" src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p><a class="category-world-link" href="#examples" data-world-jump="2">Explore on the globe <span aria-hidden="true">↗</span></a></article>
+          <article class="category-card reveal" id="policy-field-03" data-route-anchor="category-03" data-world-example="4"><span class="category-index" aria-hidden="true">03</span><img loading="lazy" src="./final_IPC_website_files/category-economy.jpg" alt="Government building"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p><a class="category-world-link" href="#examples" data-world-jump="4">Explore on the globe <span aria-hidden="true">↗</span></a></article>
+          <article class="category-card reveal" id="policy-field-04" data-route-anchor="category-04" data-world-example="6"><span class="category-index" aria-hidden="true">04</span><img loading="lazy" src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p><a class="category-world-link" href="#examples" data-world-jump="6">Explore on the globe <span aria-hidden="true">↗</span></a></article>
+          <article class="category-card reveal" id="policy-field-05" data-route-anchor="category-05" data-world-example="3"><span class="category-index" aria-hidden="true">05</span><img loading="lazy" src="./final_IPC_website_files/harvard.webp" alt="University campus"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p><a class="category-world-link" href="#examples" data-world-jump="3">Explore on the globe <span aria-hidden="true">↗</span></a></article>
+          <article class="category-card reveal" id="policy-field-06" data-route-anchor="category-06"><span class="category-index" aria-hidden="true">06</span><img loading="lazy" src="./final_IPC_website_files/flags.jpg" alt="International flags"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></article>
+          <article class="category-card reveal" id="policy-field-07" data-route-anchor="category-07" data-world-example="5"><span class="category-index" aria-hidden="true">07</span><img loading="lazy" src="./final_IPC_website_files/category-housing.jpg" alt="City skyline"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p><a class="category-world-link" href="#examples" data-world-jump="5">Explore on the globe <span aria-hidden="true">↗</span></a></article>
+          <article class="category-card reveal" id="policy-field-08" data-route-anchor="category-08"><span class="category-index" aria-hidden="true">08</span><img loading="lazy" src="./final_IPC_website_files/category-rights.jpg" alt="Civil rights demonstration"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></article>
         </div>
       </section>
 
@@ -206,20 +209,20 @@
         <noscript><p class="globe-fallback-note">Explore policy through healthcare in the United States, carbon regulation in the European Union, education in India, finance in Kenya, housing in Brazil, and technology in Australia.</p></noscript>
       </section>
 
-      <section id="stages" class="stages section">
-        <div class="section-heading centered reveal"><p class="eyebrow">04 / The competition</p><h2>Research. Present.<br><span>Make your case.</span></h2></div>
+      <section id="stages" class="stages section" data-chapter="04">
+        <div class="section-heading centered reveal"><p class="eyebrow">04 / The competition</p><h2 data-route-anchor="stages-title">Research. Present.<br><span>Make your case.</span></h2></div>
         <div class="stage-list">
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-1.webp" alt="Students collaborating at a table"></div><div class="stage-text"><span>Stage I</span><h3>Policy Research</h3><p>Build the foundation: define a policy problem, investigate its context, and develop a research-backed recommendation.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-2.webp" alt="A policy report on a desk"></div><div class="stage-text"><span>Stage II</span><h3>Policy Brief</h3><p>Translate your research into a concise, rigorous policy brief that makes a compelling case for action.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-3.jpeg" alt="Student presenting"></div><div class="stage-text"><span>Stage III</span><h3>Video Pitch</h3><p>Bring your proposal to life in a clear and creative pitch for a broad public audience.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-4.jpg" alt="Conference speaker addressing a room"></div><div class="stage-text"><span>Stage IV</span><h3>Finals</h3><p>Selected finalists present their ideas and take part in an executive question-and-answer session in Boston.</p></div></article>
+          <article class="stage reveal" data-route-anchor="stage-1"><div class="stage-image"><img src="./final_IPC_website_files/stage-1.webp" alt="Students collaborating at a table"></div><div class="stage-text"><span>Stage I</span><h3>Policy Research</h3><p>Build the foundation: define a policy problem, investigate its context, and develop a research-backed recommendation.</p></div></article>
+          <article class="stage reveal" data-route-anchor="stage-2"><div class="stage-image"><img src="./final_IPC_website_files/stage-2.webp" alt="A policy report on a desk"></div><div class="stage-text"><span>Stage II</span><h3>Policy Brief</h3><p>Translate your research into a concise, rigorous policy brief that makes a compelling case for action.</p></div></article>
+          <article class="stage reveal" data-route-anchor="stage-3"><div class="stage-image"><img src="./final_IPC_website_files/stage-3.jpeg" alt="Student presenting"></div><div class="stage-text"><span>Stage III</span><h3>Video Pitch</h3><p>Bring your proposal to life in a clear and creative pitch for a broad public audience.</p></div></article>
+          <article class="stage reveal" data-route-anchor="stage-4"><div class="stage-image"><img src="./final_IPC_website_files/stage-4.jpg" alt="Conference speaker addressing a room"></div><div class="stage-text"><span>Stage IV</span><h3>Finals</h3><p>Selected finalists present their ideas and take part in an executive question-and-answer session in Boston.</p></div></article>
         </div>
       </section>
 
-      <section id="requirements" class="requirements-detail section">
+      <section id="requirements" class="requirements-detail section" data-chapter="05">
         <div class="section-heading centered reveal">
           <p class="eyebrow">05 / Competition standards</p>
-          <h2>Know the<br><span>standard.</span></h2><p class="section-deck">Brief structure, presentation formats, and judging criteria.</p>
+          <h2 data-route-anchor="standards-title">Know the<br><span>standard.</span></h2><p class="section-deck">Brief structure, presentation formats, and judging criteria.</p>
         </div>
 
         <div class="stage-requirements reveal">
@@ -496,15 +499,15 @@
         </div>
       </section>
 
-      <section id="awards" class="awards section">
+      <section id="awards" class="awards section" data-chapter="06">
         <div class="awards-inner reveal"><p class="eyebrow">06 / Recognition</p><h2>Awards <em>&amp; honors.</em></h2><p class="awards-copy">Teams advance through six recognition levels. Final placements are determined by composite scores across all judged stages.</p><div class="award-grid"><article class="award gold"><span class="award-place">1st place</span><h3>Gold Medal</h3><p>Champion team of the session</p><b>Top team</b></article><article class="award silver"><span class="award-place">2nd place</span><h3>Silver Medal</h3><p>Runner-up team of the session</p><b>Top 2</b></article><article class="award bronze"><span class="award-place">3rd place</span><h3>Bronze Medal</h3><p>Third-place team of the session</p><b>Top 3</b></article><article class="award finalist"><span class="award-place">Finals</span><h3>Finalist</h3><p>Invited to the live finals round</p><b>Top 8 teams</b></article><article class="award mention"><span class="award-place">Recognition</span><h3>Honorable Mention</h3><p>Strong performance across stages</p><b>Top 15%</b></article><article class="award distinction"><span class="award-place">Recognition</span><h3>Distinction</h3><p>Commended for quality of work</p><b>Top 25%</b></article></div><p class="award-note">All recognized teams receive a certificate of achievement. Final placements are determined by the committee’s composite score after integrated video and paper adjudication.</p></div>
       </section>
 
-      <section class="documents section" id="documents">
+      <section class="documents section" id="documents" data-chapter="07">
         <div class="documents-hero reveal">
           <div class="documents-hero-content">
             <p class="eyebrow">07 / Read the work</p>
-            <h2>Sample Policy Briefs</h2>
+            <h2 data-route-anchor="documents-title">Sample Policy Briefs</h2>
             <p class="documents-intro">Explore exemplary policy briefs developed in collaboration with the Harvard Kennedy School's Institute of Politics. These submissions demonstrate the research depth, analytical rigor, and persuasive communication expected at the finals level.</p>
           </div>
         </div>
@@ -648,10 +651,10 @@
         </div>
       </section>
 
-      <section class="timeline section" id="dates">
+      <section class="timeline section" id="dates" data-chapter="08">
         <div class="section-heading reveal centered">
           <p class="eyebrow">2027 cycle</p>
-          <h2>Key dates at a glance</h2>
+          <h2 data-route-anchor="timeline-title">Key dates at a glance</h2>
         </div>
         <div class="timeline-horizontal reveal" aria-label="2027 competition timeline">
           <div class="timeline-line"></div>
@@ -690,10 +693,10 @@
         </div>
       </section>
 
-      <section class="faq section" id="faq"><div class="section-heading reveal"><p class="eyebrow">09 / Questions, answered</p><h2>Frequently asked questions</h2></div><div class="faq-list"><details class="reveal"><summary>Who can participate?<span>+</span></summary><p>IPC is open to high school and collegiate students worldwide. Participants may compete as individuals or in teams. Full eligibility requirements will be published with registration for Spring 2027.</p></details><details class="reveal"><summary>What do participants submit?<span>+</span></summary><p>Participants (individuals or teams) progress through research, a written policy brief, and a short video pitch. Finalists also prepare for a live presentation and executive question-and-answer session.</p></details><details class="reveal"><summary>How are entries judged?<span>+</span></summary><p>Judges assess the quality of research, clarity of the policy recommendation, feasibility, evidence, equity, and the team’s ability to communicate their work persuasively.</p></details><details class="reveal"><summary>When will registration details be released?<span>+</span></summary><p>Join the IPC mailing list through the contact section to receive the Spring 2027 timeline, eligibility requirements, and participant resources when they are announced.</p></details></div></section>
+      <section class="faq section" id="faq" data-chapter="09"><div class="section-heading reveal"><p class="eyebrow">09 / Questions, answered</p><h2 data-route-anchor="faq-title">Frequently asked questions</h2></div><div class="faq-list"><details class="reveal"><summary>Who can participate?<span>+</span></summary><p>IPC is open to high school and collegiate students worldwide. Participants may compete as individuals or in teams. Full eligibility requirements will be published with registration for Spring 2027.</p></details><details class="reveal"><summary>What do participants submit?<span>+</span></summary><p>Participants (individuals or teams) progress through research, a written policy brief, and a short video pitch. Finalists also prepare for a live presentation and executive question-and-answer session.</p></details><details class="reveal"><summary>How are entries judged?<span>+</span></summary><p>Judges assess the quality of research, clarity of the policy recommendation, feasibility, evidence, equity, and the team’s ability to communicate their work persuasively.</p></details><details class="reveal"><summary>When will registration details be released?<span>+</span></summary><p>Join the IPC mailing list through the contact section to receive the Spring 2027 timeline, eligibility requirements, and participant resources when they are announced.</p></details></div></section>
 
-      <section id="leadership" class="team section">
-        <div class="section-heading reveal"><p class="eyebrow">10 / The people behind IPC</p><h2>Meet the<br><span>organizers.</span></h2></div>
+      <section id="leadership" class="team section" data-chapter="10">
+        <div class="section-heading reveal"><p class="eyebrow">10 / The people behind IPC</p><h2 data-route-anchor="people-title">Meet the<br><span>organizers.</span></h2></div>
         <div class="leadership-profiles reveal">
           <article class="leader-profile"><img src="./final_IPC_website_files/zinia-portrait.jpeg" alt="Zinia Khattar" loading="lazy"><div><p class="eyebrow">Founder, Co-Chair</p><h3>Zinia Khattar</h3><p class="leader-school">Harvard College ‘29</p></div></article>
           <article class="leader-profile"><img src="./final_IPC_website_files/hugh-portrait.jpeg" alt="Hugh Hankenson" loading="lazy"><div><p class="eyebrow">Co-Chair</p><h3>Hugh Hankenson</h3><p class="leader-school">Harvard College ‘26, University of Oxford ‘28, Harvard Law School ‘31</p></div></article>
@@ -704,11 +707,12 @@
 
     <footer id="contact">
       <div><p class="eyebrow">International Policy Conference</p><h3>Questions?<br>Let’s talk.</h3></div>
-      <a class="footer-email" href="mailto:internationalpolicyconference@gmail.com">internationalpolicyconference@gmail.com <span>↗</span></a>
+      <a data-route-anchor="contact-email" class="footer-email" href="mailto:internationalpolicyconference@gmail.com">internationalpolicyconference@gmail.com <span>↗</span></a>
       <p class="footer-bottom">© 2026 International Policy Conference <a href="#top">Back to top ↑</a></p>
     </footer>
     <script src="./final_IPC_website_files/site.js" defer></script>
     <script type="module" src="./final_IPC_website_files/globe.js"></script>
+    <script type="module" src="./final_IPC_website_files/page-routes.js"></script>
   
 
 </body></html>

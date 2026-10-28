@@ -9,6 +9,8 @@ Supported uploads are PDF, DOCX, and UTF-8 TXT, up to 4 MB. PDFs are limited to 
 
 The homepage uses locally hosted Archivo and IBM Plex fonts with an editorial cream, forest and coral design. A locally hosted Three.js scene fills the policy-example section with lit Natural Earth geography, raised routes and selectable country markers. Country selection turns the globe, switches the policy story and highlights its corresponding category; six category links enter the same scene. Geography stays north-up during selection, while dragging and arrow keys allow free exploration. Three.js loads when the scene approaches the viewport. Animation pauses offscreen and respects reduced-motion preferences; policy controls still work when WebGL or textures are unavailable. Font, Three.js and geography licenses are included beside the assets.
 
+The wider homepage carries the route motif through a full-bleed campus opening, staggered category images, a sticky stage journey, paper-style documents and large timeline graphics. `page-routes.js` starts moving line fragments at the live projected Three.js marker and continues them into the headline, policy link, country control, category image and next stage image. The overlay spans section boundaries without intercepting input. Route anchors update after resizing, document expansion and reveal animations; page motion shares the globe's pause control and reduced-motion preference. Scroll effects use section progress, while offscreen globe rendering and idle overlay updates stop.
+
 ### Run locally
 
 Use Node 24:

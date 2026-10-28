@@ -210,6 +210,7 @@ async function createScene(T, container, state, onSelect, onFailure) {
   function render(time) {
     world.updateMatrixWorld(true);
     const stageBounds = container.getBoundingClientRect();
+    let departure = null;
     for (const m of markers) {
       worldPoint.copy(m.anchor).applyQuaternion(world.quaternion);
       normal.copy(camera.position).sub(worldPoint).normalize();
@@ -224,6 +225,9 @@ async function createScene(T, container, state, onSelect, onFailure) {
         m.button.classList.toggle('is-left', viewportX > innerWidth - 160);
       }
       const active = m.place.id === state.selected;
+      if (active) departure = { x: viewportX, y: stageBounds.top + y, visible,
+        selected: state.selected, paused: state.paused, reduced: state.reduced,
+        centerX: stageBounds.left + width / 2, centerY: stageBounds.top + height / 2 };
       m.ring.visible = active || m.place.id === 'host';
       m.ring.scale.setScalar(active && !state.reduced && !state.paused ? 1 + .2 * Math.sin(time * .0025) : 1);
       m.ring.material.opacity = active ? .85 : .35;
@@ -241,6 +245,8 @@ async function createScene(T, container, state, onSelect, onFailure) {
     renderer.render(scene, camera);
     canvas.dataset.globeReady = 'true';
     canvas.dataset.frames = String(++frameCount);
+    // Page routes continue from the exact projected 3D surface point.
+    if (departure) document.dispatchEvent(new CustomEvent('ipc:globe-frame', { detail: departure }));
   }
   function animate(time) {
     raf = 0;
