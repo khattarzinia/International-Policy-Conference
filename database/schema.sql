@@ -91,5 +91,27 @@ on conflict (id) do update set public = false, file_size_limit = excluded.file_s
 
 -- The private bucket intentionally has no anon/authenticated storage policies.
 -- Server requests use a secret key mapped to service_role; it bypasses Storage RLS.
+
+-- Permit a completed result to be rescored only when the configured model version changes.
+create or replace function public.ipc_claim_scan_versioned(p_id uuid, p_model_version text)
+returns jsonb language plpgsql security invoker set search_path = pg_catalog as $$
+declare updated jsonb;
+begin
+  if p_model_version is null or char_length(p_model_version) not between 1 and 160 then
+    raise exception 'Invalid model version';
+  end if;
+  update public.ipc_submissions
+  set data = jsonb_set(data, '{scan}', coalesce(data->'scan', '{}'::jsonb) || jsonb_build_object('status', 'processing', 'startedAt', to_char(clock_timestamp() at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')))
+  where id = p_id
+    and (coalesce(data#>>'{scan,status}', '') <> 'completed' or data#>>'{scan,modelVersion}' is distinct from p_model_version)
+    and (coalesce(data#>>'{scan,status}', '') <> 'processing'
+      or case when (data#>>'{scan,startedAt}') ~ '^\d{4}-\d{2}-\d{2}T' then (data#>>'{scan,startedAt}')::timestamptz < clock_timestamp() - interval '120 seconds' else false end)
+  returning data into updated;
+  return updated;
+end;
+$$;
+revoke all on function public.ipc_claim_scan_versioned(uuid, text) from public, anon, authenticated;
+grant execute on function public.ipc_claim_scan_versioned(uuid, text) to service_role;
+
 notify pgrst, 'reload schema';
 commit;

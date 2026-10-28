@@ -45,12 +45,13 @@
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? '' : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
   };
-  const hasScore = scan => scan?.status === 'completed' && typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent) && scan.scorePercent >= 0 && scan.scorePercent <= 100;
+  const hasScore = scan => scan?.status === 'completed' && !scan.outdated && typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent) && scan.scorePercent >= 0 && scan.scorePercent <= 100;
   const experimentalScore = scan => scan?.experimental === true || scan?.scoreType === 'model_confidence';
   const hasOverlap = comparison => comparison?.status === 'completed' && !comparison.stale && comparison.comparedCount > 0 && typeof comparison.matchedWordPercent === 'number' && Number.isFinite(comparison.matchedWordPercent) && comparison.matchedWordPercent >= 0 && comparison.matchedWordPercent <= 100;
   const coverage = scan => typeof scan?.coveragePercent === 'number' && Number.isFinite(scan.coveragePercent) ? Math.max(0, Math.min(100, scan.coveragePercent)) : null;
   const aiHeading = scan => experimentalScore(scan) ? 'AI likelihood (experimental)' : scan?.provider === 'GPTZero' ? 'Fully AI-written probability' : scan?.provider === 'Sapling' ? 'AI probability' : 'AI likelihood';
   function scanLabel(scan) {
+    if (scan?.outdated) return 'Model updated · Run screening again';
     if (hasScore(scan)) return `${scan.provider || 'AI scan'} · ${experimentalScore(scan) ? 'Experimental' : 'Complete'}`;
     if (scan?.status === 'failed' || scan?.status === 'error') return 'Scan needs retry';
     if (scan?.status === 'manual_review') return 'Manual screening needed';

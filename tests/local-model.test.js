@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { detectText, detectorSettings } from '../lib/detection.js';
+import { scanSubmission } from '../lib/detection.js';
+import { createStore } from '../lib/storage.js';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { randomUUID, createHash } from 'node:crypto';
 
 const TEXT = 'A public policy brief discusses evidence, implementation choices, stakeholder interests, and the feasibility of a proposed intervention. '.repeat(5);
 const ENV = { IPC_AI_PROVIDER: 'local', IPC_LOCAL_STORAGE: 'true', IPC_MODEL_TOKEN: 'a-test-model-token-at-least-24-characters',
@@ -48,4 +54,29 @@ test('own detector rejects missing model provenance, untrusted coverage and inva
     { segments: [{ start: 0, end: TEXT.length + 1, score: 0.5 }] },
   ]) await assert.rejects(detectText(TEXT, detectorSettings(ENV), async () => json(result(patch))));
   await assert.rejects(detectText(TEXT, detectorSettings(ENV), async () => new Response('', { status: 401 })), /HTTP 401/);
+});
+
+test('model upgrades rescore an old completed result once and reuse only the configured version', async t => {
+  const dir = await mkdtemp(join(tmpdir(), 'ipc-version-test-'));
+  const store = await createStore({ IPC_LOCAL_STORAGE: 'true', IPC_DATA_DIR: dir });
+  t.after(async () => { await store.close(); await rm(dir, { recursive: true, force: true }); });
+  const row = { id: randomUUID(), receiptHash: createHash('sha256').update(randomUUID()).digest('hex'), email: 'version@example.com',
+    filename: 'brief.txt', contentType: 'text/plain', createdAt: new Date().toISOString(), extractedText: TEXT,
+    status: 'received', scan: { status: 'completed', provider: 'IPC detector', modelVersion: 'v1', scorePercent: 80 } };
+  await store.create(row, Buffer.from(TEXT));
+  const env = { ...ENV, IPC_MODEL_VERSION: 'v2' };
+  let calls = 0;
+  let release;
+  let started;
+  const gate = new Promise(resolve => { release = resolve; });
+  const called = new Promise(resolve => { started = resolve; });
+  const fetcher = async () => { calls++; started(); await gate; return json(result({ modelVersion: 'v2' })); };
+  const first = scanSubmission(store, row.id, env, fetcher);
+  await called;
+  assert.equal((await scanSubmission(store, row.id, env, fetcher)).scan.status, 'processing');
+  release();
+  assert.equal((await first).scan.modelVersion, 'v2');
+  assert.equal((await scanSubmission(store, row.id, env, fetcher)).scan.scorePercent, 63);
+  assert.equal(calls, 1);
+  await assert.rejects(detectText(TEXT, detectorSettings(env), async () => json(result({ modelVersion: 'v1' }))), /version differs/);
 });

@@ -1,6 +1,7 @@
 """Local service boundary tests, including the real trained checkpoint when present."""
 import json
 import http.client
+import os
 from pathlib import Path
 import tempfile
 import threading
@@ -16,9 +17,10 @@ from server import ThreadingHTTPServer, create_handler
 class LocalDetectorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if not (ROOT / ".local/ml-model/metadata.json").exists():
+        model_dir = Path(os.environ.get("IPC_MODEL_TEST_DIR", str(ROOT / ".local/ml-model")))
+        if not (model_dir / "metadata.json").exists():
             raise unittest.SkipTest("Train the real checkpoint before running inference tests")
-        cls.detector = Detector(ROOT / ".local/ml-model")
+        cls.detector = Detector(model_dir)
         cls.token = "synthetic-test-token-with-no-account-access"
         cls.server = ThreadingHTTPServer(("127.0.0.1", 0), create_handler(cls.detector, cls.token))
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)

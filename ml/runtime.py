@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 import threading
 
@@ -76,7 +77,13 @@ class Detector:
             weighted.append((probability, novel))
             segments.append({"start": offsets[start][0], "end": offsets[finish - 1][1], "score": round(probability, 6)})
         denominator = sum(weight for _, weight in weighted)
-        score = sum(value * weight for value, weight in weighted) / max(denominator, 1)
+        raw_score = sum(value * weight for value, weight in weighted) / max(denominator, 1)
+        score = raw_score
+        calibration = self.metadata.get("validationCalibration") if self.metadata.get("validationCalibrationEnabled", False) else None
+        if calibration:
+            value = min(1 - 1e-6, max(1e-6, raw_score))
+            logit = calibration["scale"] * math.log(value / (1 - value)) + calibration["intercept"]
+            score = 1 / (1 + math.exp(-max(-50, min(50, logit))))
         char_ranges = sorted((item["start"], item["end"]) for item in segments)
         analyzed = 0
         previous = -1
@@ -88,9 +95,11 @@ class Detector:
             item["start"] = utf16_length(document[:item["start"]])
             item["end"] = utf16_length(document[:item["end"]])
         complete = len(covered) == len(ids)
-        return {"score": round(float(score), 6), "modelVersion": self.metadata["modelVersion"],
+        return {"score": round(float(score), 6), "rawScore": round(float(raw_score), 6), "modelVersion": self.metadata["modelVersion"],
                 "experimental": True, "scoreType": "model_confidence", "label": "ai" if score >= .5 else "human",
                 "segments": segments, "analyzedCharacters": analyzed, "totalCharacters": utf16_length(document),
                 "analyzedTokens": len(covered), "totalTokens": len(ids), "coverageComplete": complete,
+                "scoreAdjustment": "public_validation_logit_correction" if calibration else "none",
+                "segmentScoreType": "raw_window_model_confidence",
                 "message": "Experimental model confidence, not a calibrated authorship probability or percentage of AI-written words. Trained on public research text, not validated on IPC policy briefs. " +
                            ("All token windows were analyzed." if complete else "Long-document analysis sampled windows across the document; coverage counts are provided.")}

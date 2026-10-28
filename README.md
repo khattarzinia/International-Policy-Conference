@@ -7,6 +7,8 @@ The International Policy Conference, or IPC, was established in 2026 by a group 
 
 Supported uploads are PDF, DOCX, and UTF-8 TXT, up to 4 MB. PDFs are limited to 80 pages for processing. Scanned/image-only PDFs are saved for manual review when text cannot be extracted. Encrypted or damaged documents are rejected with a useful error. The current portal handles written briefs; video uploads, web-wide plagiarism comparison, judging rubrics, participant accounts, and email notifications are outside this implementation.
 
+The homepage uses locally hosted Archivo and IBM Plex fonts with an editorial cream, forest and coral design. Its globe renders real Natural Earth geography, supports dragging and keyboard navigation, and connects six country examples to the policy list. Animation pauses offscreen and respects reduced-motion preferences; a useful fallback remains when canvas or map data is unavailable. Font and geography licenses are included beside the assets.
+
 ### Run locally
 
 Use Node 24:
@@ -51,6 +53,7 @@ Configure the local service in `.env.local`, then run it separately from the web
 IPC_AI_PROVIDER=local
 IPC_AI_ENDPOINT=http://127.0.0.1:4319
 IPC_MODEL_DIR=.local/ml-model
+IPC_MODEL_VERSION=the-exact-version-in-your-checkpoint-metadata
 IPC_MODEL_TOKEN=your-unique-random-service-token
 IPC_ENABLE_AI_SCANS=true
 IPC_MAX_SCANS_PER_DAY=100
@@ -63,6 +66,10 @@ npm run model:serve
 The token must contain at least 24 characters; `npm run setup` generates it for new installations. Keep the model service running alongside `npm run dev`. A production deployment must use an authenticated HTTPS model endpoint. HTTP loopback is allowed only for local development, and the model service itself binds to loopback. Python dependencies, datasets and model weights are kept out of the Vercel website bundle and all public files.
 
 The own-model score is **experimental model confidence**, not a calibrated authorship probability or percentage of AI-written words. The response records checkpoint version and analyzed text coverage. Long documents are sampled across windows if they exceed the model's bounded workload; partial coverage is shown explicitly. A missing model or service outage produces no score. No entry is automatically rejected by either check.
+
+The October 28 raw v2 checkpoint was fine-tuned on 22,022 balanced public examples, up from 3,600. On the unchanged 800-document held-out-generator evaluation, accuracy improved from 94% to 96% and human false positives fell from 12/400 to 7/400. These are public-corpus measurements, not measured accuracy on IPC policy briefs. See `ml/README.md` for frozen-split checks and the full comparison.
+
+Set `IPC_MODEL_VERSION` to the checkpoint's exact metadata version in both local and hosted environments. The backend checks that the model service returns that version. After a version change, older scores are marked for reanalysis; an organizer can explicitly run screening again. Historical scores are not silently rewritten, and simultaneous retry requests share one persisted scan claim. Leaving this setting empty retains completed-result caching without version-aware reanalysis.
 
 Optional external integrations remain available for [GPTZero](https://docs.gptzero.me/api-reference/) and [Sapling](https://sapling.ai/docs/api/detector/). Check the selected provider's pricing and privacy terms before enabling it. Only the extracted brief text is sent to the provider; contact details are excluded from the API payload. Names or personal details written inside the brief remain part of that text.
 

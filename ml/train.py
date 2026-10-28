@@ -24,7 +24,10 @@ def main():
     parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--seconds", type=int, default=540)
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "mps"])
+    parser.add_argument("--model-version-prefix", default="ipc-bert-tiny-public")
     args = parser.parse_args()
+    if (args.output / "model.safetensors").exists():
+        parser.error("Refusing to overwrite an existing checkpoint; choose a fresh --output directory")
     import numpy as np
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -83,6 +86,7 @@ def main():
     history = []
     best = None
     best_score = -math.inf
+    best_epoch = None
     steps = 0
     timed_out = False
     print(json.dumps({"training": True, "device": str(device), "parameters": sum(p.numel() for p in model.parameters()), "examples": len(records["train"])}), flush=True)
@@ -119,6 +123,7 @@ def main():
         selection = validation["auroc"] if validation["auroc"] is not None else -validation["brierScore"]
         if selection > best_score:
             best_score = selection
+            best_epoch = epoch + 1
             best = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
         if timed_out:
             break
@@ -137,13 +142,14 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     model.to("cpu").save_pretrained(args.output, safe_serialization=True)
     tokenizer.save_pretrained(args.output)
-    version = "ipc-bert-tiny-public-" + time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+    version = args.model_version_prefix + "-" + time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     metadata = {"status": "trained", "modelVersion": version, "baseModel": args.base_model, "baseModelRevision": args.base_revision,
                 "baseModelLicense": "Apache-2.0", "experimental": True, "scoreType": "model_confidence",
+                "scoreVariant": "raw", "validationCalibrationEnabled": False,
                 "domainValidation": "Public research prose; not validated on IPC policy briefs",
                 "calibrated": False, "encoderUpdated": True, "encoderQueryWeightL2Delta": encoder_delta,
                 "trainedParameters": sum(p.numel() for p in model.parameters()), "trainingExamples": len(records["train"]),
-                "trainingSteps": steps, "completedEpochs": len(history), "timeLimited": timed_out,
+                "trainingSteps": steps, "completedEpochs": len(history), "selectedEpoch": best_epoch, "timeLimited": timed_out,
                 "learningRate": args.learning_rate, "batchSize": args.batch_size, "maxTokensPerWindow": 256,
                 "trainingSeconds": round(time.monotonic() - start_time, 2), "deviceUsed": str(device),
                 "checkpointSelection": "Best validation AUROC; test sets untouched until final evaluation", "metrics": results,

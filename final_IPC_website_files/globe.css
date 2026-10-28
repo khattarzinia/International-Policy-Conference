@@ -1,0 +1,42 @@
+/* A geographic atlas, drawn locally with Natural Earth geometry. */
+.globe-container:has(#ipc-globe){min-width:0;max-width:100%;overflow:visible}
+#ipc-globe.ipc-atlas{--atlas-paper:#e9e8de;--atlas-muted:#a3b7a9;--atlas-accent:#f06448;position:relative;width:100%;min-width:0;color:var(--atlas-paper);font-family:var(--font-body,"IBM Plex Sans",sans-serif);isolation:isolate}
+.atlas-topline,.atlas-controls,.atlas-footer{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.atlas-topline{padding:0 6px 17px;border-bottom:1px solid #e9e8de28;font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:9px;font-weight:500;letter-spacing:.11em}
+.atlas-stamp{display:flex;align-items:center;gap:9px}
+.atlas-stamp:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--atlas-accent);box-shadow:0 0 0 3px #f0644820}
+.atlas-coordinates{color:var(--atlas-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.atlas-stage{position:relative;width:100%;height:clamp(370px,40vw,570px);min-width:0}
+.atlas-canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:pan-y;outline-offset:-15px;border-radius:2px}
+.atlas-canvas[hidden]{display:none!important}
+.atlas-canvas:focus-visible{outline:1px solid var(--atlas-accent)}
+.atlas-canvas.is-over-marker{cursor:pointer}
+.is-dragging .atlas-canvas{cursor:grabbing;touch-action:none}
+.atlas-tooltip{position:absolute;transform:translate(-50%,-100%);pointer-events:none;max-width:220px;padding:8px 11px;background:#f1efe5;color:#102e2b;font-size:10px;font-weight:500;box-shadow:0 5px 20px #0002;white-space:nowrap;z-index:2}
+.atlas-tooltip[hidden],.atlas-fallback[hidden]{display:none!important}
+.atlas-controls{padding:0 6px 21px;font-size:10px;color:var(--atlas-muted);border-bottom:1px solid #e9e8de28}
+.atlas-gesture{margin-right:auto;font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:8px;letter-spacing:.1em}
+.atlas-control{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 0;border:0;border-bottom:1px solid transparent;background:transparent;font:inherit;font-size:10px;color:var(--atlas-paper);cursor:pointer;white-space:nowrap}
+.atlas-control:hover{color:#ffb397;border-bottom-color:#f06448}
+.atlas-control:focus-visible,.atlas-place:focus-visible{outline:1px solid var(--atlas-accent);outline-offset:5px}
+.atlas-control:disabled{opacity:.45;cursor:default}
+.atlas-motion-icon{position:relative;width:7px;height:8px;border-left:2px solid currentColor;border-right:2px solid currentColor}
+.atlas-motion-icon[data-paused=true]{width:0;height:0;border:4px solid transparent;border-left:6px solid currentColor;border-right:0}
+.atlas-selectors{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding-top:21px;gap:5px}
+.atlas-place{display:flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:7px 3px;border:1px solid #e9e8de2b;background:transparent;color:var(--atlas-paper);font-family:var(--font-mono,"IBM Plex Mono",monospace);cursor:pointer;transition:background .18s,color .18s,border-color .18s}
+.atlas-place-index{font-size:8px;color:var(--atlas-muted)}
+.atlas-place-code{font-size:11px;font-weight:500;letter-spacing:.06em}
+.atlas-place:hover{border-color:#e9e8de77;background:#e9e8de0b}
+.atlas-place[aria-pressed=true]{background:var(--atlas-accent);color:#102e2b;border-color:var(--atlas-accent)}
+.atlas-place[aria-pressed=true] .atlas-place-index{color:#102e2b99}
+.atlas-detail{display:grid;grid-template-columns:1fr auto;gap:7px 16px;min-height:101px;padding:23px 5px 18px}
+.atlas-detail-label{grid-column:1/-1;color:#f5a58a;font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.atlas-detail-country{font-family:var(--font-display,"Archivo",sans-serif);font-size:25px;font-weight:600;line-height:1.08;letter-spacing:-.045em}
+.atlas-detail-description{grid-column:1/-1;max-width:390px;margin:4px 0 0!important;color:#b6c8ba;font-size:11px!important;line-height:1.6!important}
+.atlas-footer{padding:15px 5px 0;border-top:1px solid #e9e8de28;color:#a3b7a977;font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:7px;letter-spacing:.06em}
+.atlas-fallback{display:grid;place-items:center;min-height:330px;padding:50px;text-align:center;border:1px solid #e9e8de33;border-radius:50%;color:var(--atlas-muted);font-size:14px;line-height:1.6}
+.atlas-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:1500px){.atlas-stage{height:600px}}
+@media(max-width:780px){.atlas-stage{height:430px}.atlas-topline{font-size:8px}.atlas-controls{padding-bottom:15px}.atlas-detail{padding-top:19px}.atlas-selectors{padding-top:16px}}
+@media(max-width:480px){.atlas-stage{height:350px}.atlas-topline{gap:8px;font-size:7px;letter-spacing:.04em;padding-bottom:12px}.atlas-controls{gap:13px;padding-inline:2px}.atlas-gesture{font-size:7px;letter-spacing:.02em}.atlas-control{font-size:9px}.atlas-place{gap:4px;min-height:41px}.atlas-place-index{font-size:6px}.atlas-place-code{font-size:9px}.atlas-detail-country{font-size:24px}.atlas-detail-description{font-size:11px!important}.atlas-footer{font-size:6px;gap:8px;letter-spacing:0}.atlas-fallback{min-height:300px;padding:35px}}
+@media(prefers-reduced-motion:reduce){.atlas-place{transition:none}}
