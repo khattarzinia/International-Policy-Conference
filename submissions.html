@@ -10,9 +10,9 @@
   <link rel="preload" href="./final_IPC_website_files/fonts/ibm-plex-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./final_IPC_website_files/styles.css">
   <link rel="stylesheet" href="./final_IPC_website_files/refinements.css">
-  <link rel="stylesheet" href="./final_IPC_website_files/submissions.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/submissions.css?v=20261114-percent">
   <link rel="stylesheet" href="./final_IPC_website_files/design.css">
-  <script src="./final_IPC_website_files/submissions-admin.js" defer></script>
+  <script type="module" src="./final_IPC_website_files/submissions-admin.js?v=20261114-percent"></script>
 </head>
 <body class="portal-body admin-body">
   <a class="skip-link" href="#admin-main">Skip to review workspace</a>
@@ -22,7 +22,7 @@
     <section id="admin-workspace" hidden>
       <div class="admin-heading"><div><p class="eyebrow">IPC / Review workspace</p><h1>Policy briefs.</h1></div><button class="portal-button button-secondary" type="button" id="refresh-button">Refresh <span aria-hidden="true">↻</span></button></div>
       <div class="review-summary" aria-label="Submission summary"><div><strong id="total-count">0</strong><span>Submissions loaded</span></div><div><strong id="pending-count">0</strong><span>Awaiting review</span></div><div><strong id="screened-count">0</strong><span>AI checks complete</span></div></div>
-      <div class="admin-integrity-note"><span aria-hidden="true">↳</span><p>Two separate checks: shared phrases across IPC submissions, and AI likelihood. Both need human judgment. Similarity can reflect shared sources; an AI score does not prove authorship.</p></div>
+      <div class="admin-integrity-note"><span aria-hidden="true">↳</span><p>Two separate checks: shared phrases across IPC submissions, and AI likelihood shown as a percentage of model confidence. Both need human judgment. Similarity can reflect shared sources; an AI score does not prove authorship.</p></div>
       <div id="admin-status" class="portal-notice" role="status" aria-live="polite" hidden></div>
       <div class="review-toolbar"><div class="field"><label for="review-search">Find a submission</label><input id="review-search" type="search" placeholder="Title, name, school, or email"></div><div class="field"><label for="review-filter">Review status</label><select id="review-filter"><option value="all">All submissions</option><option value="received">Received</option><option value="under_review">Under review</option><option value="shortlisted">Shortlisted</option><option value="not_selected">Not selected</option></select></div><p id="result-count" aria-live="polite"></p></div>
       <div class="review-grid"><section class="submission-list-wrap" aria-label="Submissions"><div class="review-table-scroll"><table class="review-table"><thead><tr><th scope="col">Policy brief</th><th scope="col">Shared text</th><th scope="col">AI likelihood</th><th scope="col">Review</th></tr></thead><tbody id="submission-list"></tbody></table></div><p class="empty-state" id="empty-state" hidden>No submissions to show yet.</p></section><aside class="review-detail" id="review-detail" aria-label="Selected submission"><div class="detail-placeholder"><span aria-hidden="true">↗</span><h2>Room for<br>good judgment.</h2><p>Select a brief to compare it with other entries, inspect AI likelihood, and record your review.</p></div></aside></div>

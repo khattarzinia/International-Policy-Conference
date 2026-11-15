@@ -64,6 +64,17 @@ class LocalDetectorTests(unittest.TestCase):
     def test_missing_or_wrong_bearer_token_rejected(self):
         self.assertEqual(self.request(data={"document": "A" * 500}, authorized=False)[0], 401)
 
+    def test_legitimate_variation_selectors_and_joiners_keep_valid_offsets(self):
+        # A variation selector can be legitimate CJK/emoji typography. It must
+        # not become a watermark verdict or break Node-compatible coverage.
+        document = ("Policy discussion: 禰\U000e0100, education, 👩‍🔬 and public health. "
+                    "Governments should consider access, costs and local evidence. ") * 8
+        status, result = self.request(data={"document": document})
+        self.assertEqual(status, 200)
+        self.assertEqual(result["totalCharacters"], utf16_length(document))
+        self.assertTrue(all(0 <= s["start"] < s["end"] <= result["totalCharacters"] for s in result["segments"]))
+        self.assertNotIn("watermarkDetected", result)
+
     def test_invalid_short_and_large_documents_rejected(self):
         self.assertEqual(self.request(data=b"{invalid")[0], 400)
         self.assertEqual(self.request(data={"document": ["invalid"]})[0], 400)

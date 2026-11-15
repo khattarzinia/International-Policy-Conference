@@ -139,3 +139,23 @@
 .page-motion-paused .hero-photo-route{animation-play-state:paused}
 .page-reduced-motion .hero-photo-route{animation:none}
 .page-reduced-motion :is(.hero-photo img,.hero-monogram,.categories::before,.category-card img,.awards::before,.timeline::before){translate:none}
+
+/* Fit the original IPC headings without abbreviating the conference copy. */
+.ipc-home .immersive-hero .hero-copy{max-width:940px;padding-bottom:90px}
+.ipc-home .immersive-hero h1{font-size:clamp(62px,8.7vw,138px);line-height:.94;max-width:none}
+.ipc-home .immersive-hero .hero-copy>.eyebrow{max-width:450px}
+.ipc-home .about .section-heading h2{font-size:clamp(42px,4.8vw,74px);line-height:1.02}
+.ipc-home .stages .section-heading h2{font-size:clamp(40px,4.1vw,64px);line-height:1.03}
+.ipc-home .world-heading h2{font-size:clamp(44px,4.1vw,64px);line-height:1.03}
+.ipc-home .leadership-label{margin-top:40px;margin-bottom:0}
+.ipc-home .chapters-section h2{font-size:clamp(43px,5.4vw,80px);line-height:1.02}
+.ipc-home .chapters-copy h3{font-size:clamp(24px,2.2vw,32px);line-height:1.15;margin:28px 0 16px}
+@media(max-width:700px){
+  .ipc-home .immersive-hero h1{font-size:clamp(40px,10.8vw,72px)}
+  .ipc-home .immersive-hero .hero-copy{padding-bottom:80px}
+  .ipc-home .immersive-hero .hero-copy>.eyebrow{max-width:75%}
+  .ipc-home .about .section-heading h2{font-size:clamp(38px,9.2vw,58px)}
+  .ipc-home .stages .section-heading h2{font-size:clamp(38px,9.2vw,58px)}
+  .ipc-home .world-heading h2{font-size:clamp(36px,8.9vw,62px)}
+  .ipc-home .chapters-section h2{font-size:43px}
+}

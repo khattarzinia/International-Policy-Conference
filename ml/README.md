@@ -4,6 +4,39 @@ This is an actual full-encoder fine-tune of [Google BERT-Tiny](https://huggingfa
 
 The model is experimental. Its output is an **uncalibrated model confidence**, not proof of authorship, the probability that a student cheated, or the percentage of AI-written words. It has not been validated on IPC policy briefs. Never use its score to automatically reject an entry.
 
+## October 31 cross-conference expansion and V4 optimization
+
+The historical corpus now contains **576 usable distinct MUN papers** from
+MUNOL, NMUN and SRMUN, plus **108 generated MUN papers**. Four new fine-tunes
+used 29,007 training examples, preserving every previous training record and
+all old evaluation files. Each added human false positives in validation, so
+**V2 remains active**.
+
+The fresh SRMUN audit found 0/182 human false positives and 24/24 AI detections
+on whole papers, but **4/182 human false positives on the same papers' first
+500 words**. A separate fresh public audit had 0/422 human false positives and
+100/104 AI detections. The length sensitivity rules out calling this flawless.
+These are historical proxies and single-generator MUN examples, not current
+IPC validation. See the [full V4 experiment and limitations](research/mun-v4.md),
+[NMUN sources](research/nmun-sources.md), [SRMUN sources](research/other-mun-sources.md)
+and [frozen selection protocol](research/v4-protocol-review.md). All 110
+Python/application checks pass. The final audits are now consumed; future
+tuning to their failures requires a new untouched assessment.
+
+## Initial October 31 MUN expansion (V3)
+
+The new research pipeline combines 225 historical MUNOL position papers, 60
+original Codex-generated papers, and an expanded public corpus. It freezes
+topic-grouped MUN holdouts, retains every v2 training example, and uses the same
+32-window policy for evaluation and serving. See the [MUN experiment and commands](research/mun-v3.md),
+[Claude watermark investigation](research/claude-watermark.md), and
+[actual online detector comparisons](research/external-comparison.md).
+The comparison runner never averages provider scores or uses their predictions as
+authorship labels. A trained candidate does not automatically replace the active
+checkpoint. The completed v3 candidate detects more AI examples, but regular-test
+human false positives rise from 2/400 to 5/400, so **v2 remains active**. All 95
+Python/application checks pass. The experiment report contains the full results.
+
 ## October 28 expanded-data checkpoint
 
 The v2 candidate uses **22,022 balanced examples** (11,011 human and 11,011 AI), versus 3,600 in v1: 6.12 times as much training data. Source groups increase from 2,222 to 4,825. Every original training example is retained, and the maximum examples per source-group/class increases from two to four. All new data comes from the same pinned public corpus; no IPC submissions or private briefs are used.

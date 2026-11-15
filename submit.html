@@ -10,9 +10,9 @@
   <link rel="preload" href="./final_IPC_website_files/fonts/ibm-plex-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./final_IPC_website_files/styles.css">
   <link rel="stylesheet" href="./final_IPC_website_files/refinements.css">
-  <link rel="stylesheet" href="./final_IPC_website_files/submissions.css">
+  <link rel="stylesheet" href="./final_IPC_website_files/submissions.css?v=20261114-percent">
   <link rel="stylesheet" href="./final_IPC_website_files/design.css">
-  <script src="./final_IPC_website_files/submissions.js" defer></script>
+  <script type="module" src="./final_IPC_website_files/submissions.js?v=20261114-percent"></script>
 </head>
 <body class="portal-body">
   <a class="skip-link" href="#submission-main">Skip to submission</a>
@@ -72,9 +72,9 @@
         </fieldset>
       </form>
       <section id="submission-success" class="receipt-card" aria-labelledby="receipt-heading" tabindex="-1" hidden>
-        <span class="receipt-check" aria-hidden="true">✓</span><p class="eyebrow">Submission received</p><h2 id="receipt-heading">You’re on record.</h2><p id="receipt-title" class="receipt-title"></p><div class="receipt-reference"><span>Your receipt code</span><strong id="receipt-code"></strong></div><p>Save this code and use the email address you submitted with to check your entry below.</p><div id="receipt-scan" class="portal-notice"></div><p id="receipt-time" class="field-hint"></p><button type="button" class="portal-button button-secondary" id="download-receipt">Save receipt <span aria-hidden="true">↓</span></button>
+        <span class="receipt-check" aria-hidden="true">✓</span><p class="eyebrow">Submission received</p><h2 id="receipt-heading">You’re on record.</h2><p id="receipt-title" class="receipt-title"></p><div class="receipt-reference"><span>Your receipt code</span><strong id="receipt-code"></strong></div><p>Save this code and use the email address you submitted with to check your entry below.</p><div id="receipt-ai-score" class="receipt-ai-score" hidden></div><div id="receipt-scan" class="portal-notice"></div><p id="receipt-time" class="field-hint"></p><button type="button" class="portal-button button-secondary" id="download-receipt">Save receipt <span aria-hidden="true">↓</span></button>
       </section>
-      <details class="lookup-section" id="lookup-section"><summary>Already submitted? Check your entry <span aria-hidden="true">+</span></summary><form id="receipt-form"><div class="field-grid"><div class="field"><label for="lookup-email">Submission email</label><input id="lookup-email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="lookup-code">Receipt code</label><input id="lookup-code" name="receiptCode" autocomplete="off" required></div></div><button class="portal-button button-secondary" id="lookup-button" type="submit">Find submission <span aria-hidden="true">→</span></button><div id="lookup-result" class="portal-notice" role="status" aria-live="polite" hidden></div></form></details>
+      <details class="lookup-section" id="lookup-section"><summary>Already submitted? Check your entry <span aria-hidden="true">+</span></summary><form id="receipt-form"><div class="field-grid"><div class="field"><label for="lookup-email">Submission email</label><input id="lookup-email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="lookup-code">Receipt code</label><input id="lookup-code" name="receiptCode" autocomplete="off" required></div></div><button class="portal-button button-secondary" id="lookup-button" type="submit">Find submission <span aria-hidden="true">→</span></button><div id="lookup-ai-score" class="receipt-ai-score" hidden></div><div id="lookup-result" class="portal-notice" role="status" aria-live="polite" hidden></div></form></details>
       <div class="portal-footnote"><span>International Policy Conference</span><a href="./submissions.html">Organizer access ↗</a></div>
     </div>
   </main>

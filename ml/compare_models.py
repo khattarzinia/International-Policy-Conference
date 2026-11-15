@@ -11,6 +11,8 @@ from common import ROOT
 def compare(baseline_dir, candidate_dir):
     baseline = json.loads((baseline_dir / "metadata.json").read_text())
     candidate = json.loads((candidate_dir / "metadata.json").read_text())
+    if baseline.get("evaluationMaxWindows", 8) != candidate.get("evaluationMaxWindows", 8):
+        raise ValueError("Stored metrics use different window budgets. Use evaluate_candidate.py to compare both checkpoints through the same serving path.")
     checks = {}
     for split in ["validation", "test", "heldout_generator"]:
         old_split = baseline["dataProvenance"]["splits"][split]

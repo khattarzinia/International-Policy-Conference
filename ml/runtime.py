@@ -8,12 +8,14 @@ import threading
 
 from common import ROOT  # Set local caches before importing model libraries.
 
+ANALYSIS_MAX_WINDOWS = 32
+
 
 def utf16_length(text):
     return len(text.encode("utf-16-le")) // 2
 
 
-def window_indices(token_count, size=254, overlap=64, max_windows=32):
+def window_indices(token_count, size=254, overlap=64, max_windows=ANALYSIS_MAX_WINDOWS):
     if max_windows < 1:
         raise ValueError("At least one analysis window is required")
     if token_count <= size:
@@ -45,7 +47,7 @@ class Detector:
         self.model.to(self.device).eval()
         self.lock = threading.Lock()
 
-    def predict(self, document, max_windows=32):
+    def predict(self, document, max_windows=ANALYSIS_MAX_WINDOWS):
         import torch
 
         if not isinstance(document, str) or len(document.strip()) < 300:

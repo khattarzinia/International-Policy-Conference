@@ -1,6 +1,7 @@
 /* The globe is the policy section's shared stage, not a separate widget. */
 .ipc-home .world-section{position:relative;isolation:isolate;min-height:950px;padding-top:82px;padding-bottom:30px;background:#102e2b;overflow:hidden;--world-accent:var(--orange)}
-.ipc-home .world-section::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 78% 44%,#38564a70,transparent 58%);pointer-events:none}
+.ipc-home .world-section::before{content:"";position:absolute;inset:0;z-index:-1;background-image:radial-gradient(#bed2aa20 .65px,transparent .65px);background-size:17px 17px;mask-image:linear-gradient(90deg,transparent 25%,#000);pointer-events:none}
+.ipc-home .world-section::after{content:"↗";position:absolute;right:3%;top:45px;font:300 clamp(100px,16vw,230px)/1 var(--font-display);color:#ef7e5935;rotate:12deg;pointer-events:none;z-index:0}
 .ipc-home .world-content{position:relative;z-index:2;max-width:515px;min-height:620px;pointer-events:none}
 .ipc-home .world-heading .eyebrow{display:flex;align-items:center;gap:12px;color:#b6c7b8;font-size:9px;margin:0 0 28px}
 .ipc-home .world-heading h2{font-size:clamp(72px,6.9vw,108px);line-height:.91;letter-spacing:-.065em;color:var(--paper);margin:0}
@@ -22,7 +23,7 @@
 .world-scene.is-dragging .world-canvas{cursor:grabbing}
 .world-scene.is-hovering .world-canvas{cursor:pointer}
 .world-pins{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.world-pin{position:absolute;left:0;top:0;display:flex;gap:10px;align-items:center;transform:translate(-5px,-50%);padding:10px 12px 10px 0;border:0;background:none;color:#eef0df;font:10px var(--font-mono);letter-spacing:.02em;white-space:nowrap;pointer-events:auto;cursor:pointer;opacity:.85;text-shadow:0 1px 2px #09251e,1px 0 2px #09251e,-1px 0 2px #09251e,0 0 6px #09251e;transition:opacity .2s}
+.world-pin{position:absolute;left:0;top:0;display:flex;gap:10px;align-items:center;transform:translate(-5px,-50%);padding:10px 12px 10px 0;border:0;background:none;color:#eef0df;font:10px var(--font-mono);letter-spacing:.02em;white-space:nowrap;pointer-events:auto;cursor:pointer;opacity:.85;background:#102e2bd9;transition:opacity .2s}
 .world-pin[hidden]{display:none!important}
 .world-pin::before{content:"";width:7px;height:7px;flex:none;border:1px solid #f4eed5;background:#143830;border-radius:50%;box-shadow:0 0 0 4px #102e2b33}
 .world-pin[aria-pressed=true]{font-size:12px;font-weight:500;color:#ffe4c6;opacity:1;z-index:3}
@@ -32,7 +33,7 @@
 .world-pin-host::before{width:5px;height:5px;background:#e8dcc0;border-color:#e8dcc0}
 .world-pin.is-left{transform:translate(calc(-100% + 5px),-50%);flex-direction:row-reverse;padding:10px 0 10px 12px}
 .world-pin:focus-visible,.world-motion:focus-visible,.world-reset:focus-visible,.world-country:focus-visible,.category-world-link:focus-visible{outline:2px solid var(--orange);outline-offset:4px}
-.world-map-fallback{position:absolute;inset:11% 9%;background:url('./globe-assets/textures/earth-policy.png') center/cover;border-radius:50%;aspect-ratio:1;max-height:80%;opacity:.14;mask-image:radial-gradient(circle,#000 35%,transparent 70%);pointer-events:none}
+.world-map-fallback{position:absolute;left:22%;top:18%;width:56%;aspect-ratio:1;border-radius:50%;border:1px solid #b9d2a6;background:repeating-radial-gradient(ellipse at center,transparent 0 22px,#b9d2a626 23px 24px);opacity:.2;pointer-events:none}
 .world-scene[data-globe-state=ready] .world-map-fallback{display:none}
 .world-scene[data-globe-state=fallback] .world-map-fallback{opacity:.5}
 .world-scene[data-globe-state=fallback] .world-canvas,.world-scene[data-globe-state=fallback] .world-pins{display:none}

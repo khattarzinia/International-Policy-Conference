@@ -8,7 +8,7 @@ from pathlib import Path
 import time
 
 from common import ROOT, load_jsonl, metrics, sha256
-from runtime import Detector
+from runtime import ANALYSIS_MAX_WINDOWS, Detector
 
 
 def fit_validation_adjustment(labels, scores):
@@ -55,9 +55,10 @@ def main():
     validation = load_jsonl(args.data / "validation.jsonl")
     if sha256(args.data / "validation.jsonl") != metadata["dataProvenance"]["splits"]["validation"]["sha256"]:
         raise ValueError("Validation documents changed")
-    validation_scores = [detector.predict(row["text"], max_windows=8)["score"] for row in validation]
+    validation_scores = [detector.predict(row["text"])["score"] for row in validation]
     calibration = fit_validation_adjustment([row["label"] for row in validation], validation_scores)
     calibration["validationSha256"] = sha256(args.data / "validation.jsonl")
+    calibration["analysisMaxWindows"] = ANALYSIS_MAX_WINDOWS
     calibration["fittedAt"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     calibration["checkpointSha256"] = sha256(args.model / "model.safetensors")
     # Freeze fitted parameters before calculating any new test predictions.
@@ -69,7 +70,7 @@ def main():
         rows = validation if split == "validation" else load_jsonl(args.data / f"{split}.jsonl")
         if sha256(args.data / f"{split}.jsonl") != metadata["dataProvenance"]["splits"][split]["sha256"]:
             raise ValueError("Frozen evaluation documents changed")
-        raw_scores = validation_scores if split == "validation" else [detector.predict(row["text"], max_windows=8)["score"] for row in rows]
+        raw_scores = validation_scores if split == "validation" else [detector.predict(row["text"])["score"] for row in rows]
         adjusted = [adjust(score, calibration) for score in raw_scores]
         labels = [row["label"] for row in rows]
         raw_metrics[split] = metrics(labels, raw_scores)
@@ -78,6 +79,7 @@ def main():
     metadata["rawMetrics"] = raw_metrics
     metadata["validationAdjustedMetrics"] = adjusted_metrics
     metadata["metrics"] = adjusted_metrics if args.enable else raw_metrics
+    metadata["evaluationMaxWindows"] = ANALYSIS_MAX_WINDOWS
     metadata["validationCalibration"] = calibration
     metadata["validationCalibrationEnabled"] = args.enable
     metadata["scoreVariant"] = "public_validation_adjusted" if args.enable else "raw"
@@ -87,7 +89,7 @@ def main():
     metadata["calibrationSha256"] = sha256(frozen_calibration)
     metadata["calibrated"] = False  # Never imply calibration on the actual IPC population.
     metadata["scoreAdjustment"] = "Validation-fitted confidence correction; still experimental, not an IPC authorship probability" if args.enable else "none; validation-fitted correction retained as an optional experimental variant"
-    metadata["selectedEpoch"] = max(metadata["history"], key=lambda item: item["validation"]["auroc"])["epoch"]
+    # Calibration must not rewrite the training checkpoint-selection record.
     (args.model / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
     (args.model / "evaluation-predictions.json").write_text(json.dumps(predictions, indent=2) + "\n")
     print(json.dumps({"rawMetrics": raw_metrics, "validationAdjustedMetrics": adjusted_metrics}, indent=2), flush=True)

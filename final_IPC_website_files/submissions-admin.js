@@ -1,3 +1,5 @@
+import { hasAIScore as hasScore, isModelConfidence as experimentalScore, aiScoreHeading as aiHeading, createAIScore } from './ai-score.js?v=20261114-percent';
+
 (() => {
   'use strict';
   const byId = id => document.getElementById(id);
@@ -45,11 +47,8 @@
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? '' : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
   };
-  const hasScore = scan => scan?.status === 'completed' && !scan.outdated && typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent) && scan.scorePercent >= 0 && scan.scorePercent <= 100;
-  const experimentalScore = scan => scan?.experimental === true || scan?.scoreType === 'model_confidence';
   const hasOverlap = comparison => comparison?.status === 'completed' && !comparison.stale && comparison.comparedCount > 0 && typeof comparison.matchedWordPercent === 'number' && Number.isFinite(comparison.matchedWordPercent) && comparison.matchedWordPercent >= 0 && comparison.matchedWordPercent <= 100;
   const coverage = scan => typeof scan?.coveragePercent === 'number' && Number.isFinite(scan.coveragePercent) ? Math.max(0, Math.min(100, scan.coveragePercent)) : null;
-  const aiHeading = scan => experimentalScore(scan) ? 'AI likelihood (experimental)' : scan?.provider === 'GPTZero' ? 'Fully AI-written probability' : scan?.provider === 'Sapling' ? 'AI probability' : 'AI likelihood';
   function scanLabel(scan) {
     if (scan?.outdated) return 'Model updated · Run screening again';
     if (hasScore(scan)) return `${scan.provider || 'AI scan'} · ${experimentalScore(scan) ? 'Experimental' : 'Complete'}`;
@@ -107,10 +106,9 @@
       button.addEventListener('click', () => selectEntry(entry));
       titleCell.append(button);
       const scanCell = el('td');
-      scanCell.append(el('span', 'score-value', hasScore(entry.scan) ? `${entry.scan.scorePercent.toFixed(1)}%` : '—'), el('span', 'scan-label', scanLabel(entry.scan)));
-      if (experimentalScore(entry.scan) && hasScore(entry.scan)) scanCell.append(el('span', 'scan-label', 'Model confidence'));
+      scanCell.append(createAIScore(entry.scan, { compact: true, showLabel: false }), el('span', 'scan-label', scanLabel(entry.scan)));
       if (coverage(entry.scan) !== null && coverage(entry.scan) < 100) scanCell.append(el('span', 'scan-label partial-coverage-label', `${coverage(entry.scan).toFixed(1)}% of text analyzed`));
-      if (entry.scan?.classification) scanCell.append(el('span', 'scan-label', `Classification: ${entry.scan.classification}`));
+      if (!experimentalScore(entry.scan) && hasScore(entry.scan) && entry.scan?.classification) scanCell.append(el('span', 'scan-label', `Classification: ${entry.scan.classification}`));
       const comparison = comparisons.get(entry.id) || entry.comparisonSummary;
       const similarityCell = el('td');
       const comparisonLabel = comparison?.stale ? 'Needs refresh' : comparison?.status === 'completed' ? comparison.comparedCount === 0 ? 'No other entries' : `${comparison.comparedCount} entries compared` : comparison?.status === 'insufficient_text' ? 'Not enough text' : 'Not compared';
@@ -264,7 +262,7 @@
     const screening = el('section', 'screening-panel');
     const screeningHeading = el('div', 'analysis-heading');
     screeningHeading.append(el('span', 'analysis-number', '02'), el('h3', '', aiHeading(entry.scan)));
-    screening.append(screeningHeading, el('div', 'screening-score', hasScore(entry.scan) ? `${entry.scan.scorePercent.toFixed(1)}%` : '—'), el('p', '', scanLabel(entry.scan)));
+    screening.append(screeningHeading, createAIScore(entry.scan, { showLabel: false }), el('p', '', scanLabel(entry.scan)));
     if (experimentalScore(entry.scan)) {
       screening.append(el('p', 'experimental-note', 'Experimental model confidence. This has not been validated on IPC policy briefs and is not a calibrated probability.'));
       const validation = entry.scan?.validationSummary;
@@ -274,7 +272,7 @@
     const analyzedCoverage = coverage(entry.scan);
     if (analyzedCoverage !== null) screening.append(el('p', analyzedCoverage < 100 ? 'partial-coverage-note' : 'analysis-meta', `${analyzedCoverage < 100 ? 'Partial analysis: ' : ''}${analyzedCoverage.toFixed(1)}% of this brief’s text was analyzed.${analyzedCoverage < 100 ? ' The score covers only the analyzed text.' : ''}`));
     const classifications = { ai: 'AI writing', mixed: 'Mixed human and AI writing', human: 'Human writing' };
-    if (classifications[entry.scan?.classification]) screening.append(el('p', '', `Provider classification: ${classifications[entry.scan.classification]}`));
+    if (!experimentalScore(entry.scan) && hasScore(entry.scan) && classifications[entry.scan?.classification]) screening.append(el('p', '', `Provider classification: ${classifications[entry.scan.classification]}`));
     if (typeof entry.scan?.mixedScorePercent === 'number') screening.append(el('p', '', `Mixed-writing probability: ${entry.scan.mixedScorePercent.toFixed(1)}%`));
     if (typeof entry.scan?.humanScorePercent === 'number') screening.append(el('p', '', `Human-writing probability: ${entry.scan.humanScorePercent.toFixed(1)}%`));
     if (entry.scan?.confidenceCategory) screening.append(el('p', '', `Confidence: ${entry.scan.confidenceCategory === 'reject' ? 'Too low to classify reliably' : entry.scan.confidenceCategory}`));

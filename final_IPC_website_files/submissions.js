@@ -1,3 +1,5 @@
+import { hasAIScore, createAIScore } from './ai-score.js?v=20261114-percent';
+
 (() => {
   'use strict';
   const byId = id => document.getElementById(id);
@@ -29,16 +31,18 @@
     element.hidden = !message;
   }
 
-  function scanDescription(scan) {
+  function scanDescription(scan, includeScore = true) {
     if (!scan) return 'Your brief is saved and awaiting organizer review.';
-    if (scan.status === 'completed') {
+    if (scan.outdated) return 'The detector has been updated. An organizer needs to run screening again before a current percentage is available.';
+    if (scan.status === 'completed' && !hasAIScore(scan)) return 'No valid AI likelihood score is available. An organizer can retry screening.';
+    if (hasAIScore(scan)) {
       if (scan.experimental === true || scan.scoreType === 'model_confidence') {
-        const score = typeof scan.scorePercent === 'number' && Number.isFinite(scan.scorePercent) ? ` AI likelihood: ${scan.scorePercent.toFixed(1)}%.` : '';
+        const score = includeScore ? ` AI likelihood: ${scan.scorePercent.toFixed(1)}%.` : '';
         const partial = typeof scan.coveragePercent === 'number' && Number.isFinite(scan.coveragePercent) && scan.coveragePercent < 100 ? ` Only ${scan.coveragePercent.toFixed(1)}% of this brief’s text was analyzed.` : '';
         return `Experimental AI screening complete${scan.provider ? ` with ${scan.provider}` : ''}.${score}${partial} This is model confidence, not a calibrated probability or the percentage of words written by AI. The model has not been validated on IPC policy briefs. An organizer will review the result alongside your work.`;
       }
       const label = scan.provider === 'GPTZero' ? 'Fully AI-written probability' : 'AI probability';
-      const score = typeof scan.scorePercent === 'number' ? ` ${label}: ${scan.scorePercent.toFixed(1)}%.` : '';
+      const score = includeScore ? ` ${label}: ${scan.scorePercent.toFixed(1)}%.` : '';
       const classifications = { ai: 'AI writing', mixed: 'mixed human and AI writing', human: 'human writing' };
       const classification = classifications[scan.classification] ? ` Provider classification: ${classifications[scan.classification]}.` : '';
       const mixed = typeof scan.mixedScorePercent === 'number' ? ` Mixed-writing probability: ${scan.mixedScorePercent.toFixed(1)}%.` : '';
@@ -49,6 +53,13 @@
     if (scan.status === 'failed' || scan.status === 'error') return 'Your brief is saved. Automated screening could not finish; the IPC team can retry it and review your entry.';
     if (scan.status === 'manual_review') return 'Your brief is saved and needs a manual screening review by the IPC team.';
     return scan.message || 'Your brief is saved. Screening and organizer review are pending.';
+  }
+
+  function renderReceiptScore(id, scan) {
+    const panel = byId(id);
+    panel.replaceChildren();
+    panel.hidden = !hasAIScore(scan);
+    if (hasAIScore(scan)) panel.append(createAIScore(scan));
   }
 
   function dateLabel(value) {
@@ -138,7 +149,8 @@
       byId('receipt-title').textContent = receipt.title;
       byId('receipt-code').textContent = receipt.receiptCode;
       byId('receipt-time').textContent = `Saved ${dateLabel(receipt.createdAt)}`;
-      setNotice(byId('receipt-scan'), scanDescription(receipt.scan));
+      setNotice(byId('receipt-scan'), scanDescription(receipt.scan, false));
+      renderReceiptScore('receipt-ai-score', receipt.scan);
       byId('lookup-email').value = savedReceipt.email;
       byId('lookup-code').value = receipt.receiptCode;
       form.hidden = true;
@@ -183,12 +195,14 @@
     if (!lookupForm.reportValidity()) return;
     const button = byId('lookup-button');
     button.disabled = true;
+    renderReceiptScore('lookup-ai-score', null);
     setNotice(byId('lookup-result'), 'Finding your entry…');
     try {
       const data = await request('/api/receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ receiptCode: byId('lookup-code').value.trim(), email: byId('lookup-email').value.trim() }) });
       const receipt = data.submission;
       if (!receipt?.title) throw new Error('No entry was returned. Please check your receipt details.');
-      setNotice(byId('lookup-result'), `${receipt.title} · ${labels[receipt.status] || 'Received'} · Saved ${dateLabel(receipt.createdAt)}. ${scanDescription(receipt.scan)}`);
+      setNotice(byId('lookup-result'), `${receipt.title} · ${labels[receipt.status] || 'Received'} · Saved ${dateLabel(receipt.createdAt)}. ${scanDescription(receipt.scan, false)}`);
+      renderReceiptScore('lookup-ai-score', receipt.scan);
     } catch (error) { setNotice(byId('lookup-result'), error.message, true); }
     finally { button.disabled = false; }
   });

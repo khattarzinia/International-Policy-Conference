@@ -1,3 +1,4 @@
+import { createNodeTrails } from './globe-trails.js?v=20261114-travel';
 // One Three.js scene shared by the country stories and policy-category links.
 const mount = document.getElementById('ipc-globe');
 const PLACES = [
@@ -86,8 +87,7 @@ async function createScene(T, container, state, onSelect, onFailure) {
   const renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
   renderer.setClearColor(0x102e2b, 0);
   renderer.outputColorSpace = T.SRGBColorSpace;
-  renderer.toneMapping = T.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.35;
+  renderer.toneMapping = T.NoToneMapping;
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
   container.append(canvas);
   const pins = document.createElement('div'); pins.className = 'world-pins'; container.append(pins);
@@ -99,27 +99,21 @@ async function createScene(T, container, state, onSelect, onFailure) {
     const a = lon * Math.PI / 180, b = lat * Math.PI / 180;
     return new T.Vector3(Math.cos(b) * Math.cos(a), Math.sin(b), -Math.cos(b) * Math.sin(a)).multiplyScalar(radius);
   };
-  const [colorMap, landMask] = await Promise.all([
-    new T.TextureLoader().loadAsync(new URL('./globe-assets/textures/earth-policy.png', import.meta.url).href),
-    new T.TextureLoader().loadAsync(new URL('./globe-assets/textures/earth-landmask.png', import.meta.url).href),
-  ]).catch(error => { renderer.dispose(); throw error; });
-  colorMap.colorSpace = T.SRGBColorSpace;
-  colorMap.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  const earthMaterial = new T.MeshStandardMaterial({ map: colorMap, bumpMap: landMask, bumpScale: .018,
-    roughness: .76, metalness: .08, color: 0xf7f4e9 });
-  const earth = new T.Mesh(new T.SphereGeometry(1, 96, 64), earthMaterial);
+  const landMask = await new T.TextureLoader().loadAsync(new URL('./globe-assets/textures/earth-landmask.png', import.meta.url).href)
+    .catch(error => { renderer.dispose(); throw error; });
+  // A printed atlas in three dimensions: flat ink, little paper tiles, no simulated sunlight.
+  const earth = new T.Mesh(new T.SphereGeometry(1, 64, 48), new T.MeshBasicMaterial({ color: 0x1b443a }));
   world.add(earth);
-  scene.add(new T.AmbientLight(0x9fae9c, 1.9));
-  const sun = new T.DirectionalLight(0xfff0d2, 3.6); sun.position.set(-2.5, 3.5, 4); scene.add(sun);
-  const edge = new T.DirectionalLight(0x91b7a7, 2.8); edge.position.set(3, .5, -2); scene.add(edge);
-  const fill = new T.DirectionalLight(0x6c9583, .7); fill.position.set(0, -3, 2); scene.add(fill);
-  const atmosphere = new T.Mesh(new T.SphereGeometry(1.035, 64, 48), new T.ShaderMaterial({
-    uniforms: { tint: { value: new T.Color(0x8da98e) } },
-    vertexShader: 'varying vec3 vNormal; varying vec3 vView; void main(){vec4 p=modelViewMatrix*vec4(position,1.0);vNormal=normalize(normalMatrix*normal);vView=normalize(-p.xyz);gl_Position=projectionMatrix*p;}',
-    fragmentShader: 'uniform vec3 tint; varying vec3 vNormal; varying vec3 vView; void main(){float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),3.8);gl_FragColor=vec4(tint,rim*.35);}',
-    transparent: true, depthWrite: false, blending: T.AdditiveBlending,
-  }));
-  world.add(atmosphere);
+  world.add(new T.Mesh(new T.SphereGeometry(1.012, 64, 48), new T.MeshBasicMaterial({ color: 0x91b39b, side: T.BackSide })));
+  const gridMaterial = new T.LineBasicMaterial({ color: 0xb0c8a2, transparent: true, opacity: .19 });
+  for (let lat = -60; lat <= 60; lat += 30) {
+    const points = Array.from({ length: 145 }, (_, i) => position(i * 2.5 - 180, lat, 1.003));
+    world.add(new T.Line(new T.BufferGeometry().setFromPoints(points), gridMaterial));
+  }
+  for (let lon = -180; lon < 180; lon += 30) {
+    const points = Array.from({ length: 73 }, (_, i) => position(lon, i * 2.5 - 90, 1.003));
+    world.add(new T.Line(new T.BufferGeometry().setFromPoints(points), gridMaterial));
+  }
 
   const markers = [];
   const hitTargets = [];
@@ -148,50 +142,41 @@ async function createScene(T, container, state, onSelect, onFailure) {
     markers.push({ place, anchor, dot, ring, button });
   }
 
-  // These arcs connect policy perspectives, not participant or chapter locations.
-  const routes = [];
-  const makeCurve = (from, to, lift) => {
-    const a = position(from.lon, from.lat), b = position(to.lon, to.lat);
-    const angle = a.angleTo(b);
-    const points = Array.from({ length: 73 }, (_, i) => {
-      const t = i / 72;
-      const v = angle < .001 ? a.clone() : a.clone().multiplyScalar(Math.sin((1 - t) * angle)).add(b.clone().multiplyScalar(Math.sin(t * angle))).divideScalar(Math.sin(angle));
-      return v.normalize().multiplyScalar(1.016 + Math.sin(Math.PI * t) * lift);
-    });
-    return new T.CatmullRomCurve3(points);
-  };
-  for (const place of PLACES) {
-    const curve = makeCurve(HOST, place, .12 + Math.abs(place.lon - HOST.lon) / 1000);
-    const material = new T.MeshBasicMaterial({ color: 0xf76b49, transparent: true, opacity: .17, depthWrite: false });
-    const line = new T.Mesh(new T.TubeGeometry(curve, 100, .0014, 4, false), material); world.add(line);
-    const bead = new T.Mesh(new T.SphereGeometry(.006, 8, 6), new T.MeshBasicMaterial({ color: 0xffb68b }));
-    world.add(bead);
-    routes.push({ id: place.id, curve, line, bead, material, phase: Number(place.id) / 6 });
-  }
+  // Each moving stroke launches from the exact marker and gets a new random bearing.
+  // These are decorative gestures, not participant traffic or chapter locations.
+  const nodeTrails = createNodeTrails(T, world, markers
+    .filter(marker => marker.place.id !== 'host')
+    .map(marker => ({ id: marker.place.id, position: marker.anchor })));
 
-  // Sparse raised land points gives the surface physical depth as it turns.
+  // Uniformly spaced, tangential paper tiles make the continents feel drawn.
   const points = [];
   const maskCanvas = document.createElement('canvas'); maskCanvas.width = 360; maskCanvas.height = 180;
   const maskContext = maskCanvas.getContext('2d', { willReadFrequently: true });
   if (maskContext) {
     maskContext.drawImage(landMask.image, 0, 0, 360, 180);
     const pixels = maskContext.getImageData(0, 0, 360, 180).data;
-    for (let lat = -75; lat < 81; lat += 2.5) {
-      const step = 2.5 / Math.max(.25, Math.cos(lat * Math.PI / 180));
+    for (let lat = -78; lat < 84; lat += 2.2) {
+      const step = 2.2 / Math.max(.25, Math.cos(lat * Math.PI / 180));
       for (let lon = -180; lon < 180; lon += step) {
         const x = clamp(Math.floor(lon + 180), 0, 359), y = clamp(Math.floor(90 - lat), 0, 179);
         if (pixels[(y * 360 + x) * 4] < 160) continue;
-        const v = position(lon, lat, 1.004); points.push(v.x, v.y, v.z);
+        points.push({ vector: position(lon, lat, 1.008), lon, lat });
       }
     }
-    const geometry = new T.BufferGeometry(); geometry.setAttribute('position', new T.Float32BufferAttribute(points, 3));
-    world.add(new T.Points(geometry, new T.PointsMaterial({ color: 0xfff5d3, size: .0035, transparent: true, opacity: .32, depthWrite: false })));
+    const tiles = new T.InstancedMesh(new T.CircleGeometry(.0125, 4), new T.MeshBasicMaterial({ color: 0xffffff, side: T.FrontSide }), points.length);
+    const stamp = new T.Object3D();
+    const inks = [new T.Color(0xe7e7ba), new T.Color(0xc9dca8), new T.Color(0xa7c79c)];
+    points.forEach(({ vector, lon, lat }, i) => {
+      stamp.position.copy(vector); stamp.quaternion.setFromUnitVectors(normalZ, vector.clone().normalize());
+      stamp.scale.setScalar(.86 + .14 * Math.sin(lon * .14 + lat * .2)); stamp.updateMatrix();
+      tiles.setMatrixAt(i, stamp.matrix); tiles.setColorAt(i, inks[Math.abs(Math.floor(lon / 24 + lat / 20)) % inks.length]);
+    });
+    world.add(tiles);
   }
 
   let raf = 0, lastPaint = 0, width = 0, height = 0, tween = null, disposed = false;
   let pointer = null, dragging = false, hovered = false, focused = false;
-  let resumeAt = 0, frameCount = 0;
-  const idleBase = new T.Quaternion();
+  let resumeAt = 0, frameCount = 0, previousTime = 0, sceneTime = 0;
   const raycaster = new T.Raycaster(), mouse = new T.Vector2();
   const projected = new T.Vector3(), worldPoint = new T.Vector3(), normal = new T.Vector3();
   const dragRotation = new T.Quaternion();
@@ -204,8 +189,7 @@ async function createScene(T, container, state, onSelect, onFailure) {
     return tilt.multiply(yaw);
   };
   world.quaternion.copy(targetFor(state.selected));
-  idleBase.copy(world.quaternion);
-  const rememberPose = (delay = 600) => { idleBase.copy(world.quaternion); resumeAt = performance.now() + delay; };
+  const rememberPose = (delay = 600) => { resumeAt = performance.now() + delay; };
   const isActive = () => !disposed && state.ready && state.visible && !document.hidden && !state.failed;
   function render(time) {
     world.updateMatrixWorld(true);
@@ -229,43 +213,38 @@ async function createScene(T, container, state, onSelect, onFailure) {
         selected: state.selected, paused: state.paused, reduced: state.reduced,
         centerX: stageBounds.left + width / 2, centerY: stageBounds.top + height / 2 };
       m.ring.visible = active || m.place.id === 'host';
-      m.ring.scale.setScalar(active && !state.reduced && !state.paused ? 1 + .2 * Math.sin(time * .0025) : 1);
+      m.ring.scale.setScalar(active ? 1 + .15 * Math.sin(sceneTime * 2.5) : 1);
       m.ring.material.opacity = active ? .85 : .35;
       m.dot.scale.setScalar(active ? 1.5 : .85);
       if (m.place.id !== 'host') m.button.setAttribute('aria-pressed', String(active));
     }
-    for (const route of routes) {
-      const active = route.id === state.selected;
-      route.material.opacity = active ? .88 : .16;
-      route.bead.visible = active;
-      const t = state.reduced || state.paused ? .48 : (time * .00009 + route.phase) % 1;
-      route.bead.position.copy(route.curve.getPoint(t));
-      route.bead.scale.setScalar(active ? 1.5 : 1);
-    }
+    nodeTrails.update(sceneTime, state.selected);
     renderer.render(scene, camera);
     canvas.dataset.globeReady = 'true';
     canvas.dataset.frames = String(++frameCount);
-    // Page routes continue from the exact projected 3D surface point.
+    // Share motion state with the page decorations.
     if (departure) document.dispatchEvent(new CustomEvent('ipc:globe-frame', { detail: departure }));
   }
   function animate(time) {
     raf = 0;
     if (!isActive()) return;
+    const dt = previousTime ? Math.min((time - previousTime) / 1000, .05) : 0;
+    previousTime = time;
+    if (!state.paused && !state.reduced) sceneTime += dt;
     if (tween) {
       const t = clamp((time - tween.start) / 1200, 0, 1);
       world.quaternion.slerpQuaternions(tween.from, tween.to, ease(t));
       if (t === 1) { tween = null; rememberPose(2500); }
     } else if (!state.paused && !state.reduced && !dragging && !hovered && !focused && time > resumeAt) {
-      // Keep the selected country in view while giving the scene a gentle drift.
-      world.quaternion.copy(idleBase);
-      dragRotation.setFromAxisAngle(rotationAxis, Math.sin((time - resumeAt) * .0003) * .14);
-      world.quaternion.premultiply(dragRotation);
+      // A complete revolution, rather than oscillating around one fixed view.
+      dragRotation.setFromAxisAngle(rotationAxis, dt * .105);
+      world.quaternion.multiply(dragRotation);
     }
     if (time - lastPaint > 32 || tween || dragging || state.paused || state.reduced) { render(time); lastPaint = time; }
     if (tween || dragging || (!state.paused && !state.reduced)) raf = requestAnimationFrame(animate);
   }
   function draw() { if (isActive() && !raf) { raf = requestAnimationFrame(animate); } }
-  function suspend() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+  function suspend() { if (raf) cancelAnimationFrame(raf); raf = 0; previousTime = 0; }
   function select(id, immediate = false) {
     if (!PLACES.some(p => p.id === id)) return;
     const target = targetFor(id);
@@ -277,7 +256,7 @@ async function createScene(T, container, state, onSelect, onFailure) {
     const rect = container.getBoundingClientRect(); width = rect.width; height = rect.height;
     if (!width || !height) return;
     camera.aspect = width / height;
-    camera.position.z = width < 600 ? 4.0 : 3.9;
+    camera.position.z = width < 600 ? 4.9 : 4.65;
     camera.updateProjectionMatrix(); renderer.setSize(width, height, false); draw();
   }
   function hit(event) {
@@ -319,9 +298,9 @@ async function createScene(T, container, state, onSelect, onFailure) {
   };
   canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
   canvas.addEventListener('pointerleave', () => { hovered = false; container.classList.remove('is-hovering'); draw(); });
-  canvas.addEventListener('focus', () => { focused = true; draw(); });
+  canvas.addEventListener('focus', () => { focused = canvas.matches(':focus-visible'); draw(); });
   canvas.addEventListener('blur', () => { focused = false; draw(); });
-  pins.addEventListener('focusin', () => { focused = true; draw(); });
+  pins.addEventListener('focusin', event => { focused = event.target.matches(':focus-visible'); draw(); });
   pins.addEventListener('focusout', event => { if (!pins.contains(event.relatedTarget)) { focused = false; draw(); } });
   canvas.addEventListener('keydown', event => {
     if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(event.key)) return;
@@ -340,7 +319,7 @@ async function createScene(T, container, state, onSelect, onFailure) {
     if (disposed) return;
     suspend(); disposed = true; observer.disconnect();
     scene.traverse(object => { object.geometry?.dispose(); if (object.material) for (const material of Array.isArray(object.material) ? object.material : [object.material]) material.dispose(); });
-    colorMap.dispose(); landMask.dispose(); renderer.dispose();
+    landMask.dispose(); renderer.dispose();
   };
   window.addEventListener('pagehide', event => { if (!event.persisted) stop(); });
   return { select, draw, suspend, stop,
