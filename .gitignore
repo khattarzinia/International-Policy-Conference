@@ -1,0 +1,9 @@
+node_modules/
+.local/
+.env*
+!.env.example
+.vercel/
+public/
+test-results/
+__pycache__/
+*.pyc

@@ -1,0 +1,9 @@
+.git
+.local
+.env*
+!.env.example
+tests
+database
+work
+outputs
+ml

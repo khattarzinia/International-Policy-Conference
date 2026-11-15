@@ -1,0 +1,13 @@
+/* Separate fading strokes, kept in the margins and out of the reading surface. */
+.page-routes{position:fixed;inset:0;width:100%;height:100svh;z-index:20;overflow:hidden;pointer-events:none;contain:strict}
+.page-routes *{pointer-events:none}
+.page-route{opacity:0;transition:opacity .4s}
+.page-route.is-visible{opacity:1}
+.page-route-line{stroke-width:1;opacity:.24;vector-effect:non-scaling-stroke}
+.page-route-flight{stroke-width:2;stroke-linecap:round;stroke-dasharray:180 820;animation:page-route-flow 6s linear infinite;animation-play-state:paused;vector-effect:non-scaling-stroke;opacity:.6}
+.page-route.is-visible .page-route-flight{animation-play-state:running}
+.page-motion-paused .page-route-flight{animation-play-state:paused!important}
+.page-reduced-motion .page-route-flight{display:none}
+@keyframes page-route-flow{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@media(max-width:700px){.page-route-line{stroke-width:.75}.page-route-flight{stroke-width:1.2;opacity:.4}}
+@media(prefers-reduced-motion:reduce){.page-route{transition:none}.page-route-flight{display:none;animation:none}}
