@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO Meta Tags -->
@@ -26,40 +25,40 @@
     <meta name="twitter:description" content="A global policy competition for high school and collegiate students. Compete as individuals or teams. Spring 2027 Finals in Cambridge, Massachusetts, USA.">
     <meta name="twitter:image" content="https://internationalpolicyconference.org/final_IPC_website_files/ipc-logo.png">
 
-    <title>International Policy Conference - Global Student Policy Competition | Spring 2027 Finals in Cambridge</title>
+    <!-- Google Search Console Verification (you'll add this later) -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE"> -->
+
+    <title>International Policy Conference - Global Student Policy Competition | 2027 Finals at Harvard</title>
     <link rel="icon" type="image/png" href="./final_IPC_website_files/ipc-logo.png">
     <link rel="apple-touch-icon" href="./final_IPC_website_files/ipc-logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,500..900;1,500..700&display=swap" rel="stylesheet">
-    <link rel="preload" as="image" href="./assets/diplomacy/un-general-assembly.webp" fetchpriority="high">
-    <link rel="stylesheet" href="./final_IPC_website_files/ipc-redesign.css">
-
-    <!-- Critical Loader Styles (zero FOUC, zero early fade) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./final_IPC_website_files/css2" rel="stylesheet">
+    <link rel="preload" as="image" href="./assets/lowell-house-hires.jpg" fetchpriority="high">
+    <link rel="stylesheet" href="./final_IPC_website_files/styles.css">
+    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css">
+    <link rel="stylesheet" href="./final_IPC_website_files/extended.css">
     <style>
-      html.ipc-loading, html.ipc-loading body { overflow: hidden; }
-      html.ipc-loading .hero-main,
-      html.ipc-loading .hero-hud {
+      .hero-copy.reveal { opacity: 1; transform: none; }
+      html.ipc-loading .hero-copy.reveal,
+      html.ipc-loading .hero-year {
         opacity: 0;
         transform: translateY(18px);
       }
+      html.ipc-loading .top-banner,
       html.ipc-loading .site-header {
         opacity: 0;
         transform: translateY(-10px);
       }
-      html.ipc-loading .hero-scrim {
-        opacity: 0.22;
+      html.ipc-loader-exiting .hero-copy.reveal,
+      html.ipc-loader-exiting .hero-year {
+        transition: opacity 0.65s ease 0.32s, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.32s;
       }
-      html.ipc-loader-exiting .hero-scrim {
-        transition: opacity 0.7s ease 0.25s;
-      }
-      html.ipc-loader-exiting .hero-main,
-      html.ipc-loader-exiting .hero-hud {
-        transition: opacity 0.7s ease 0.42s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.42s;
-      }
+      html.ipc-loader-exiting .top-banner,
       html.ipc-loader-exiting .site-header {
-        transition: opacity 0.55s ease 0.62s, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.62s;
+        transition: opacity 0.5s ease 0.58s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.58s;
       }
+      html.ipc-loading, html.ipc-loading body { overflow: hidden; }
       #ipc-loader {
         display: none;
         position: fixed;
@@ -81,8 +80,9 @@
         height: 100%;
       }
       @media (prefers-reduced-motion: reduce) {
-        html.ipc-loading .hero-main,
-        html.ipc-loading .hero-hud,
+        html.ipc-loading .hero-copy.reveal,
+        html.ipc-loading .hero-year,
+        html.ipc-loading .top-banner,
         html.ipc-loading .site-header {
           opacity: 1;
           transform: none;
@@ -107,7 +107,7 @@
             if (el) el.remove();
           }, 400);
         }
-      }, 3400);
+      }, 3200);
     </script>
 
     <!-- Structured Data (Schema.org) -->
@@ -138,7 +138,7 @@
       "@type": "Event",
       "name": "International Policy Conference 2027",
       "description": "Global student policy competition finals featuring research, policy briefs, and presentations to legislators.",
-      "startDate": "2027-04-01",
+      "startDate": "2027",
       "eventStatus": "https://schema.org/EventScheduled",
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "location": {
@@ -160,10 +160,14 @@
     </script>
   </head>
   <body>
-    <!-- Full-screen IPC Cutout Loading Screen (single continuous liquid white canvas, zero early fade) -->
+    <!-- Full-screen IPC Cutout Loading Screen (single continuous liquid white canvas) -->
     <div id="ipc-loader" aria-hidden="true">
       <svg id="ipc-loader-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
         <defs>
+          <linearGradient id="ipc-top-soften" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
           <mask id="ipc-cutout-mask" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="13200" height="12600">
             <rect x="-6000" y="-6000" width="13200" height="12600" fill="#ffffff"/>
             <g id="ipc-glyph-i">
@@ -175,161 +179,69 @@
             <g id="ipc-glyph-c">
               <path fill="#000000" fill-rule="nonzero" transform="translate(723.5 504) scale(1.15)" d="M207.0 -361.0Q240.0 -361.0 261.2 -351.2Q282.5 -341.5 299.0 -328.5Q309.0 -321.0 314.2 -326.8Q319.5 -332.5 321.5 -354.0L333.0 -354.0Q332.0 -334.0 331.5 -305.2Q331.0 -276.5 331.0 -229.0L319.5 -229.0Q317.5 -253.0 313.0 -271.8Q308.5 -290.5 299.5 -305.0Q290.5 -319.5 273.5 -330.5Q263.0 -337.5 251.2 -341.5Q239.5 -345.5 227.0 -345.5Q198.5 -345.5 180.0 -329.8Q161.5 -314.0 151.2 -288.8Q141.0 -263.5 137.0 -233.8Q133.0 -204.0 133.0 -176.0Q133.0 -148.0 137.0 -118.2Q141.0 -88.5 151.2 -63.2Q161.5 -38.0 180.0 -22.2Q198.5 -6.5 227.0 -6.5Q239.5 -6.5 251.2 -10.8Q263.0 -15.0 273.5 -21.5Q298.5 -37.0 307.2 -63.0Q316.0 -89.0 319.5 -130.0L331.0 -130.0Q331.0 -81.0 331.5 -50.8Q332.0 -20.5 333.0 -0.0L321.5 -0.0Q319.5 -21.5 314.8 -27.0Q310.0 -32.5 299.0 -25.5Q280.5 -12.5 259.8 -2.8Q239.0 7.0 206.5 7.0Q150.0 7.0 107.5 -14.5Q65.0 -36.0 41.5 -76.5Q18.0 -117.0 18.0 -174.0Q18.0 -230.0 42.2 -272.0Q66.5 -314.0 109.0 -337.5Q151.5 -361.0 207.0 -361.0Z"/>
             </g>
+            <rect id="ipc-top-shield" x="-6000" y="-6060" width="13200" height="6000" fill="#ffffff"/>
+            <rect id="ipc-top-feather" x="-6000" y="-60" width="13200" height="60" fill="url(#ipc-top-soften)"/>
           </mask>
         </defs>
         <path id="ipc-curtain" fill="#ffffff" mask="url(#ipc-cutout-mask)" d="M-6000 -6000 H7200 V6600 H-6000 Z"/>
       </svg>
     </div>
 
-    <!-- Floating Header with Original IPC Logo -->
+    <!-- Top Banner -->
+    <div class="top-banner" style="background: linear-gradient(90deg, #f2684e 0%, #d95b42 100%); color: white; padding: 12px 20px; text-align: center; font-size: 14px; font-weight: 500; border-bottom: 2px solid #c14d36;">
+      <p style="margin: 0;">
+        Apply to be on our leadership board or start a chapter via the following link:
+        <a href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" style="color: white; text-decoration: underline; font-weight: 700; margin-left: 5px;">Apply Here →</a>
+      </p>
+    </div>
+
     <header class="site-header" id="top">
       <a class="brand" href="#top" aria-label="International Policy Conference home">
-        <span class="brand-logo-wrap">
-          <img class="brand-logo" src="./final_IPC_website_files/ipc-logo.png" alt="International Policy Conference logo" width="44" height="38">
-        </span>
-        <span>International Policy<br>Conference</span>
+        <img class="brand-logo" src="./final_IPC_website_files/ipc-logo.png" alt="International Policy Conference logo"><span>International Policy<br>Conference</span>
       </a>
-      <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">
-        <span></span><span></span>
-      </button>
+      <button class="menu-button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
       <nav aria-label="Main navigation">
-        <a href="#diplomacy">Diplomacy</a>
-        <a href="#about">About</a>
-        <a href="#categories">Categories</a>
-        <a href="#stages">Stages</a>
-        <a href="#requirements">Requirements</a>
-        <a href="#documents">Briefs</a>
-        <a href="#leadership">Leadership</a>
+        <a href="#about">About</a><a href="#categories">Categories</a><a href="#stages">Stages</a><a href="#documents">Documents</a><a href="#requirements">Requirements</a><a href="#leadership">Leadership</a>
         <a class="nav-cta" href="#contact">Contact</a>
       </nav>
     </header>
 
     <main>
-      <!-- Full-Bleed Kinetic Diplomacy Hero -->
       <section class="hero">
-        <div class="hero-stage" id="hero-stage" aria-hidden="true">
-          <img class="hero-slide is-active" src="./assets/diplomacy/un-general-assembly.webp" alt="United Nations General Assembly Hall, New York, USA" fetchpriority="high" decoding="async">
-        </div>
-        <div class="hero-flash-pulse" id="hero-flash-pulse" aria-hidden="true"></div>
-        <div class="hero-scrim" aria-hidden="true"></div>
-
-        <div class="hero-main">
-          <a class="hero-pill" href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" rel="noopener noreferrer">
-            <span class="hero-pill-dot" aria-hidden="true"></span>
-            <span>Apply for Leadership Board or Start a Chapter →</span>
-          </a>
+        <div class="hero-scrim"></div>
+        <div class="hero-copy reveal in-view">
           <p class="eyebrow">A global policy challenge for the next generation</p>
           <h1>International<br><em>Policy</em> Conference</h1>
-          <p class="hero-detail">
-            Where high school and collegiate thinkers step into real-world diplomacy—researching pressing global challenges and presenting actionable policy briefs to decision-makers. Spring 2027 Finals in Cambridge, Massachusetts.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" rel="noopener noreferrer">
-              Start a Chapter / Apply <span>→</span>
-            </a>
-            <a class="btn btn-glass" href="#about">
-              Explore IPC <span>↓</span>
-            </a>
-          </div>
+          <p class="hero-detail">Spring 2027 Finals in Cambridge, Massachusetts, USA</p>
+          <a class="button button-light" href="#about">Discover IPC <span>↘</span></a>
         </div>
-
-        <!-- Live Kinetic Photography Credits & Interactive Contact-Sheet Controls -->
-        <div class="hero-hud" aria-label="Diplomacy photography reel controls">
-          <div class="hero-caption-wrap">
-            <div class="hero-caption-top">
-              <span class="hero-frame-counter" id="hero-frame-counter">01 / 08</span>
-              <span id="hero-caption-tag">Multilateral Assembly · New York, USA</span>
-            </div>
-            <div class="hero-caption-title" id="hero-caption-title">United Nations General Assembly Hall</div>
-            <div class="hero-caption-credit" id="hero-caption-credit">
-              Photo: <a href="https://commons.wikimedia.org/wiki/File:United_Nations_General_Assembly_Hall_(3).jpg" target="_blank" rel="noopener noreferrer">Basil D Soufi · CC BY-SA 3.0 · Wikimedia Commons ↗</a>
-            </div>
-          </div>
-
-          <div class="hero-controls">
-            <div class="hero-mode-row">
-              <button class="hud-btn" id="hero-flash-btn" type="button" aria-pressed="false">⚡ Fast Flash</button>
-              <button class="hud-btn" id="hero-pause-btn" type="button" aria-pressed="false">Pause</button>
-            </div>
-            <div class="hero-filmstrip" id="hero-filmstrip" role="group" aria-label="Select diplomacy photo"></div>
-          </div>
-        </div>
+        <div class="hero-year">2027</div>
       </section>
 
-      <!-- Kinetic "Diplomacy in Motion" Visual Photo Strip -->
-      <section id="diplomacy" class="diplomacy-reel">
-        <div class="reel-header reveal">
-          <div>
-            <p class="eyebrow">Diplomacy in Motion</p>
-            <h2>The rooms where <em>global policy</em> gets written.</h2>
-          </div>
-          <p class="reel-hint">Hover to pause the press reel, or click any photograph to read the context and inspect its verified Wikimedia Commons source.</p>
-        </div>
-        <div class="reel-marquee">
-          <div class="reel-track" id="reel-track"></div>
-        </div>
-      </section>
-
-      <!-- About IPC -->
       <section id="about" class="about section">
         <div class="section-heading reveal">
           <p class="eyebrow">Our mission</p>
           <h2>About the <span>International Policy Conference</span></h2>
         </div>
-        <div class="about-copy reveal">
+        <div class=”about-copy reveal”>
           <p>The International Policy Conference, or IPC, was established in 2026 by a group of Harvard students and graduates in hopes of providing exposure to global perspectives to future leaders early in their education. IPC is open to both high school and collegiate students worldwide. We strive to encourage students to take some of the problems they might have seen in their communities and ask not just “what is the problem” but “why does it persist, how can we solve it, and who can we work with to change it.” IPC challenges students by delving deep into fields they might never have encountered in school, such as economics, international law, public health, environmental science, and more. In the process of developing research, synthesis, public speaking, negotiation, and persuasive communication skills, students will be given the unique opportunity to get their policy recommendations to the legislators whose vote influences real-world outcomes in their communities.</p>
-          <div class="about-stats">
-            <div class="stat-box"><strong>8</strong><span>Policy Categories</span></div>
-            <div class="stat-box"><strong>4</strong><span>Judged Stages</span></div>
-            <div class="stat-box"><strong>100</strong><span>Point Rubric</span></div>
-            <div class="stat-box"><strong>2027</strong><span>Cambridge Finals</span></div>
-          </div>
         </div>
       </section>
 
-      <!-- Eight Policy Categories -->
       <section id="categories" class="categories section">
-        <div class="section-heading reveal">
-          <p class="eyebrow">A world of questions</p>
-          <h2><span>Eight</span> Policy Categories</h2>
-        </div>
+        <div class="section-heading reveal"><p class="eyebrow">A world of questions</p><h2><span>Eight</span> Policy Categories</h2></div>
         <div class="category-grid">
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals" loading="lazy" decoding="async"><span class="category-num">01</span></div>
-            <div class="category-body"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment" loading="lazy" decoding="async"><span class="category-num">02</span></div>
-            <div class="category-body"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/category-rights.jpg" alt="Government building" loading="lazy" decoding="async"><span class="category-num">03</span></div>
-            <div class="category-body"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology" loading="lazy" decoding="async"><span class="category-num">04</span></div>
-            <div class="category-body"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/harvard.webp" alt="University campus" loading="lazy" decoding="async"><span class="category-num">05</span></div>
-            <div class="category-body"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/flags.jpg" alt="International flags" loading="lazy" decoding="async"><span class="category-num">06</span></div>
-            <div class="category-body"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/category-housing.jpg" alt="City skyline" loading="lazy" decoding="async"><span class="category-num">07</span></div>
-            <div class="category-body"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p></div>
-          </article>
-          <article class="category-card reveal">
-            <div class="category-media"><img src="./final_IPC_website_files/category-economy.jpg" alt="Civil rights demonstration" loading="lazy" decoding="async"><span class="category-num">08</span></div>
-            <div class="category-body"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></div>
-          </article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-economy.jpg" alt="Government building"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/harvard.webp" alt="University campus"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/flags.jpg" alt="International flags"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-housing.jpg" alt="City skyline"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p></article>
+          <article class="category-card reveal"><img src="./final_IPC_website_files/category-rights.jpg" alt="Civil rights demonstration"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></article>
         </div>
       </section>
 
-      <!-- Interactive Global Policy Examples -->
       <section id="examples" class="examples section">
         <div class="section-heading centered reveal">
           <p class="eyebrow">Past Proposals</p>
@@ -338,106 +250,241 @@
 
         <div class="examples-content reveal">
           <div class="globe-container">
-            <svg viewBox="0 0 800 800" class="globe-svg" role="img" aria-label="Interactive globe highlighting six international policy proposals">
-              <defs>
-                <radialGradient id="oceanGradient" cx="38%" cy="38%">
-                  <stop offset="0%" stop-color="#355e4a"/>
-                  <stop offset="65%" stop-color="#1f3e2e"/>
-                  <stop offset="100%" stop-color="#12261c"/>
-                </radialGradient>
-                <radialGradient id="sphereLight" cx="35%" cy="32%">
-                  <stop offset="0%" stop-color="rgba(255,253,248,0.28)"/>
-                  <stop offset="50%" stop-color="rgba(255,253,248,0)"/>
-                  <stop offset="85%" stop-color="rgba(0,0,0,0)"/>
-                  <stop offset="100%" stop-color="rgba(0,0,0,0.42)"/>
-                </radialGradient>
-              </defs>
-              <circle cx="400" cy="400" r="320" fill="url(#oceanGradient)" stroke="rgba(255,253,248,0.22)" stroke-width="2"/>
-              <path d="M 200,150 Q 180,140 170,155 L 160,180 Q 155,210 165,240 L 180,265 Q 195,280 215,285 L 240,285 Q 260,280 275,265 L 290,240 Q 300,210 295,180 L 285,155 Q 270,140 250,145 L 225,150 Q 210,152 200,150 Z" fill="#c7d8c5" opacity="0.88"/>
-              <path d="M 220,300 Q 210,295 200,305 L 190,330 Q 185,360 190,395 L 200,440 Q 210,475 230,500 L 250,515 Q 265,515 275,500 L 285,475 Q 290,450 290,420 L 285,380 Q 280,345 270,320 L 255,305 Q 240,298 220,300 Z" fill="#c7d8c5" opacity="0.88"/>
-              <path d="M 340,110 Q 320,105 310,120 L 305,145 Q 305,170 315,190 L 330,205 Q 350,210 370,205 L 385,190 Q 395,170 395,145 L 390,120 Q 380,105 360,110 L 350,110 Z" fill="#e6eee4" opacity="0.82"/>
-              <path d="M 410,200 Q 395,195 385,205 L 378,225 Q 375,245 380,265 L 390,285 Q 405,295 425,295 L 445,290 Q 460,280 465,260 L 468,235 Q 465,215 455,205 L 435,197 Q 420,195 410,200 Z" fill="#c7d8c5" opacity="0.88"/>
-              <path d="M 400,300 Q 385,295 375,310 L 365,340 Q 360,375 365,415 L 375,460 Q 390,495 410,520 L 435,535 Q 460,538 480,525 L 500,500 Q 510,470 512,435 L 510,390 Q 505,350 490,325 L 470,305 Q 450,295 425,300 L 410,302 Z" fill="#c7d8c5" opacity="0.88"/>
-              <path d="M 465,140 Q 445,135 430,145 L 415,165 Q 408,190 410,220 L 418,255 Q 430,285 450,305 L 475,320 Q 505,330 535,325 L 565,315 Q 590,300 605,275 L 615,245 Q 618,210 610,180 L 595,155 Q 575,138 550,140 L 520,145 Q 490,145 465,140 Z" fill="#c7d8c5" opacity="0.88"/>
-              <ellipse cx="560" cy="420" rx="35" ry="25" fill="#c7d8c5" opacity="0.88"/>
-              <ellipse cx="600" cy="450" rx="28" ry="20" fill="#c7d8c5" opacity="0.88"/>
-              <path d="M 580,500 Q 560,495 545,510 L 535,535 Q 530,565 540,595 L 555,620 Q 575,635 600,635 L 630,630 Q 655,615 665,590 L 670,560 Q 668,530 655,515 L 635,502 Q 610,495 580,500 Z" fill="#c7d8c5" opacity="0.88"/>
-              <g opacity="0.14" stroke="#ffffff" stroke-width="1.5" fill="none">
-                <ellipse cx="400" cy="400" rx="320" ry="120"/>
-                <ellipse cx="400" cy="400" rx="320" ry="200"/>
-                <ellipse cx="400" cy="400" rx="320" ry="260"/>
-                <ellipse cx="400" cy="400" rx="120" ry="320"/>
-                <ellipse cx="400" cy="400" rx="200" ry="320"/>
-                <ellipse cx="400" cy="400" rx="260" ry="320"/>
-                <line x1="400" y1="80" x2="400" y2="720"/>
-                <line x1="80" y1="400" x2="720" y2="400"/>
-              </g>
-              <circle cx="400" cy="400" r="320" fill="url(#sphereLight)" pointer-events="none"/>
-              <g class="location-marker" data-location="1"><circle cx="230" cy="220" r="22" fill="#e85d43" opacity="0.35" class="pulse-ring"/><circle cx="230" cy="220" r="15" fill="#e85d43"/><text x="230" y="226" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text></g>
-              <g class="location-marker" data-location="2"><circle cx="425" cy="250" r="22" fill="#e85d43" opacity="0.35" class="pulse-ring"/><circle cx="425" cy="250" r="15" fill="#e85d43"/><text x="425" y="256" text-anchor="middle" fill="white" font-size="18" font-weight="bold">2</text></g>
-              <g class="location-marker" data-location="3"><circle cx="530" cy="230" r="22" fill="#e85d43" opacity="0.35" class="pulse-ring"/><circle cx="530" cy="230" r="15" fill="#e85d43"/><text x="530" y="236" text-anchor="middle" fill="white" font-size="18" font-weight="bold">3</text></g>
-              <g class="location-marker" data-location="4"><circle cx="440" cy="400" r="22" fill="#e85d43" opacity="0.35" class="pulse-ring"/><circle cx="440" cy="400" r="15" fill="#e85d43"/><text x="440" y="406" text-anchor="middle" fill="white" font-size="18" font-weight="bold">4</text></g>
-              <g class="location-marker" data-location="5"><circle cx="250" cy="400" r="22" fill="#e85d43" opacity="0.35" class="pulse-ring"/><circle cx="250" cy="400" r="15" fill="#e85d43"/><text x="250" y="406" text-anchor="middle" fill="white" font-size="18" font-weight="bold">5</text></g>
-              <g class="location-marker" data-location="6"><circle cx="605" cy="560" r="22" fill="#e85d43" opacity="0.35" class="pulse-ring"/><circle cx="605" cy="560" r="15" fill="#e85d43"/><text x="605" y="566" text-anchor="middle" fill="white" font-size="18" font-weight="bold">6</text></g>
-            </svg>
-            <p class="globe-hint">Hover or tap any numbered pin or card to connect regions to proposals.</p>
+            <div class="globe-3d">
+              <svg viewBox="0 0 800 800" class="globe-svg">
+                <defs>
+                  <!-- Ocean gradient -->
+                  <radialGradient id="oceanGradient" cx="40%" cy="40%">
+                    <stop offset="0%" stop-color="#5eb3d6"/>
+                    <stop offset="70%" stop-color="#3d8db5"/>
+                    <stop offset="100%" stop-color="#2b6a8f"/>
+                  </radialGradient>
+
+                  <!-- 3D shading overlay -->
+                  <radialGradient id="sphereLight" cx="38%" cy="35%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+                    <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+                    <stop offset="85%" stop-color="rgba(0,0,0,0)"/>
+                    <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
+                  </radialGradient>
+                </defs>
+
+                <!-- Base ocean circle -->
+                <circle cx="400" cy="400" r="320" fill="url(#oceanGradient)" stroke="#2b6a8f" stroke-width="2"/>
+
+                <!-- Continents in green -->
+                <!-- North America -->
+                <path d="M 200,150 Q 180,140 170,155 L 160,180 Q 155,210 165,240 L 180,265 Q 195,280 215,285 L 240,285 Q 260,280 275,265 L 290,240 Q 300,210 295,180 L 285,155 Q 270,140 250,145 L 225,150 Q 210,152 200,150 Z" fill="#52b788" opacity="0.92"/>
+
+                <!-- South America -->
+                <path d="M 220,300 Q 210,295 200,305 L 190,330 Q 185,360 190,395 L 200,440 Q 210,475 230,500 L 250,515 Q 265,515 275,500 L 285,475 Q 290,450 290,420 L 285,380 Q 280,345 270,320 L 255,305 Q 240,298 220,300 Z" fill="#52b788" opacity="0.92"/>
+
+                <!-- Greenland -->
+                <path d="M 340,110 Q 320,105 310,120 L 305,145 Q 305,170 315,190 L 330,205 Q 350,210 370,205 L 385,190 Q 395,170 395,145 L 390,120 Q 380,105 360,110 L 350,110 Z" fill="#a8dadc" opacity="0.85"/>
+
+                <!-- Europe -->
+                <path d="M 410,200 Q 395,195 385,205 L 378,225 Q 375,245 380,265 L 390,285 Q 405,295 425,295 L 445,290 Q 460,280 465,260 L 468,235 Q 465,215 455,205 L 435,197 Q 420,195 410,200 Z" fill="#52b788" opacity="0.92"/>
+
+                <!-- Africa -->
+                <path d="M 400,300 Q 385,295 375,310 L 365,340 Q 360,375 365,415 L 375,460 Q 390,495 410,520 L 435,535 Q 460,538 480,525 L 500,500 Q 510,470 512,435 L 510,390 Q 505,350 490,325 L 470,305 Q 450,295 425,300 L 410,302 Z" fill="#52b788" opacity="0.92"/>
+
+                <!-- Asia -->
+                <path d="M 465,140 Q 445,135 430,145 L 415,165 Q 408,190 410,220 L 418,255 Q 430,285 450,305 L 475,320 Q 505,330 535,325 L 565,315 Q 590,300 605,275 L 615,245 Q 618,210 610,180 L 595,155 Q 575,138 550,140 L 520,145 Q 490,145 465,140 Z" fill="#52b788" opacity="0.92"/>
+
+                <!-- Southeast Asia Islands -->
+                <ellipse cx="560" cy="420" rx="35" ry="25" fill="#52b788" opacity="0.92"/>
+                <ellipse cx="600" cy="450" rx="28" ry="20" fill="#52b788" opacity="0.92"/>
+
+                <!-- Australia -->
+                <path d="M 580,500 Q 560,495 545,510 L 535,535 Q 530,565 540,595 L 555,620 Q 575,635 600,635 L 630,630 Q 655,615 665,590 L 670,560 Q 668,530 655,515 L 635,502 Q 610,495 580,500 Z" fill="#52b788" opacity="0.92"/>
+
+                <!-- Latitude/longitude grid lines -->
+                <g opacity="0.15" stroke="#ffffff" stroke-width="1.5" fill="none">
+                  <ellipse cx="400" cy="400" rx="320" ry="120"/>
+                  <ellipse cx="400" cy="400" rx="320" ry="200"/>
+                  <ellipse cx="400" cy="400" rx="320" ry="260"/>
+                  <ellipse cx="400" cy="400" rx="120" ry="320"/>
+                  <ellipse cx="400" cy="400" rx="200" ry="320"/>
+                  <ellipse cx="400" cy="400" rx="260" ry="320"/>
+                  <line x1="400" y1="80" x2="400" y2="720"/>
+                  <line x1="80" y1="400" x2="720" y2="400"/>
+                </g>
+
+                <!-- 3D lighting overlay -->
+                <circle cx="400" cy="400" r="320" fill="url(#sphereLight)" pointer-events="none"/>
+
+                <!-- Location markers -->
+                <!-- North America -->
+                <g class="location-marker" data-location="1">
+                  <circle cx="230" cy="220" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="230" cy="220" r="14" fill="#f2684e"/>
+                  <text x="230" y="227" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text>
+                </g>
+
+                <!-- Europe -->
+                <g class="location-marker" data-location="2">
+                  <circle cx="425" cy="250" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="425" cy="250" r="14" fill="#f2684e"/>
+                  <text x="425" y="257" text-anchor="middle" fill="white" font-size="18" font-weight="bold">2</text>
+                </g>
+
+                <!-- Asia -->
+                <g class="location-marker" data-location="3">
+                  <circle cx="530" cy="230" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="530" cy="230" r="14" fill="#f2684e"/>
+                  <text x="530" y="237" text-anchor="middle" fill="white" font-size="18" font-weight="bold">3</text>
+                </g>
+
+                <!-- Africa -->
+                <g class="location-marker" data-location="4">
+                  <circle cx="440" cy="400" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="440" cy="400" r="14" fill="#f2684e"/>
+                  <text x="440" y="407" text-anchor="middle" fill="white" font-size="18" font-weight="bold">4</text>
+                </g>
+
+                <!-- South America -->
+                <g class="location-marker" data-location="5">
+                  <circle cx="250" cy="400" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="250" cy="400" r="14" fill="#f2684e"/>
+                  <text x="250" y="407" text-anchor="middle" fill="white" font-size="18" font-weight="bold">5</text>
+                </g>
+
+                <!-- Australia -->
+                <g class="location-marker" data-location="6">
+                  <circle cx="605" cy="560" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
+                  <circle cx="605" cy="560" r="14" fill="#f2684e"/>
+                  <text x="605" y="567" text-anchor="middle" fill="white" font-size="18" font-weight="bold">6</text>
+                </g>
+              </svg>
+            </div>
           </div>
 
           <div class="examples-list">
-            <div class="example-item" data-location="1"><span class="example-number">1</span><div class="example-content"><h4>United States</h4><p class="example-topic">Healthcare</p><p class="example-desc">Expanding Medicaid coverage in rural communities through telehealth infrastructure investment</p></div></div>
-            <div class="example-item" data-location="2"><span class="example-number">2</span><div class="example-content"><h4>European Union</h4><p class="example-topic">Environmental</p><p class="example-desc">Carbon border adjustment mechanism to reduce emissions leakage in steel manufacturing</p></div></div>
-            <div class="example-item" data-location="3"><span class="example-number">3</span><div class="example-content"><h4>India</h4><p class="example-topic">Education</p><p class="example-desc">Digital literacy programs for girls in underserved districts using mobile technology</p></div></div>
-            <div class="example-item" data-location="4"><span class="example-number">4</span><div class="example-content"><h4>Kenya</h4><p class="example-topic">Economic</p><p class="example-desc">Mobile banking regulations to expand financial inclusion for smallholder farmers</p></div></div>
-            <div class="example-item" data-location="5"><span class="example-number">5</span><div class="example-content"><h4>Brazil</h4><p class="example-topic">Housing</p><p class="example-desc">Zoning reform to incentivize mixed-income housing development in São Paulo metro area</p></div></div>
-            <div class="example-item" data-location="6"><span class="example-number">6</span><div class="example-content"><h4>Australia</h4><p class="example-topic">Technology</p><p class="example-desc">AI governance framework for algorithmic accountability in public sector decision-making</p></div></div>
+            <div class="example-item">
+              <span class="example-number">1</span>
+              <div class="example-content">
+                <h4>United States</h4>
+                <p class="example-topic">Healthcare</p>
+                <p class="example-desc">Expanding Medicaid coverage in rural communities through telehealth infrastructure investment</p>
+              </div>
+            </div>
+
+            <div class="example-item">
+              <span class="example-number">2</span>
+              <div class="example-content">
+                <h4>European Union</h4>
+                <p class="example-topic">Environmental</p>
+                <p class="example-desc">Carbon border adjustment mechanism to reduce emissions leakage in steel manufacturing</p>
+              </div>
+            </div>
+
+            <div class="example-item">
+              <span class="example-number">3</span>
+              <div class="example-content">
+                <h4>India</h4>
+                <p class="example-topic">Education</p>
+                <p class="example-desc">Digital literacy programs for girls in underserved districts using mobile technology</p>
+              </div>
+            </div>
+
+            <div class="example-item">
+              <span class="example-number">4</span>
+              <div class="example-content">
+                <h4>Kenya</h4>
+                <p class="example-topic">Economic</p>
+                <p class="example-desc">Mobile banking regulations to expand financial inclusion for smallholder farmers</p>
+              </div>
+            </div>
+
+            <div class="example-item">
+              <span class="example-number">5</span>
+              <div class="example-content">
+                <h4>Brazil</h4>
+                <p class="example-topic">Housing</p>
+                <p class="example-desc">Zoning reform to incentivize mixed-income housing development in São Paulo metro area</p>
+              </div>
+            </div>
+
+            <div class="example-item">
+              <span class="example-number">6</span>
+              <div class="example-content">
+                <h4>Australia</h4>
+                <p class="example-topic">Technology</p>
+                <p class="example-desc">AI governance framework for algorithmic accountability in public sector decision-making</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Stages -->
       <section id="stages" class="stages section">
-        <div class="section-heading centered reveal">
-          <p class="eyebrow">From idea to impact</p>
-          <h2>Overview of International Policy<br>Conference <span>Stages</span></h2>
-        </div>
+        <div class="section-heading centered reveal"><p class="eyebrow">From idea to impact</p><h2>Overview of International Policy<br>Conference Stages</h2></div>
         <div class="stage-list">
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-1.webp" alt="Students collaborating at a table" loading="lazy" decoding="async"></div><div class="stage-text"><span>Stage I</span><h3>Policy Research</h3><p>Build the foundation: define a policy problem, investigate its context, and develop a research-backed recommendation.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-2.webp" alt="A policy report on a desk" loading="lazy" decoding="async"></div><div class="stage-text"><span>Stage II</span><h3>Policy Brief</h3><p>Translate your research into a concise, rigorous policy brief that makes a compelling case for action.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-3.jpeg" alt="Student presenting" loading="lazy" decoding="async"></div><div class="stage-text"><span>Stage III</span><h3>Video Pitch</h3><p>Bring your proposal to life in a clear and creative pitch for a broad public audience.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-4.jpg" alt="Conference speaker addressing a room" loading="lazy" decoding="async"></div><div class="stage-text"><span>Stage IV</span><h3>Finals</h3><p>Selected finalists present their ideas and take part in an executive question-and-answer session in Cambridge, Massachusetts.</p></div></article>
+          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-1.webp" alt="Students collaborating at a table"></div><div class="stage-text"><span>Stage I</span><h3>Policy Research</h3><p>Build the foundation: define a policy problem, investigate its context, and develop a research-backed recommendation.</p></div></article>
+          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-2.webp" alt="A policy report on a desk"></div><div class="stage-text"><span>Stage II</span><h3>Policy Brief</h3><p>Translate your research into a concise, rigorous policy brief that makes a compelling case for action.</p></div></article>
+          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-3.jpeg" alt="Student presenting"></div><div class="stage-text"><span>Stage III</span><h3>Video Pitch</h3><p>Bring your proposal to life in a clear and creative pitch for a broad public audience.</p></div></article>
+          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-4.jpg" alt="Conference speaker addressing a room"></div><div class="stage-text"><span>Stage IV</span><h3>Finals</h3><p>Selected finalists present their ideas and take part in an executive question-and-answer session in Boston.</p></div></article>
         </div>
       </section>
 
-      <!-- Interactive Tabbed Requirements & Judging Criteria -->
       <section id="requirements" class="requirements-detail section">
         <div class="section-heading centered reveal">
           <p class="eyebrow">Competition Standards</p>
           <h2>Requirements <em>&amp;</em> Judging Criteria</h2>
         </div>
 
-        <div class="req-tabs reveal" role="tablist" aria-label="Competition stage requirements">
-          <button class="req-tab is-active" type="button" role="tab" aria-selected="true" data-stage="1">I · Policy Brief</button>
-          <button class="req-tab" type="button" role="tab" aria-selected="false" data-stage="2">II · Video Pitch</button>
-          <button class="req-tab" type="button" role="tab" aria-selected="false" data-stage="3">III · Live Finals</button>
-        </div>
-
         <div class="stage-requirements reveal">
-          <!-- Stage I -->
-          <div class="req-stage is-active" data-stage="1" role="tabpanel">
-            <div class="req-header"><span class="req-number">I</span><h3>Policy Brief Requirements</h3></div>
+          <div class="req-stage">
+            <div class="req-header">
+              <span class="req-number">I</span>
+              <h3>Policy Brief Requirements</h3>
+            </div>
+
             <div class="req-section">
               <h4>Mandatory Brief Structure</h4>
               <div class="req-items">
-                <div class="req-item"><div class="req-item-header">Executive Summary</div><div class="req-item-body">150 words max. State the problem, proposed intervention, and expected primary outcome in jargon-free prose.</div></div>
-                <div class="req-item"><div class="req-item-header">Problem Definition and Scope</div><div class="req-item-body">Define the problem with at least one quantitative indicator of its magnitude. Specify jurisdiction and time horizon.</div></div>
-                <div class="req-item"><div class="req-item-header">Background and Context</div><div class="req-item-body">Summarize the relevant policy history and prior interventions. Cite at least three independent sources.</div></div>
-                <div class="req-item"><div class="req-item-header">Stakeholder Analysis</div><div class="req-item-body">Identify at least three distinct stakeholder groups; describe each group's interest, influence, and how the proposed policy affects them.</div></div>
-                <div class="req-item"><div class="req-item-header">Policy Options</div><div class="req-item-body">Present at minimum two distinct approaches evaluated against the same criteria: cost, feasibility, equity, and evidence base.</div></div>
-                <div class="req-item"><div class="req-item-header">Recommended Policy</div><div class="req-item-body">State the preferred approach, implementing authority, and a realistic implementation timeline.</div></div>
-                <div class="req-item"><div class="req-item-header">Anticipated Objections</div><div class="req-item-body">Address at least two significant objections with substantive responses.</div></div>
-                <div class="req-item"><div class="req-item-header">References</div><div class="req-item-body">Full bibliography. Minimum 8 sources; at least 4 primary or peer-reviewed.</div></div>
+                <div class="req-item">
+                  <div class="req-item-header">Executive Summary</div>
+                  <div class="req-item-body">150 words max. State the problem, proposed intervention, and expected primary outcome in jargon-free prose.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Problem Definition and Scope</div>
+                  <div class="req-item-body">Define the problem with at least one quantitative indicator of its magnitude. Specify jurisdiction and time horizon.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Background and Context</div>
+                  <div class="req-item-body">Summarize the relevant policy history and prior interventions. Cite at least three independent sources.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Stakeholder Analysis</div>
+                  <div class="req-item-body">Identify at least three distinct stakeholder groups; describe each group's interest, influence, and how the proposed policy affects them.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Policy Options</div>
+                  <div class="req-item-body">Present at minimum two distinct approaches evaluated against the same criteria: cost, feasibility, equity, and evidence base.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Recommended Policy</div>
+                  <div class="req-item-body">State the preferred approach, implementing authority, and a realistic implementation timeline.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Anticipated Objections</div>
+                  <div class="req-item-body">Address at least two significant objections with substantive responses.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">References</div>
+                  <div class="req-item-body">Full bibliography. Minimum 8 sources; at least 4 primary or peer-reviewed.</div>
+                </div>
               </div>
             </div>
+
             <div class="req-section">
               <h4>Academic Integrity Requirements</h4>
               <ul class="integrity-list">
@@ -447,25 +494,59 @@
                 <li>Students must disclose any familial, professional, or personal connection to organizations cited or analyzed in their brief. Failure to disclose constitutes a conflict of interest violation.</li>
               </ul>
             </div>
+
             <div class="req-section rubric-section">
               <h4>Judging Rubric (100 points)</h4>
               <table class="rubric-table">
-                <thead><tr><th>Criterion</th><th>Description</th><th>Points</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Criterion</th>
+                    <th>Description</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td>Problem Definition</td><td>Clarity and precision; use of quantitative indicators; appropriate scoping</td><td>15</td></tr>
-                  <tr><td>Evidence Quality</td><td>Quality, recency, and independence of sources; correct interpretation of causal vs. correlational claims</td><td>25</td></tr>
-                  <tr><td>Analytical Rigor</td><td>Depth of stakeholder analysis; quality of options comparison; soundness of trade-off reasoning</td><td>25</td></tr>
-                  <tr><td>Policy Recommendation</td><td>Specificity of proposed intervention; feasibility; identification of implementing authority</td><td>20</td></tr>
-                  <tr><td>Counter-Argument Engagement</td><td>Substantiveness of objections addressed; quality of responses</td><td>10</td></tr>
-                  <tr><td>Writing and Structure</td><td>Clarity, organization, adherence to required structure</td><td>5</td></tr>
+                  <tr>
+                    <td>Problem Definition</td>
+                    <td>Clarity and precision; use of quantitative indicators; appropriate scoping</td>
+                    <td>15</td>
+                  </tr>
+                  <tr>
+                    <td>Evidence Quality</td>
+                    <td>Quality, recency, and independence of sources; correct interpretation of causal vs. correlational claims</td>
+                    <td>25</td>
+                  </tr>
+                  <tr>
+                    <td>Analytical Rigor</td>
+                    <td>Depth of stakeholder analysis; quality of options comparison; soundness of trade-off reasoning</td>
+                    <td>25</td>
+                  </tr>
+                  <tr>
+                    <td>Policy Recommendation</td>
+                    <td>Specificity of proposed intervention; feasibility; identification of implementing authority</td>
+                    <td>20</td>
+                  </tr>
+                  <tr>
+                    <td>Counter-Argument Engagement</td>
+                    <td>Substantiveness of objections addressed; quality of responses</td>
+                    <td>10</td>
+                  </tr>
+                  <tr>
+                    <td>Writing and Structure</td>
+                    <td>Clarity, organization, adherence to required structure</td>
+                    <td>5</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Stage II -->
-          <div class="req-stage" data-stage="2" role="tabpanel">
-            <div class="req-header"><span class="req-number">II</span><h3>Video Pitch Requirements</h3></div>
+          <div class="req-stage">
+            <div class="req-header">
+              <span class="req-number">II</span>
+              <h3>Video Pitch Requirements</h3>
+            </div>
+
             <div class="req-section">
               <h4>Technical Specifications</h4>
               <ul class="spec-list">
@@ -477,34 +558,84 @@
                 <li>No background music, dramatic effects, or theatrical elements.</li>
               </ul>
             </div>
+
             <div class="req-section">
               <h4>Required Content Elements</h4>
               <div class="req-items">
-                <div class="req-item"><div class="req-item-header">Opening Statement (≈90 sec)</div><div class="req-item-body">Identify the policy problem and state at least one quantitative measure of its scale or severity. Lead with evidence.</div></div>
-                <div class="req-item"><div class="req-item-header">Policy Proposal (≈2–3 min)</div><div class="req-item-body">Identify the implementing authority, target population, and primary mechanism of effect.</div></div>
-                <div class="req-item"><div class="req-item-header">Evidence Base (≈2 min)</div><div class="req-item-body">Cite at least two independent studies or data sources. Distinguish correlational from causal evidence where relevant.</div></div>
-                <div class="req-item"><div class="req-item-header">Objections and Trade-offs (≈2 min)</div><div class="req-item-body">Address at least one significant objection and describe the primary limitation or equity concern.</div></div>
-                <div class="req-item"><div class="req-item-header">Conclusion (≈60 sec)</div><div class="req-item-body">State the primary expected outcome and the condition under which it is most likely to be achieved.</div></div>
+                <div class="req-item">
+                  <div class="req-item-header">Opening Statement (≈90 sec)</div>
+                  <div class="req-item-body">Identify the policy problem and state at least one quantitative measure of its scale or severity. Lead with evidence.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Policy Proposal (≈2–3 min)</div>
+                  <div class="req-item-body">Identify the implementing authority, target population, and primary mechanism of effect.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Evidence Base (≈2 min)</div>
+                  <div class="req-item-body">Cite at least two independent studies or data sources. Distinguish correlational from causal evidence where relevant.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Objections and Trade-offs (≈2 min)</div>
+                  <div class="req-item-body">Address at least one significant objection and describe the primary limitation or equity concern.</div>
+                </div>
+
+                <div class="req-item">
+                  <div class="req-item-header">Conclusion (≈60 sec)</div>
+                  <div class="req-item-body">State the primary expected outcome and the condition under which it is most likely to be achieved.</div>
+                </div>
               </div>
             </div>
+
             <div class="req-section rubric-section">
               <h4>Judging Rubric (100 points)</h4>
               <table class="rubric-table">
-                <thead><tr><th>Criterion</th><th>Description</th><th>Points</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Criterion</th>
+                    <th>Description</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td>Problem Framing</td><td>Evidence-grounded introduction within the time allotted</td><td>15</td></tr>
-                  <tr><td>Clarity of Proposal</td><td>Precision of the intervention; whether the mechanism of effect is clearly explained</td><td>20</td></tr>
-                  <tr><td>Evidence Presentation</td><td>Quality of empirical evidence and effectiveness of communication to a generalist audience</td><td>25</td></tr>
-                  <tr><td>Objection Handling</td><td>Credibility and thoroughness of objections addressed</td><td>20</td></tr>
-                  <tr><td>Communication</td><td>Clarity, pace, structure, and accessibility of the video as a standalone presentation</td><td>20</td></tr>
+                  <tr>
+                    <td>Problem Framing</td>
+                    <td>Evidence-grounded introduction within the time allotted</td>
+                    <td>15</td>
+                  </tr>
+                  <tr>
+                    <td>Clarity of Proposal</td>
+                    <td>Precision of the intervention; whether the mechanism of effect is clearly explained</td>
+                    <td>20</td>
+                  </tr>
+                  <tr>
+                    <td>Evidence Presentation</td>
+                    <td>Quality of empirical evidence and effectiveness of communication to a generalist audience</td>
+                    <td>25</td>
+                  </tr>
+                  <tr>
+                    <td>Objection Handling</td>
+                    <td>Credibility and thoroughness of objections addressed</td>
+                    <td>20</td>
+                  </tr>
+                  <tr>
+                    <td>Communication</td>
+                    <td>Clarity, pace, structure, and accessibility of the video as a standalone presentation</td>
+                    <td>20</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Stage III -->
-          <div class="req-stage" data-stage="3" role="tabpanel">
-            <div class="req-header"><span class="req-number">III</span><h3>Finals Requirements</h3></div>
+          <div class="req-stage">
+            <div class="req-header">
+              <span class="req-number">III</span>
+              <h3>Finals Requirements</h3>
+            </div>
+
             <div class="req-section">
               <h4>Live Pitch Requirements</h4>
               <ul class="spec-list">
@@ -515,6 +646,7 @@
                 <li>Presentations will be recorded for the competition archive. Recording constitutes consent for non-commercial use by IPC.</li>
               </ul>
             </div>
+
             <div class="req-section">
               <h4>Executive Q&amp;A Format</h4>
               <ul class="spec-list">
@@ -526,20 +658,48 @@
                 <li>Responses should be direct and concise. Non-responsive answers are evaluated negatively regardless of length.</li>
               </ul>
             </div>
+
             <div class="req-section">
               <h4>Updated Policy Summary</h4>
               <p class="summary-note">All finalists must submit a 500-word updated policy summary on Day 2, due by 11:59 PM local time. Required elements: the policy recommendation in one sentence; the three strongest pieces of supporting evidence; the primary implementation challenge; and the proposed metric by which the policy's effectiveness should be evaluated within five years. This document is provided to the executive judges prior to the Day 3 Q&amp;A session.</p>
             </div>
+
             <div class="req-section rubric-section">
               <h4>Judging Rubric (100 points)</h4>
               <table class="rubric-table">
-                <thead><tr><th>Criterion</th><th>Description</th><th>Points</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Criterion</th>
+                    <th>Description</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td>Command of Material</td><td>Depth of knowledge; ability to cite specific data without notes; familiarity with the literature</td><td>25</td></tr>
-                  <tr><td>Pitch Effectiveness</td><td>Clarity, structure, and persuasive coherence of the 12-minute live presentation</td><td>20</td></tr>
-                  <tr><td>Q&amp;A Responsiveness</td><td>How directly and substantively each question was addressed</td><td>30</td></tr>
-                  <tr><td>Policy Realism</td><td>How implementable and politically viable the proposal appears to working policymakers</td><td>15</td></tr>
-                  <tr><td>Intellectual Honesty</td><td>Acknowledgment of limitations; willingness to update positions in response to new information</td><td>10</td></tr>
+                  <tr>
+                    <td>Command of Material</td>
+                    <td>Depth of knowledge; ability to cite specific data without notes; familiarity with the literature</td>
+                    <td>25</td>
+                  </tr>
+                  <tr>
+                    <td>Pitch Effectiveness</td>
+                    <td>Clarity, structure, and persuasive coherence of the 12-minute live presentation</td>
+                    <td>20</td>
+                  </tr>
+                  <tr>
+                    <td>Q&amp;A Responsiveness</td>
+                    <td>How directly and substantively each question was addressed</td>
+                    <td>30</td>
+                  </tr>
+                  <tr>
+                    <td>Policy Realism</td>
+                    <td>How implementable and politically viable the proposal appears to working policymakers</td>
+                    <td>15</td>
+                  </tr>
+                  <tr>
+                    <td>Intellectual Honesty</td>
+                    <td>Acknowledgment of limitations; willingness to update positions in response to new information</td>
+                    <td>10</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -547,53 +707,57 @@
         </div>
       </section>
 
-      <!-- Awards -->
       <section id="awards" class="awards section">
-        <div class="awards-inner reveal">
-          <div class="section-heading">
-            <p class="eyebrow">Recognition</p>
-            <h2>Awards <em>tiers</em></h2>
-          </div>
-          <p class="awards-copy">Teams advance through six recognition levels. Final placements are determined by composite scores across all judged stages.</p>
-          <div class="award-grid">
-            <article class="award gold"><span class="award-place">1st place</span><h3>Gold Medal</h3><p>Champion team of the session</p><b>Top team</b></article>
-            <article class="award silver"><span class="award-place">2nd place</span><h3>Silver Medal</h3><p>Runner-up team of the session</p><b>Top 2</b></article>
-            <article class="award bronze"><span class="award-place">3rd place</span><h3>Bronze Medal</h3><p>Third-place team of the session</p><b>Top 3</b></article>
-            <article class="award finalist"><span class="award-place">Finals</span><h3>Finalist</h3><p>Invited to the live finals round</p><b>Top 8 teams</b></article>
-            <article class="award mention"><span class="award-place">Recognition</span><h3>Honorable Mention</h3><p>Strong performance across stages</p><b>Top 15%</b></article>
-            <article class="award distinction"><span class="award-place">Recognition</span><h3>Distinction</h3><p>Commended for quality of work</p><b>Top 25%</b></article>
-          </div>
-          <p class="award-note">All recognized teams receive a certificate of achievement. Final placements are determined by the committee’s composite score after integrated video and paper adjudication.</p>
-        </div>
+        <div class="awards-inner reveal"><p class="eyebrow">Recognition</p><h2>Awards <em>tiers</em></h2><p class="awards-copy">Teams advance through six recognition levels. Final placements are determined by composite scores across all judged stages.</p><div class="award-grid"><article class="award gold"><span class="award-place">1st place</span><h3>Gold Medal</h3><p>Champion team of the session</p><b>Top team</b></article><article class="award silver"><span class="award-place">2nd place</span><h3>Silver Medal</h3><p>Runner-up team of the session</p><b>Top 2</b></article><article class="award bronze"><span class="award-place">3rd place</span><h3>Bronze Medal</h3><p>Third-place team of the session</p><b>Top 3</b></article><article class="award finalist"><span class="award-place">Finals</span><h3>Finalist</h3><p>Invited to the live finals round</p><b>Top 8 teams</b></article><article class="award mention"><span class="award-place">Recognition</span><h3>Honorable Mention</h3><p>Strong performance across stages</p><b>Top 15%</b></article><article class="award distinction"><span class="award-place">Recognition</span><h3>Distinction</h3><p>Commended for quality of work</p><b>Top 25%</b></article></div><p class="award-note">All recognized teams receive a certificate of achievement. Final placements are determined by the committee’s composite score after integrated video and paper adjudication.</p></div>
       </section>
 
-      <!-- Sample Policy Briefs -->
       <section class="documents section" id="documents">
         <div class="documents-hero reveal">
-          <div class="section-heading centered">
+          <div class="documents-hero-content">
             <p class="eyebrow">Competition Resources</p>
-            <h2>Sample Policy <span>Briefs</span></h2>
+            <h2>Sample Policy Briefs</h2>
+            <p class="documents-intro">Explore exemplary policy briefs developed in collaboration with the Harvard Kennedy School's Institute of Politics. These submissions demonstrate the research depth, analytical rigor, and persuasive communication expected at the finals level.</p>
           </div>
-          <p class="documents-intro">Explore exemplary policy briefs developed in collaboration with the Harvard Kennedy School's Institute of Politics. These submissions demonstrate the research depth, analytical rigor, and persuasive communication expected at the finals level.</p>
         </div>
 
         <div class="sample-briefs-container reveal">
           <div class="sample-brief-card">
             <div class="brief-header">
-              <div class="brief-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <div class="brief-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
               </div>
-              <span class="brief-badge health">Healthcare Policy</span>
+              <div class="brief-badge health">Healthcare Policy</div>
             </div>
+
             <div class="brief-content">
               <h3>Expanding Access to Mental Health Services in Rural Communities</h3>
               <p class="brief-excerpt">A comprehensive policy proposal addressing the mental healthcare gap in underserved rural regions through telehealth infrastructure investment and provider incentive programs.</p>
+
               <div class="brief-meta-grid">
-                <div><span class="meta-label">Cycle</span><span class="meta-value">Fall 2025</span></div>
-                <div><span class="meta-label">Track</span><span class="meta-value">Health</span></div>
-                <div><span class="meta-label">Stage</span><span class="meta-value">Finals</span></div>
-                <div><span class="meta-label">Size</span><span class="meta-value">3.6 MB</span></div>
+                <div class="meta-item">
+                  <span class="meta-label">Competition</span>
+                  <span class="meta-value">Fall 2025</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Category</span>
+                  <span class="meta-value">Health Policy</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Stage</span>
+                  <span class="meta-value">Finals</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">File Size</span>
+                  <span class="meta-value">3.6 MB</span>
+                </div>
               </div>
+
               <div class="brief-highlights">
                 <h4>Key Highlights</h4>
                 <ul>
@@ -604,28 +768,57 @@
                 </ul>
               </div>
             </div>
+
             <div class="brief-footer">
-              <a href="./documents/Health Team Fall 2025 Final Brief.pdf" class="brief-download" download>Download PDF ↓</a>
+              <a href="./documents/Health Team Fall 2025 Final Brief.pdf" class="brief-download" download>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+              </a>
               <span class="file-format">PDF Document</span>
             </div>
           </div>
 
           <div class="sample-brief-card">
             <div class="brief-header">
-              <div class="brief-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <div class="brief-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
               </div>
-              <span class="brief-badge tech">Technology Policy</span>
+              <div class="brief-badge tech">Technology Policy</div>
             </div>
+
             <div class="brief-content">
               <h3>Algorithmic Accountability Framework for Public Sector AI Systems</h3>
               <p class="brief-excerpt">A regulatory framework establishing transparency requirements, bias auditing protocols, and oversight mechanisms for artificial intelligence deployed in government decision-making.</p>
+
               <div class="brief-meta-grid">
-                <div><span class="meta-label">Cycle</span><span class="meta-value">Spring 2026</span></div>
-                <div><span class="meta-label">Track</span><span class="meta-value">AI &amp; Tech</span></div>
-                <div><span class="meta-label">Stage</span><span class="meta-value">Finals</span></div>
-                <div><span class="meta-label">Size</span><span class="meta-value">1.4 MB</span></div>
+                <div class="meta-item">
+                  <span class="meta-label">Competition</span>
+                  <span class="meta-value">Spring 2026</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Category</span>
+                  <span class="meta-value">AI & Technology</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Stage</span>
+                  <span class="meta-value">Finals</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">File Size</span>
+                  <span class="meta-value">1.4 MB</span>
+                </div>
               </div>
+
               <div class="brief-highlights">
                 <h4>Key Highlights</h4>
                 <ul>
@@ -636,15 +829,36 @@
                 </ul>
               </div>
             </div>
+
             <div class="brief-footer">
-              <a href="./documents/Tech Team Spring 2026 Final Brief.pdf" class="brief-download" download>Download PDF ↓</a>
+              <a href="./documents/Tech Team Spring 2026 Final Brief.pdf" class="brief-download" download>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+              </a>
               <span class="file-format">PDF Document</span>
             </div>
           </div>
         </div>
+
+        <div class="documents-coming-soon reveal">
+          <div class="coming-soon-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <h3>Additional Resources Coming Soon</h3>
+          <p>Complete competition guidelines, research templates, judging rubrics, and submission instructions will be available at the end of September 2026.</p>
+          <p class="coming-soon-date">Check back after <strong>September 30, 2026</strong></p>
+        </div>
       </section>
 
-      <!-- Timeline -->
       <section class="timeline section" id="dates">
         <div class="section-heading reveal centered">
           <p class="eyebrow">2027 cycle</p>
@@ -652,115 +866,102 @@
         </div>
         <div class="timeline-horizontal reveal" aria-label="2027 competition timeline">
           <div class="timeline-line"></div>
-          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><em>Fall 2026</em><h3>Registration</h3><p>Sign up for updates to receive the registration announcement first.</p></div></div>
-          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><em>Winter 2027</em><h3>Research &amp; Brief</h3><p>Individuals and teams investigate a problem and submit a research-backed recommendation.</p></div></div>
-          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><em>Early Spring 2027</em><h3>Video Pitch</h3><p>Selected participants communicate their ideas in a concise recorded pitch.</p></div></div>
-          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><em>Spring 2027</em><h3>Cambridge Finals</h3><p>Finalists present live, take part in executive Q&amp;A, and celebrate their work in Cambridge, MA.</p></div></div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <em>Fall 2026</em>
+              <h3>Registration</h3>
+              <p>Sign up for updates to receive the registration announcement first.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <em>Winter 2027</em>
+              <h3>Research &amp; Policy Brief</h3>
+              <p>Teams investigate a problem and submit a research-backed recommendation.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <em>Spring 2027</em>
+              <h3>Video Pitch</h3>
+              <p>Selected teams communicate their ideas in a concise recorded pitch.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <em>Summer 2027</em>
+              <h3>Boston Finals</h3>
+              <p>Finalists present live, take part in executive Q&amp;A, and celebrate their work.</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- FAQ -->
-      <section class="faq section" id="faq">
-        <div class="section-heading reveal">
-          <p class="eyebrow">Questions, answered</p>
-          <h2>Frequently asked questions</h2>
-        </div>
-        <div class="faq-list">
-          <details class="reveal"><summary>Who can participate?<span>+</span></summary><p>IPC is open to high school and collegiate students worldwide. Participants may compete as individuals or in teams. Full eligibility requirements will be published with registration for Spring 2027.</p></details>
-          <details class="reveal"><summary>What do participants submit?<span>+</span></summary><p>Participants (individuals or teams) progress through research, a written policy brief, and a short video pitch. Finalists also prepare for a live presentation and executive question-and-answer session.</p></details>
-          <details class="reveal"><summary>How are entries judged?<span>+</span></summary><p>Judges assess the quality of research, clarity of the policy recommendation, feasibility, evidence, equity, and the team’s ability to communicate their work persuasively.</p></details>
-          <details class="reveal"><summary>When will registration details be released?<span>+</span></summary><p>Join the IPC mailing list through the contact section to receive the Spring 2027 timeline, eligibility requirements, and participant resources when they are announced.</p></details>
-        </div>
-      </section>
+      <section class="faq section" id="faq"><div class="section-heading reveal"><p class="eyebrow">Questions, answered</p><h2>Frequently asked questions</h2></div><div class="faq-list"><details class="reveal"><summary>Who can participate?<span>+</span></summary><p>IPC is open to high school and collegiate students worldwide. Participants may compete as individuals or in teams. Full eligibility requirements will be published with registration for Spring 2027.</p></details><details class="reveal"><summary>What do participants submit?<span>+</span></summary><p>Participants (individuals or teams) progress through research, a written policy brief, and a short video pitch. Finalists also prepare for a live presentation and executive question-and-answer session.</p></details><details class="reveal"><summary>How are entries judged?<span>+</span></summary><p>Judges assess the quality of research, clarity of the policy recommendation, feasibility, evidence, equity, and the team’s ability to communicate their work persuasively.</p></details><details class="reveal"><summary>When will registration details be released?<span>+</span></summary><p>Join the IPC mailing list through the contact section to receive the Spring 2027 timeline, eligibility requirements, and participant resources when they are announced.</p></details></div></section>
 
-      <!-- Leadership & Chapters -->
       <section id="leadership" class="team section">
-        <div class="section-heading centered reveal">
-          <p class="eyebrow">The people behind IPC</p>
-          <h2>Leadership &amp; <span>Chapters</span></h2>
-        </div>
+        <div class="section-heading centered reveal"><p class="eyebrow">The people behind IPC</p><h2>Leadership &amp; Advisors</h2></div>
 
-        <div class="team-grid reveal">
-          <div class="leadership-panel">
+        <div class="reveal" style="max-width: 600px; margin: 65px auto 0;">
+          <div class="leadership-column" style="background: #fafbfc; padding: 40px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,.05);">
             <h3 class="column-header">Student Leadership</h3>
+
             <div class="leader-profile">
-              <img src="./final_IPC_website_files/zinia-portrait.jpeg" alt="Zinia Khattar" loading="lazy" decoding="async">
+              <img src="./final_IPC_website_files/zinia-portrait.jpeg" alt="Zinia Khattar">
               <div>
                 <p class="eyebrow">Founder, Co-Chair</p>
                 <h4>Zinia Khattar</h4>
-                <p class="leader-school">Harvard College ’29</p>
+                <p class="leader-school">Harvard College ‘29</p>
               </div>
             </div>
+
             <div class="leader-profile">
-              <img src="./final_IPC_website_files/hugh-portrait.jpeg" alt="Hugh Hankenson" loading="lazy" decoding="async">
+              <img src="./final_IPC_website_files/hugh-portrait.jpeg" alt="Hugh Hankenson">
               <div>
                 <p class="eyebrow">Co-Chair</p>
                 <h4>Hugh Hankenson</h4>
-                <p class="leader-school">Harvard College ’26, University of Oxford ’28, Harvard Law School ’31</p>
+                <p class="leader-school">Harvard College ‘26, University of Oxford ‘28, Harvard Law School ‘31</p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="chapters-panel">
-            <div>
-              <p class="eyebrow">Building a Global Network</p>
-              <h3>Start an IPC Chapter at Your School</h3>
-              <p>We are building IPC chapters at leading high schools and universities worldwide. Chapter leaders coordinate local outreach, organize information sessions, and support participants through the competition process. Applications for the leadership board and school chapters are reviewed on a rolling basis for the Spring 2027 cycle.</p>
-            </div>
-            <div>
-              <a class="btn btn-primary" href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" rel="noopener noreferrer">
-                Apply to Start a Chapter <span>→</span>
-              </a>
+        <!-- Chapters Section -->
+        <div class="reveal" style="margin-top: 90px;">
+          <div style="text-align: center; margin-bottom: 45px;">
+            <p class="eyebrow" style="text-align: center;">Building a Global Network</p>
+            <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(42px, 5.8vw, 72px); letter-spacing: -0.055em; margin: 0 auto; max-width: 900px; text-align: center;">
+              <span style="position: relative; z-index: 0;">IPC Chapters<span style="content: ''; height: 0.21em; background: #efbaa9; position: absolute; bottom: 0.01em; left: -0.04em; right: -0.04em; z-index: -1; transform: rotate(-1.5deg); display: inline-block; width: 100%;"></span></span>
+            </h2>
+          </div>
+
+          <div style="max-width: 1100px; margin: 0 auto; background: linear-gradient(135deg, #fafbfc 0%, #f5efe3 100%); padding: 60px 50px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;">
+            <p style="font-size: 19px; line-height: 1.7; margin-bottom: 40px; color: #213c2b; max-width: 850px; margin-left: auto; margin-right: auto;">
+              We are building IPC chapters at leading high schools and universities worldwide. Chapter leaders coordinate local outreach, organize information sessions, and support participants through the competition process.
+            </p>
+
+            <div style="background: white; padding: 45px 50px; border-radius: 10px; box-shadow: 0 6px 24px rgba(242,104,78,0.15); border: 3px solid #f2684e; max-width: 750px; margin: 0 auto;">
+              <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 32px; color: #213c2b; margin-bottom: 20px; letter-spacing: -0.03em; font-weight: 600;">Start a Chapter at Your School</h3>
+              <p style="font-size: 17px; line-height: 1.7; margin-bottom: 28px; color: #18261d;">
+                Applications are being reviewed on a rolling basis. Apply by <strong style="color: #f2684e;">Friday, August 21, 2026</strong> for priority consideration.
+              </p>
+              <a href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" style="display: inline-block; background: #f2684e; color: white; padding: 16px 40px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(242,104,78,0.3);">Apply to Start a Chapter</a>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Diplomacy Photo Lightbox Modal -->
-    <div class="photo-modal" id="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photo-modal-title">
-      <div class="photo-modal-card">
-        <button class="photo-modal-close" id="photo-modal-close" type="button" aria-label="Close photo details">×</button>
-        <img class="photo-modal-img" id="photo-modal-img" src="" alt="">
-        <div class="photo-modal-info">
-          <p class="eyebrow" id="photo-modal-tag"></p>
-          <h3 id="photo-modal-title"></h3>
-          <p id="photo-modal-story"></p>
-          <a class="photo-modal-source" id="photo-modal-source" href="#"></a>
-        </div>
-      </div>
-    </div>
-
     <footer id="contact">
-      <div class="footer-top">
-        <div>
-          <p class="eyebrow">International Policy Conference</p>
-          <h2>Questions? Let’s talk.</h2>
-        </div>
-        <a class="footer-email" href="mailto:internationalpolicyconference@gmail.com">internationalpolicyconference@gmail.com <span>↗</span></a>
-      </div>
-
-      <!-- Verified Photography Sources & Licenses -->
-      <details class="photo-credits">
-        <summary>Photography Sources &amp; Licenses (8 frames) ▾</summary>
-        <ul class="credits-list">
-          <li><strong>UN General Assembly Hall:</strong> Basil D Soufi, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:United_Nations_General_Assembly_Hall_(3).jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>UN Security Council Meeting (CTBT):</strong> U.S. Department of State, Public Domain — <a href="https://commons.wikimedia.org/wiki/File:United_Nations_Security_Council_Meeting_on_the_Comprehensive_Nuclear-Test-Ban_Treaty_(29795162411).jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>Signing the Paris Climate Agreement (COP21):</strong> U.S. Department of State, Public Domain — <a href="https://commons.wikimedia.org/wiki/File:Secretary_Kerry_Holds_Granddaughter_Dobbs-Higginson_on_Lap_While_Signing_COP21_Climate_Change_Agreement_at_UN_General_Assembly_Hall_in_New_York_(26556850026).jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>European Parliament Hemicycle, Strasbourg:</strong> Diliff, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:European_Parliament_Strasbourg_Hemicycle_-_Diliff.jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>International Court of Justice, Great Hall of Justice:</strong> Lybil BER, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Grand_Hall_de_Justice_de_Palais_de_La_Paix_%C3%A0_La_Haye_Pays-Bas.jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>Allée des Nations, Palais des Nations, Geneva:</strong> Tom Page, CC BY-SA 2.0 — <a href="https://commons.wikimedia.org/wiki/File:United_Nations_Flags_-_cropped.jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>Peace Palace, The Hague:</strong> Thomas Wolf (foto-tw.de), CC BY-SA 3.0 DE — <a href="https://commons.wikimedia.org/wiki/File:Friedenspalast_Den_Haag_(100MP).jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a></li>
-          <li><strong>Cambridge, Massachusetts (Lowell House):</strong> International Policy Conference Archive</li>
-        </ul>
-      </details>
-
-      <div class="footer-bottom">
-        <span>© 2026 International Policy Conference</span>
-        <a href="#top">Back to top ↑</a>
-      </div>
+      <div><p class="eyebrow">International Policy Conference</p><h3 style="font-size: 32px; letter-spacing: -0.03em;">Questions? Let’s talk.</h3></div>
+      <a class="footer-email" href="mailto:internationalpolicyconference@gmail.com">internationalpolicyconference@gmail.com <span>↗</span></a>
+      <p class="footer-bottom">© 2026 International Policy Conference <a href="#top">Back to top ↑</a></p>
     </footer>
+    <script src="./final_IPC_website_files/script.js"></script>
+  
 
-    <script src="./final_IPC_website_files/script.js" defer></script>
-  </body>
-</html>
+</body></html>
