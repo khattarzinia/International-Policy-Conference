@@ -47,7 +47,7 @@
       }
       html.ipc-loader-exiting .hero-copy.reveal,
       html.ipc-loader-exiting .hero-year {
-        transition: opacity 0.65s ease 0.26s, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.26s;
+        transition: opacity 0.7s ease 0.42s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.42s;
       }
       html.ipc-loading, html.ipc-loading body { overflow: hidden; }
       #ipc-loader {
@@ -65,64 +65,10 @@
       html.ipc-loader-exiting #ipc-loader {
         pointer-events: none;
       }
-      .ipc-loader-panel {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        will-change: transform, opacity;
-        transform: translate3d(0, 0, 0);
-      }
-      .ipc-panel-i { z-index: 1; }
-      .ipc-panel-p { z-index: 2; }
-      .ipc-panel-c { z-index: 1; }
-      .ipc-loader-panel svg {
+      #ipc-loader-svg {
         display: block;
         width: 100%;
         height: 100%;
-      }
-      @keyframes ipc-fly-p {
-        0%   { transform: translate3d(0, 0, 0); opacity: 1; }
-        58%  { opacity: 1; }
-        100% { transform: translate3d(0, -112%, 0); opacity: 0; }
-      }
-      @keyframes ipc-fly-i {
-        0%   { transform: translate3d(0, 0, 0); opacity: 1; }
-        62%  { opacity: 1; }
-        100% { transform: translate3d(-52%, -112%, 0); opacity: 0; }
-      }
-      @keyframes ipc-fly-c {
-        0%   { transform: translate3d(0, 0, 0); opacity: 1; }
-        62%  { opacity: 1; }
-        100% { transform: translate3d(52%, -112%, 0); opacity: 0; }
-      }
-      @keyframes ipc-fly-i-mobile {
-        0%   { transform: translate3d(0, 0, 0); opacity: 1; }
-        55%  { opacity: 1; }
-        100% { transform: translate3d(-65%, -112%, 0); opacity: 0; }
-      }
-      @keyframes ipc-fly-c-mobile {
-        0%   { transform: translate3d(0, 0, 0); opacity: 1; }
-        55%  { opacity: 1; }
-        100% { transform: translate3d(65%, -112%, 0); opacity: 0; }
-      }
-      html.ipc-loader-exiting .ipc-panel-p {
-        animation: ipc-fly-p 0.92s cubic-bezier(0.76, 0, 0.24, 1) forwards;
-      }
-      html.ipc-loader-exiting .ipc-panel-i {
-        animation: ipc-fly-i 0.96s cubic-bezier(0.76, 0, 0.24, 1) 0.035s forwards;
-      }
-      html.ipc-loader-exiting .ipc-panel-c {
-        animation: ipc-fly-c 0.96s cubic-bezier(0.76, 0, 0.24, 1) 0.035s forwards;
-      }
-      @media (max-width: 640px) {
-        html.ipc-loader-exiting .ipc-panel-i {
-          animation-name: ipc-fly-i-mobile;
-        }
-        html.ipc-loader-exiting .ipc-panel-c {
-          animation-name: ipc-fly-c-mobile;
-        }
       }
       @media (prefers-reduced-motion: reduce) {
         html.ipc-loading .hero-copy.reveal,
@@ -134,12 +80,6 @@
           transition: opacity 0.3s ease;
           opacity: 0;
         }
-        html.ipc-loader-exiting .ipc-panel-i,
-        html.ipc-loader-exiting .ipc-panel-p,
-        html.ipc-loader-exiting .ipc-panel-c {
-          animation: none;
-          transform: none;
-        }
       }
     </style>
     <script>
@@ -149,11 +89,12 @@
         if (r.classList.contains('ipc-loading')) {
           r.classList.remove('ipc-loading');
           r.classList.add('ipc-loader-exiting');
+          var el = document.getElementById('ipc-loader');
+          if (el) { el.style.transition = 'opacity 0.35s ease'; el.style.opacity = '0'; }
           setTimeout(function () {
             r.classList.remove('ipc-loader-exiting');
-            var el = document.getElementById('ipc-loader');
             if (el) el.remove();
-          }, 1300);
+          }, 400);
         }
       }, 3200);
     </script>
@@ -208,41 +149,25 @@
     </script>
   </head>
   <body>
-    <!-- Full-screen IPC Cutout Loading Screen -->
+    <!-- Full-screen IPC Cutout Loading Screen (single continuous liquid white canvas) -->
     <div id="ipc-loader" aria-hidden="true">
-      <div class="ipc-loader-panel ipc-panel-i">
-        <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <mask id="ipc-mask-i" maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="11225" height="10600">
-              <rect x="-5000" y="-5000" width="11225" height="10600" fill="#ffffff"/>
+      <svg id="ipc-loader-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <mask id="ipc-cutout-mask" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="13200" height="12600">
+            <rect x="-6000" y="-6000" width="13200" height="12600" fill="#ffffff"/>
+            <g id="ipc-glyph-i">
               <path fill="#000000" fill-rule="nonzero" transform="translate(77.5 504) scale(1.15)" d="M186.5 -354.0L186.5 -344.0Q171.5 -343.5 163.8 -340.2Q156.0 -337.0 153.5 -328.2Q151.0 -319.5 151.0 -301.0L151.0 -53.0Q151.0 -35.0 153.8 -26.0Q156.5 -17.0 164.0 -14.0Q171.5 -11.0 186.5 -10.0L186.5 -0.0Q172.0 -1.0 149.2 -1.2Q126.5 -1.5 103.0 -1.5Q76.0 -1.5 52.2 -1.2Q28.5 -1.0 14.0 -0.0L14.0 -10.0Q29.5 -11.0 37.0 -14.0Q44.5 -17.0 47.0 -26.0Q49.5 -35.0 49.5 -53.0L49.5 -301.0Q49.5 -319.5 47.0 -328.2Q44.5 -337.0 36.8 -340.2Q29.0 -343.5 14.0 -344.0L14.0 -354.0Q28.5 -353.5 52.2 -353.0Q76.0 -352.5 103.0 -352.5Q126.5 -352.5 149.2 -353.0Q172.0 -353.5 186.5 -354.0Z"/>
-            </mask>
-          </defs>
-          <rect x="-5000" y="-5000" width="5320.2" height="10600" fill="#ffffff" mask="url(#ipc-mask-i)"/>
-        </svg>
-      </div>
-      <div class="ipc-loader-panel ipc-panel-p">
-        <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <mask id="ipc-mask-p" maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="11225" height="10600">
-              <rect x="-5000" y="-5000" width="11225" height="10600" fill="#ffffff"/>
+            </g>
+            <g id="ipc-glyph-p">
               <path fill="#000000" fill-rule="nonzero" transform="translate(331.3 504) scale(1.15)" d="M14.0 -354.0Q28.5 -353.5 52.2 -353.0Q76.0 -352.5 100.0 -352.5Q125.0 -352.5 148.0 -353.0Q171.0 -353.5 180.5 -353.5Q256.5 -353.5 293.8 -326.0Q331.0 -298.5 331.0 -255.0Q331.0 -237.0 323.5 -217.2Q316.0 -197.5 298.0 -180.8Q280.0 -164.0 248.8 -153.5Q217.5 -143.0 169.5 -143.0L116.5 -143.0L116.5 -153.0L164.5 -153.0Q190.0 -153.0 203.2 -166.5Q216.5 -180.0 221.2 -202.0Q226.0 -224.0 226.0 -249.5Q226.0 -297.0 215.2 -320.5Q204.5 -344.0 178.0 -344.0Q161.0 -344.0 156.0 -335.5Q151.0 -327.0 151.0 -301.0L151.0 -58.0Q151.0 -37.5 155.2 -27.5Q159.5 -17.5 171.5 -14.5Q183.5 -11.5 206.5 -11.5L206.5 -0.0Q189.5 -0.5 162.0 -1.0Q134.5 -1.5 103.5 -1.5Q80.5 -1.5 57.5 -1.0Q34.5 -0.5 14.0 -0.0L14.0 -10.0Q29.5 -11.0 37.0 -14.0Q44.5 -17.0 47.0 -26.0Q49.5 -35.0 49.5 -53.0L49.5 -301.0Q49.5 -319.5 47.0 -328.2Q44.5 -337.0 36.8 -340.2Q29.0 -343.5 14.0 -344.0Z"/>
-            </mask>
-          </defs>
-          <rect x="319.2" y="-5000" width="409.4" height="10600" fill="#ffffff" mask="url(#ipc-mask-p)"/>
-        </svg>
-      </div>
-      <div class="ipc-loader-panel ipc-panel-c">
-        <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <mask id="ipc-mask-c" maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="11225" height="10600">
-              <rect x="-5000" y="-5000" width="11225" height="10600" fill="#ffffff"/>
+            </g>
+            <g id="ipc-glyph-c">
               <path fill="#000000" fill-rule="nonzero" transform="translate(723.5 504) scale(1.15)" d="M207.0 -361.0Q240.0 -361.0 261.2 -351.2Q282.5 -341.5 299.0 -328.5Q309.0 -321.0 314.2 -326.8Q319.5 -332.5 321.5 -354.0L333.0 -354.0Q332.0 -334.0 331.5 -305.2Q331.0 -276.5 331.0 -229.0L319.5 -229.0Q317.5 -253.0 313.0 -271.8Q308.5 -290.5 299.5 -305.0Q290.5 -319.5 273.5 -330.5Q263.0 -337.5 251.2 -341.5Q239.5 -345.5 227.0 -345.5Q198.5 -345.5 180.0 -329.8Q161.5 -314.0 151.2 -288.8Q141.0 -263.5 137.0 -233.8Q133.0 -204.0 133.0 -176.0Q133.0 -148.0 137.0 -118.2Q141.0 -88.5 151.2 -63.2Q161.5 -38.0 180.0 -22.2Q198.5 -6.5 227.0 -6.5Q239.5 -6.5 251.2 -10.8Q263.0 -15.0 273.5 -21.5Q298.5 -37.0 307.2 -63.0Q316.0 -89.0 319.5 -130.0L331.0 -130.0Q331.0 -81.0 331.5 -50.8Q332.0 -20.5 333.0 -0.0L321.5 -0.0Q319.5 -21.5 314.8 -27.0Q310.0 -32.5 299.0 -25.5Q280.5 -12.5 259.8 -2.8Q239.0 7.0 206.5 7.0Q150.0 7.0 107.5 -14.5Q65.0 -36.0 41.5 -76.5Q18.0 -117.0 18.0 -174.0Q18.0 -230.0 42.2 -272.0Q66.5 -314.0 109.0 -337.5Q151.5 -361.0 207.0 -361.0Z"/>
-            </mask>
-          </defs>
-          <rect x="727.6" y="-5000" width="5500" height="10600" fill="#ffffff" mask="url(#ipc-mask-c)"/>
-        </svg>
-      </div>
+            </g>
+          </mask>
+        </defs>
+        <path id="ipc-curtain" fill="#ffffff" mask="url(#ipc-cutout-mask)" d="M-6000 -6000 H7200 V6600 H-6000 Z"/>
+      </svg>
     </div>
 
     <!-- Top Banner -->
