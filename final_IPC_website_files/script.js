@@ -6,13 +6,14 @@
   const glyphP = document.getElementById('ipc-glyph-p');
   const glyphC = document.getElementById('ipc-glyph-c');
   const curtain = document.getElementById('ipc-curtain');
+  const topShield = document.getElementById('ipc-top-shield');
+  const topFeather = document.getElementById('ipc-top-feather');
 
   if (loader && svg && glyphI && glyphP && glyphC && curtain) {
     let dismissed = false;
     const clamp = (v, min, max) => (v < min ? min : v > max ? max : v);
-    // Smooth fluid ease-in-out quintic/cubic blend for liquid momentum
     const easeLiquid = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+    const easeInOutSine = t => -(Math.cos(Math.PI * t) - 1) / 2;
     const cubicPt = (t, p0, p1, p2, p3) => {
       const m = 1 - t;
       return (
@@ -25,14 +26,18 @@
 
     const getViewportBounds = () => {
       const ctm = svg.getScreenCTM();
-      if (!ctm) return { xLeft: 0, xRight: 1200, yTop: -100, yBot: 700 };
+      if (!ctm) return { xLeft: 0, xRight: 1200, yTop: -100, yBot: 700, yHeroTop: 10 };
       const inv = ctm.inverse();
       const pt = svg.createSVGPoint();
       pt.x = 0; pt.y = 0;
       const tl = pt.matrixTransform(inv);
       pt.x = window.innerWidth; pt.y = window.innerHeight;
       const br = pt.matrixTransform(inv);
-      return { xLeft: tl.x, xRight: br.x, yTop: tl.y, yBot: br.y };
+      const header = document.querySelector('.site-header');
+      const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+      pt.x = 0; pt.y = headerBottom;
+      const heroTop = pt.matrixTransform(inv);
+      return { xLeft: tl.x, xRight: br.x, yTop: tl.y, yBot: br.y, yHeroTop: heroTop.y };
     };
 
     const cleanup = () => {
@@ -51,46 +56,61 @@
         return;
       }
 
-      const duration = 1380;
+      const duration = 1280;
       const start = performance.now();
 
       const step = now => {
         const p = clamp((now - start) / duration, 0, 1);
-        const { xLeft, xRight, yTop, yBot } = getViewportBounds();
+        const { xLeft, xRight, yTop, yBot, yHeroTop } = getViewportBounds();
         const vW = xRight - xLeft;
         const vH = yBot - yTop;
         const xMid = (xLeft + xRight) / 2;
 
-        // 1. P glides straight up smoothly off the top edge
-        const uP = clamp(p / 0.78, 0, 1);
+        // Position soft top mask feather right at the hero/header seam (above resting letters)
+        if (topShield && topFeather) {
+          const featherY = Math.min(yHeroTop, 20);
+          const featherH = Math.max(45, Math.min(95, 86 - featherY));
+          topShield.setAttribute('y', (featherY - 6000).toFixed(1));
+          topShield.setAttribute('height', '6000');
+          topFeather.setAttribute('y', featherY.toFixed(1));
+          topFeather.setAttribute('height', featherH.toFixed(1));
+        }
+
+        // 1. P glides straight up smoothly and dissolves gently into the top feather
+        const uP = clamp(p / 0.72, 0, 1);
         const eP = easeLiquid(uP);
-        const dyP = -eP * (525 - yTop + 60);
+        const dyP = -eP * (525 - yHeroTop + 90);
         glyphP.setAttribute('transform', `translate(0 ${dyP.toFixed(2)})`);
+        const fadeP = 1 - clamp((uP - 0.42) / 0.42, 0, 1);
+        glyphP.setAttribute('opacity', fadeP.toFixed(3));
 
         // 2. I rises UP FIRST along a vertical tangent, then curves fluidly into the left edge
-        const uSide = clamp((p - 0.03) / 0.86, 0, 1);
+        const uSide = clamp((p - 0.03) / 0.78, 0, 1);
         const eSide = easeLiquid(uSide);
-        const endXI = -(320 - xLeft + 80);
+        const heroHeadroom = Math.max(80, 96 - yHeroTop);
+        const riseSide = Math.min(vH * 0.28, heroHeadroom + vH * 0.06);
+        const endXI = -(320 - xLeft + 90);
         const dxI = cubicPt(eSide, 0, 0, -vW * 0.22, endXI);
-        const dyI = cubicPt(eSide, 0, -vH * 0.28, -vH * 0.35, -vH * 0.36);
+        const dyI = cubicPt(eSide, 0, -riseSide * 0.85, -riseSide * 1.05, -riseSide);
         glyphI.setAttribute('transform', `translate(${dxI.toFixed(2)} ${dyI.toFixed(2)})`);
 
         // 3. C mirrors I: rises UP FIRST, then curves fluidly into the right edge
-        const endXC = xRight - 720 + 80;
+        const endXC = xRight - 720 + 90;
         const dxC = cubicPt(eSide, 0, 0, vW * 0.22, endXC);
         const dyC = dyI;
         glyphC.setAttribute('transform', `translate(${dxC.toFixed(2)} ${dyC.toFixed(2)})`);
 
-        // 4. Single continuous white curtain lifts as a silky liquid arch wave behind the letters
-        const uWave = clamp((p - 0.24) / 0.76, 0, 1);
-        const wEdge = easeLiquid(uWave);
-        const wArch = Math.sin(Math.PI * easeOutQuart(uWave));
-        const edgeY = (yBot + 30) - wEdge * (vH + 180);
-        const centerY = edgeY - wArch * (vH * 0.44);
-        const xL = xLeft - 120;
-        const xR = xRight + 120;
-        const yT = yTop - 220;
-        const ctrl = (xR - xL) * 0.26;
+        // 4. Strictly monotonic liquid white arch wave
+        const uWave = clamp((p - 0.20) / 0.80, 0, 1);
+        const wCenter = easeInOutSine(Math.pow(uWave, 0.72));
+        const wEdge = easeInOutSine(Math.pow(uWave, 1.22));
+        const span = vH + 100;
+        const edgeY = (yBot + 24) - wEdge * span;
+        const centerY = (yBot + 24) - wCenter * span;
+        const xL = xLeft - 140;
+        const xR = xRight + 140;
+        const yT = yTop - 600;
+        const ctrl = (xR - xL) * 0.27;
         const d =
           `M${xL.toFixed(1)} ${yT.toFixed(1)} ` +
           `H${xR.toFixed(1)} ` +
@@ -98,6 +118,10 @@
           `C${(xR - ctrl).toFixed(1)} ${edgeY.toFixed(1)} ${(xMid + ctrl).toFixed(1)} ${centerY.toFixed(1)} ${xMid.toFixed(1)} ${centerY.toFixed(1)} ` +
           `C${(xMid - ctrl).toFixed(1)} ${centerY.toFixed(1)} ${(xL + ctrl).toFixed(1)} ${edgeY.toFixed(1)} ${xL.toFixed(1)} ${edgeY.toFixed(1)} Z`;
         curtain.setAttribute('d', d);
+
+        // Dissolve remaining upper white veil cleanly before the header/banner settle in
+        const curtainAlpha = 1 - easeInOutSine(clamp((uWave - 0.54) / 0.34, 0, 1));
+        curtain.setAttribute('opacity', curtainAlpha.toFixed(3));
 
         if (p < 1) {
           requestAnimationFrame(step);
@@ -109,7 +133,7 @@
       requestAnimationFrame(step);
     };
 
-    const minHold = new Promise(resolve => setTimeout(resolve, 600));
+    const minHold = new Promise(resolve => setTimeout(resolve, 550));
     const heroReady = new Promise(resolve => {
       const img = new Image();
       img.onload = img.onerror = resolve;

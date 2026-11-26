@@ -45,9 +45,18 @@
         opacity: 0;
         transform: translateY(18px);
       }
+      html.ipc-loading .top-banner,
+      html.ipc-loading .site-header {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
       html.ipc-loader-exiting .hero-copy.reveal,
       html.ipc-loader-exiting .hero-year {
-        transition: opacity 0.7s ease 0.42s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.42s;
+        transition: opacity 0.65s ease 0.32s, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.32s;
+      }
+      html.ipc-loader-exiting .top-banner,
+      html.ipc-loader-exiting .site-header {
+        transition: opacity 0.5s ease 0.58s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.58s;
       }
       html.ipc-loading, html.ipc-loading body { overflow: hidden; }
       #ipc-loader {
@@ -72,7 +81,9 @@
       }
       @media (prefers-reduced-motion: reduce) {
         html.ipc-loading .hero-copy.reveal,
-        html.ipc-loading .hero-year {
+        html.ipc-loading .hero-year,
+        html.ipc-loading .top-banner,
+        html.ipc-loading .site-header {
           opacity: 1;
           transform: none;
         }
@@ -153,6 +164,10 @@
     <div id="ipc-loader" aria-hidden="true">
       <svg id="ipc-loader-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
         <defs>
+          <linearGradient id="ipc-top-soften" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
           <mask id="ipc-cutout-mask" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="13200" height="12600">
             <rect x="-6000" y="-6000" width="13200" height="12600" fill="#ffffff"/>
             <g id="ipc-glyph-i">
@@ -164,6 +179,8 @@
             <g id="ipc-glyph-c">
               <path fill="#000000" fill-rule="nonzero" transform="translate(723.5 504) scale(1.15)" d="M207.0 -361.0Q240.0 -361.0 261.2 -351.2Q282.5 -341.5 299.0 -328.5Q309.0 -321.0 314.2 -326.8Q319.5 -332.5 321.5 -354.0L333.0 -354.0Q332.0 -334.0 331.5 -305.2Q331.0 -276.5 331.0 -229.0L319.5 -229.0Q317.5 -253.0 313.0 -271.8Q308.5 -290.5 299.5 -305.0Q290.5 -319.5 273.5 -330.5Q263.0 -337.5 251.2 -341.5Q239.5 -345.5 227.0 -345.5Q198.5 -345.5 180.0 -329.8Q161.5 -314.0 151.2 -288.8Q141.0 -263.5 137.0 -233.8Q133.0 -204.0 133.0 -176.0Q133.0 -148.0 137.0 -118.2Q141.0 -88.5 151.2 -63.2Q161.5 -38.0 180.0 -22.2Q198.5 -6.5 227.0 -6.5Q239.5 -6.5 251.2 -10.8Q263.0 -15.0 273.5 -21.5Q298.5 -37.0 307.2 -63.0Q316.0 -89.0 319.5 -130.0L331.0 -130.0Q331.0 -81.0 331.5 -50.8Q332.0 -20.5 333.0 -0.0L321.5 -0.0Q319.5 -21.5 314.8 -27.0Q310.0 -32.5 299.0 -25.5Q280.5 -12.5 259.8 -2.8Q239.0 7.0 206.5 7.0Q150.0 7.0 107.5 -14.5Q65.0 -36.0 41.5 -76.5Q18.0 -117.0 18.0 -174.0Q18.0 -230.0 42.2 -272.0Q66.5 -314.0 109.0 -337.5Q151.5 -361.0 207.0 -361.0Z"/>
             </g>
+            <rect id="ipc-top-shield" x="-6000" y="-6060" width="13200" height="6000" fill="#ffffff"/>
+            <rect id="ipc-top-feather" x="-6000" y="-60" width="13200" height="60" fill="url(#ipc-top-soften)"/>
           </mask>
         </defs>
         <path id="ipc-curtain" fill="#ffffff" mask="url(#ipc-cutout-mask)" d="M-6000 -6000 H7200 V6600 H-6000 Z"/>
@@ -171,7 +188,7 @@
     </div>
 
     <!-- Top Banner -->
-    <div style="background: linear-gradient(90deg, #f2684e 0%, #d95b42 100%); color: white; padding: 12px 20px; text-align: center; font-size: 14px; font-weight: 500; border-bottom: 2px solid #c14d36;">
+    <div class="top-banner" style="background: linear-gradient(90deg, #f2684e 0%, #d95b42 100%); color: white; padding: 12px 20px; text-align: center; font-size: 14px; font-weight: 500; border-bottom: 2px solid #c14d36;">
       <p style="margin: 0;">
         Apply to be on our leadership board or start a chapter via the following link:
         <a href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" style="color: white; text-decoration: underline; font-weight: 700; margin-left: 5px;">Apply Here →</a>
