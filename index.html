@@ -277,176 +277,90 @@
         </div>
       </section>
 
-      <section id="examples" class="examples section">
-        <div class="section-heading centered reveal">
-          <p class="eyebrow">Past Proposals</p>
-          <h2>Policy Examples from <span>Around the World</span></h2>
-        </div>
-
-        <div class="examples-content reveal">
-          <div class="globe-container">
-            <div class="globe-3d">
-              <svg viewBox="0 0 800 800" class="globe-svg">
-                <defs>
-                  <!-- Ocean gradient -->
-                  <radialGradient id="oceanGradient" cx="40%" cy="40%">
-                    <stop offset="0%" stop-color="#5eb3d6"/>
-                    <stop offset="70%" stop-color="#3d8db5"/>
-                    <stop offset="100%" stop-color="#2b6a8f"/>
-                  </radialGradient>
-
-                  <!-- 3D shading overlay -->
-                  <radialGradient id="sphereLight" cx="38%" cy="35%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
-                    <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
-                    <stop offset="85%" stop-color="rgba(0,0,0,0)"/>
-                    <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
-                  </radialGradient>
-                </defs>
-
-                <!-- Base ocean circle -->
-                <circle cx="400" cy="400" r="320" fill="url(#oceanGradient)" stroke="#2b6a8f" stroke-width="2"/>
-
-                <!-- Continents in green -->
-                <!-- North America -->
-                <path d="M 200,150 Q 180,140 170,155 L 160,180 Q 155,210 165,240 L 180,265 Q 195,280 215,285 L 240,285 Q 260,280 275,265 L 290,240 Q 300,210 295,180 L 285,155 Q 270,140 250,145 L 225,150 Q 210,152 200,150 Z" fill="#52b788" opacity="0.92"/>
-
-                <!-- South America -->
-                <path d="M 220,300 Q 210,295 200,305 L 190,330 Q 185,360 190,395 L 200,440 Q 210,475 230,500 L 250,515 Q 265,515 275,500 L 285,475 Q 290,450 290,420 L 285,380 Q 280,345 270,320 L 255,305 Q 240,298 220,300 Z" fill="#52b788" opacity="0.92"/>
-
-                <!-- Greenland -->
-                <path d="M 340,110 Q 320,105 310,120 L 305,145 Q 305,170 315,190 L 330,205 Q 350,210 370,205 L 385,190 Q 395,170 395,145 L 390,120 Q 380,105 360,110 L 350,110 Z" fill="#a8dadc" opacity="0.85"/>
-
-                <!-- Europe -->
-                <path d="M 410,200 Q 395,195 385,205 L 378,225 Q 375,245 380,265 L 390,285 Q 405,295 425,295 L 445,290 Q 460,280 465,260 L 468,235 Q 465,215 455,205 L 435,197 Q 420,195 410,200 Z" fill="#52b788" opacity="0.92"/>
-
-                <!-- Africa -->
-                <path d="M 400,300 Q 385,295 375,310 L 365,340 Q 360,375 365,415 L 375,460 Q 390,495 410,520 L 435,535 Q 460,538 480,525 L 500,500 Q 510,470 512,435 L 510,390 Q 505,350 490,325 L 470,305 Q 450,295 425,300 L 410,302 Z" fill="#52b788" opacity="0.92"/>
-
-                <!-- Asia -->
-                <path d="M 465,140 Q 445,135 430,145 L 415,165 Q 408,190 410,220 L 418,255 Q 430,285 450,305 L 475,320 Q 505,330 535,325 L 565,315 Q 590,300 605,275 L 615,245 Q 618,210 610,180 L 595,155 Q 575,138 550,140 L 520,145 Q 490,145 465,140 Z" fill="#52b788" opacity="0.92"/>
-
-                <!-- Southeast Asia Islands -->
-                <ellipse cx="560" cy="420" rx="35" ry="25" fill="#52b788" opacity="0.92"/>
-                <ellipse cx="600" cy="450" rx="28" ry="20" fill="#52b788" opacity="0.92"/>
-
-                <!-- Australia -->
-                <path d="M 580,500 Q 560,495 545,510 L 535,535 Q 530,565 540,595 L 555,620 Q 575,635 600,635 L 630,630 Q 655,615 665,590 L 670,560 Q 668,530 655,515 L 635,502 Q 610,495 580,500 Z" fill="#52b788" opacity="0.92"/>
-
-                <!-- Latitude/longitude grid lines -->
-                <g opacity="0.15" stroke="#ffffff" stroke-width="1.5" fill="none">
-                  <ellipse cx="400" cy="400" rx="320" ry="120"/>
-                  <ellipse cx="400" cy="400" rx="320" ry="200"/>
-                  <ellipse cx="400" cy="400" rx="320" ry="260"/>
-                  <ellipse cx="400" cy="400" rx="120" ry="320"/>
-                  <ellipse cx="400" cy="400" rx="200" ry="320"/>
-                  <ellipse cx="400" cy="400" rx="260" ry="320"/>
-                  <line x1="400" y1="80" x2="400" y2="720"/>
-                  <line x1="80" y1="400" x2="720" y2="400"/>
-                </g>
-
-                <!-- 3D lighting overlay -->
-                <circle cx="400" cy="400" r="320" fill="url(#sphereLight)" pointer-events="none"/>
-
-                <!-- Location markers -->
-                <!-- North America -->
-                <g class="location-marker" data-location="1">
-                  <circle cx="230" cy="220" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
-                  <circle cx="230" cy="220" r="14" fill="#f2684e"/>
-                  <text x="230" y="227" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text>
-                </g>
-
-                <!-- Europe -->
-                <g class="location-marker" data-location="2">
-                  <circle cx="425" cy="250" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
-                  <circle cx="425" cy="250" r="14" fill="#f2684e"/>
-                  <text x="425" y="257" text-anchor="middle" fill="white" font-size="18" font-weight="bold">2</text>
-                </g>
-
-                <!-- Asia -->
-                <g class="location-marker" data-location="3">
-                  <circle cx="530" cy="230" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
-                  <circle cx="530" cy="230" r="14" fill="#f2684e"/>
-                  <text x="530" y="237" text-anchor="middle" fill="white" font-size="18" font-weight="bold">3</text>
-                </g>
-
-                <!-- Africa -->
-                <g class="location-marker" data-location="4">
-                  <circle cx="440" cy="400" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
-                  <circle cx="440" cy="400" r="14" fill="#f2684e"/>
-                  <text x="440" y="407" text-anchor="middle" fill="white" font-size="18" font-weight="bold">4</text>
-                </g>
-
-                <!-- South America -->
-                <g class="location-marker" data-location="5">
-                  <circle cx="250" cy="400" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
-                  <circle cx="250" cy="400" r="14" fill="#f2684e"/>
-                  <text x="250" y="407" text-anchor="middle" fill="white" font-size="18" font-weight="bold">5</text>
-                </g>
-
-                <!-- Australia -->
-                <g class="location-marker" data-location="6">
-                  <circle cx="605" cy="560" r="20" fill="#f2684e" opacity="0.2" class="pulse-ring"/>
-                  <circle cx="605" cy="560" r="14" fill="#f2684e"/>
-                  <text x="605" y="567" text-anchor="middle" fill="white" font-size="18" font-weight="bold">6</text>
-                </g>
-              </svg>
-            </div>
+      <section id="examples" class="examples examples-atlas section">
+        <div class="examples-shell">
+          <div class="section-heading centered reveal">
+            <p class="eyebrow">Past Proposals</p>
+            <h2>Policy Examples from <span>Around the World</span></h2>
           </div>
 
-          <div class="examples-list">
-            <div class="example-item">
-              <span class="example-number">1</span>
-              <div class="example-content">
-                <h4>United States</h4>
-                <p class="example-topic">Healthcare</p>
-                <p class="example-desc">Expanding Medicaid coverage in rural communities through telehealth infrastructure investment</p>
+          <div class="examples-content reveal">
+            <div class="globe-stage">
+              <div class="globe-canvas-wrap" id="ipc-globe-wrap">
+                <canvas id="ipc-globe-canvas" width="560" height="560" aria-label="Interactive 3D world globe showing six international policy proposal locations"></canvas>
+              </div>
+              <div class="globe-hud">
+                <span class="globe-coords" id="globe-coords">39.8° N · 98.6° W — UNITED STATES · HEALTHCARE</span>
+                <span class="globe-hint">Drag to rotate · Click any region</span>
               </div>
             </div>
 
-            <div class="example-item">
-              <span class="example-number">2</span>
-              <div class="example-content">
-                <h4>European Union</h4>
-                <p class="example-topic">Environmental</p>
-                <p class="example-desc">Carbon border adjustment mechanism to reduce emissions leakage in steel manufacturing</p>
-              </div>
-            </div>
+            <div class="examples-list" id="examples-list">
+              <button type="button" class="example-item is-active" data-loc="0">
+                <span class="example-number">01</span>
+                <div class="example-content">
+                  <div class="example-head">
+                    <h4>United States</h4>
+                    <span class="example-topic">Healthcare</span>
+                  </div>
+                  <p class="example-desc">Expanding Medicaid coverage in rural communities through telehealth infrastructure investment</p>
+                </div>
+              </button>
 
-            <div class="example-item">
-              <span class="example-number">3</span>
-              <div class="example-content">
-                <h4>India</h4>
-                <p class="example-topic">Education</p>
-                <p class="example-desc">Digital literacy programs for girls in underserved districts using mobile technology</p>
-              </div>
-            </div>
+              <button type="button" class="example-item" data-loc="1">
+                <span class="example-number">02</span>
+                <div class="example-content">
+                  <div class="example-head">
+                    <h4>European Union</h4>
+                    <span class="example-topic">Environmental</span>
+                  </div>
+                  <p class="example-desc">Carbon border adjustment mechanism to reduce emissions leakage in steel manufacturing</p>
+                </div>
+              </button>
 
-            <div class="example-item">
-              <span class="example-number">4</span>
-              <div class="example-content">
-                <h4>Kenya</h4>
-                <p class="example-topic">Economic</p>
-                <p class="example-desc">Mobile banking regulations to expand financial inclusion for smallholder farmers</p>
-              </div>
-            </div>
+              <button type="button" class="example-item" data-loc="2">
+                <span class="example-number">03</span>
+                <div class="example-content">
+                  <div class="example-head">
+                    <h4>India</h4>
+                    <span class="example-topic">Education</span>
+                  </div>
+                  <p class="example-desc">Digital literacy programs for girls in underserved districts using mobile technology</p>
+                </div>
+              </button>
 
-            <div class="example-item">
-              <span class="example-number">5</span>
-              <div class="example-content">
-                <h4>Brazil</h4>
-                <p class="example-topic">Housing</p>
-                <p class="example-desc">Zoning reform to incentivize mixed-income housing development in São Paulo metro area</p>
-              </div>
-            </div>
+              <button type="button" class="example-item" data-loc="3">
+                <span class="example-number">04</span>
+                <div class="example-content">
+                  <div class="example-head">
+                    <h4>Kenya</h4>
+                    <span class="example-topic">Economic</span>
+                  </div>
+                  <p class="example-desc">Mobile banking regulations to expand financial inclusion for smallholder farmers</p>
+                </div>
+              </button>
 
-            <div class="example-item">
-              <span class="example-number">6</span>
-              <div class="example-content">
-                <h4>Australia</h4>
-                <p class="example-topic">Technology</p>
-                <p class="example-desc">AI governance framework for algorithmic accountability in public sector decision-making</p>
-              </div>
+              <button type="button" class="example-item" data-loc="4">
+                <span class="example-number">05</span>
+                <div class="example-content">
+                  <div class="example-head">
+                    <h4>Brazil</h4>
+                    <span class="example-topic">Housing</span>
+                  </div>
+                  <p class="example-desc">Zoning reform to incentivize mixed-income housing development in São Paulo metro area</p>
+                </div>
+              </button>
+
+              <button type="button" class="example-item" data-loc="5">
+                <span class="example-number">06</span>
+                <div class="example-content">
+                  <div class="example-head">
+                    <h4>Australia</h4>
+                    <span class="example-topic">Technology</span>
+                  </div>
+                  <p class="example-desc">AI governance framework for algorithmic accountability in public sector decision-making</p>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -1038,6 +952,7 @@
       </details>
       <p class="footer-bottom">© 2026 International Policy Conference <a href="#top">Back to top ↑</a></p>
     </footer>
+    <script src="./final_IPC_website_files/world-data.js" defer></script>
     <script src="./final_IPC_website_files/script.js" defer></script>
   
 

@@ -1295,7 +1295,398 @@
     root.classList.remove("ipc-loading", "ipc-loader-exiting");
   }
 
-  // ─── 4. Header Scroll State, Mobile Nav & Scroll Reveal ───
+  // ─── 4. Interactive 3D Natural Earth Orthographic Globe (#examples) ───
+  const globeCanvas = document.getElementById("ipc-globe-canvas");
+  const globeCoordsEl = document.getElementById("globe-coords");
+  const exampleBtns = [...document.querySelectorAll("#examples-list .example-item")];
+
+  if (globeCanvas && window.IPC_EARTH_DATA) {
+    const ctx = globeCanvas.getContext("2d");
+    const DEG = Math.PI / 180;
+    const { dots: rawDots, coasts: rawCoasts } = window.IPC_EARTH_DATA;
+
+    const LOCS = [
+      { id: "01", name: "United States", topic: "Healthcare", lat: 39.8, lon: -98.6, label: "39.8° N · 98.6° W" },
+      { id: "02", name: "European Union", topic: "Environmental", lat: 50.85, lon: 4.35, label: "50.8° N · 4.4° E" },
+      { id: "03", name: "India", topic: "Education", lat: 22.6, lon: 79.0, label: "22.6° N · 79.0° E" },
+      { id: "04", name: "Kenya", topic: "Economic", lat: -1.29, lon: 36.82, label: "1.3° S · 36.8° E" },
+      { id: "05", name: "Brazil", topic: "Housing", lat: -23.55, lon: -46.63, label: "23.6° S · 46.6° W" },
+      { id: "06", name: "Australia", topic: "Technology", lat: -29.0, lon: 141.0, label: "29.0° S · 141.0° E" }
+    ];
+
+    const ARCS = [
+      [0, 1], [1, 2], [2, 5], [1, 3], [3, 2], [0, 4], [4, 3]
+    ];
+
+    // Precompute unit sphere Cartesian coordinates (y = North, x = lon 90°E, z = lon 0° prime meridian)
+    const toXYZ = (lonDeg, latDeg) => {
+      const lam = lonDeg * DEG;
+      const phi = latDeg * DEG;
+      const cp = Math.cos(phi);
+      return [cp * Math.sin(lam), Math.sin(phi), cp * Math.cos(lam)];
+    };
+
+    const landPts = new Float32Array((rawDots.length / 2) * 3);
+    for (let i = 0, j = 0; i < rawDots.length; i += 2, j += 3) {
+      const [x, y, z] = toXYZ(rawDots[i] / 10, rawDots[i + 1] / 10);
+      landPts[j] = x; landPts[j + 1] = y; landPts[j + 2] = z;
+    }
+
+    const coastRings = rawCoasts.map(ring => {
+      const arr = new Float32Array((ring.length / 2) * 3);
+      for (let i = 0, j = 0; i < ring.length; i += 2, j += 3) {
+        const [x, y, z] = toXYZ(ring[i] / 10, ring[i + 1] / 10);
+        arr[j] = x; arr[j + 1] = y; arr[j + 2] = z;
+      }
+      return arr;
+    });
+
+    const locXYZ = LOCS.map(l => toXYZ(l.lon, l.lat));
+
+    // Precompute 36-step elevated geodesic great-circle arcs
+    const arcPaths = ARCS.map(([a, b]) => {
+      const p0 = locXYZ[a], p1 = locXYZ[b];
+      const dot = Math.max(-1, Math.min(1, p0[0] * p1[0] + p0[1] * p1[1] + p0[2] * p1[2]));
+      const omega = Math.acos(dot);
+      const sinO = Math.sin(omega) || 1;
+      const steps = 36;
+      const pts = [];
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const w0 = Math.sin((1 - t) * omega) / sinO;
+        const w1 = Math.sin(t * omega) / sinO;
+        const lift = 1 + Math.sin(Math.PI * t) * 0.14;
+        pts.push([(p0[0] * w0 + p1[0] * w1) * lift, (p0[1] * w0 + p1[1] * w1) * lift, (p0[2] * w0 + p1[2] * w1) * lift]);
+      }
+      return { a, b, pts };
+    });
+
+    let activeIdx = 0;
+    let rotLon = -LOCS[0].lon * DEG;
+    let rotLat = LOCS[0].lat * DEG * 0.72;
+    let targetLon = rotLon;
+    let targetLat = rotLat;
+    let autoSpin = true;
+    let userHoverLock = false;
+    let dragging = false;
+    let dragX = 0, dragY = 0;
+    let velLon = 0, velLat = 0;
+    let globeVisible = true;
+    let markerHitPts = [];
+
+    const selectLocation = (idx, pauseSpin = true) => {
+      activeIdx = idx;
+      const loc = LOCS[idx];
+      // Shortest angular path around 2π
+      const desired = -loc.lon * DEG;
+      let diff = ((desired - rotLon + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+      targetLon = rotLon + diff;
+      targetLat = Math.max(-0.85, Math.min(0.85, loc.lat * DEG * 0.78));
+      if (pauseSpin) autoSpin = false;
+      exampleBtns.forEach((btn, i) => btn.classList.toggle("is-active", i === idx));
+      if (globeCoordsEl) {
+        globeCoordsEl.textContent = `${loc.label} — ${loc.name.toUpperCase()} · ${loc.topic.toUpperCase()}`;
+      }
+    };
+
+    exampleBtns.forEach((btn, idx) => {
+      btn.addEventListener("click", () => selectLocation(idx, true));
+      btn.addEventListener("mouseenter", () => {
+        userHoverLock = true;
+        selectLocation(idx, true);
+      });
+      btn.addEventListener("mouseleave", () => {
+        userHoverLock = false;
+      });
+    });
+
+    // Pointer drag-to-rotate + click beacon detection
+    let downX = 0, downY = 0;
+    globeCanvas.addEventListener("pointerdown", e => {
+      dragging = true;
+      autoSpin = false;
+      dragX = downX = e.clientX;
+      dragY = downY = e.clientY;
+      velLon = 0; velLat = 0;
+      globeCanvas.setPointerCapture(e.pointerId);
+    });
+    globeCanvas.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      const dx = e.clientX - dragX;
+      const dy = e.clientY - dragY;
+      dragX = e.clientX; dragY = e.clientY;
+      velLon = dx * 0.0075;
+      velLat = dy * 0.006;
+      rotLon += velLon;
+      rotLat = Math.max(-1.05, Math.min(1.05, rotLat + velLat));
+      targetLon = rotLon;
+      targetLat = rotLat;
+    });
+    const endDrag = e => {
+      if (!dragging) return;
+      dragging = false;
+      // Check click on a front-facing marker beacon
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) < 7) {
+        const rect = globeCanvas.getBoundingClientRect();
+        const cx = e.clientX - rect.left;
+        const cy = e.clientY - rect.top;
+        for (const m of markerHitPts) {
+          if (Math.hypot(cx - m.x, cy - m.y) < 22) {
+            selectLocation(m.idx, true);
+            break;
+          }
+        }
+      }
+    };
+    globeCanvas.addEventListener("pointerup", endDrag);
+    globeCanvas.addEventListener("pointercancel", endDrag);
+
+    // Pause rendering when scrolled off-screen for zero idle CPU
+    const globeObs = new IntersectionObserver(entries => {
+      globeVisible = entries[0]?.isIntersecting ?? true;
+    }, { threshold: 0.05 });
+    globeObs.observe(globeCanvas);
+
+    const resizeCanvas = () => {
+      const rect = globeCanvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const size = Math.max(260, Math.round(rect.width));
+      if (globeCanvas.width !== Math.round(size * dpr)) {
+        globeCanvas.width = Math.round(size * dpr);
+        globeCanvas.height = Math.round(size * dpr);
+      }
+      return { size, dpr };
+    };
+
+    const drawGlobe = now => {
+      requestAnimationFrame(drawGlobe);
+      if (!globeVisible || document.hidden) return;
+
+      const { size, dpr } = resizeCanvas();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, size, size);
+
+      if (!dragging) {
+        if (autoSpin && !userHoverLock && !reducedMotion) {
+          rotLon += 0.0024;
+          targetLon = rotLon;
+        } else {
+          if (Math.abs(velLon) > 0.0002 || Math.abs(velLat) > 0.0002) {
+            rotLon += velLon;
+            rotLat = Math.max(-1.05, Math.min(1.05, rotLat + velLat));
+            targetLon = rotLon; targetLat = rotLat;
+            velLon *= 0.93; velLat *= 0.93;
+          } else {
+            rotLon += (targetLon - rotLon) * 0.085;
+            rotLat += (targetLat - rotLat) * 0.085;
+          }
+        }
+      }
+
+      const cx = size / 2;
+      const cy = size / 2;
+      const R = size * 0.425;
+      const cosLon = Math.cos(rotLon), sinLon = Math.sin(rotLon);
+      const cosLat = Math.cos(rotLat), sinLat = Math.sin(rotLat);
+
+      const project = (x, y, z) => {
+        // Rotate around Y (longitude), then X (latitude tilt)
+        const x1 = x * cosLon + z * sinLon;
+        const z1 = -x * sinLon + z * cosLon;
+        const y2 = y * cosLat - z1 * sinLat;
+        const z2 = y * sinLat + z1 * cosLat;
+        return [cx + x1 * R, cy - y2 * R, z2];
+      };
+
+      // 1. Subtle outer atmospheric halo
+      const halo = ctx.createRadialGradient(cx, cy, R * 0.92, cx, cy, R * 1.15);
+      halo.addColorStop(0, "rgba(22, 46, 33, 0.24)");
+      halo.addColorStop(0.55, "rgba(22, 46, 33, 0.06)");
+      halo.addColorStop(1, "rgba(22, 46, 33, 0)");
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * 1.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Sculpted Deep Diplomatic Forest-Obsidian Sphere
+      const sphereGrad = ctx.createRadialGradient(cx - R * 0.34, cy - R * 0.32, R * 0.06, cx, cy, R * 1.05);
+      sphereGrad.addColorStop(0, "#234332");
+      sphereGrad.addColorStop(0.48, "#14271d");
+      sphereGrad.addColorStop(0.86, "#0d1a13");
+      sphereGrad.addColorStop(1, "#08110c");
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.fillStyle = sphereGrad;
+      ctx.fill();
+      ctx.clip();
+
+      // 3. Precision Architectural Graticule (Meridians & Parallels every 30°)
+      ctx.lineWidth = 0.75;
+      for (let lat = -60; lat <= 60; lat += 30) {
+        ctx.strokeStyle = lat === 0 ? "rgba(246, 242, 233, 0.14)" : "rgba(246, 242, 233, 0.065)";
+        ctx.beginPath();
+        let pen = false;
+        for (let lon = -180; lon <= 180; lon += 6) {
+          const [x, y, z] = toXYZ(lon, lat);
+          const [sx, sy, sz] = project(x, y, z);
+          if (sz >= -0.02) {
+            if (!pen) { ctx.moveTo(sx, sy); pen = true; } else ctx.lineTo(sx, sy);
+          } else pen = false;
+        }
+        ctx.stroke();
+      }
+      for (let lon = -180; lon < 180; lon += 30) {
+        ctx.strokeStyle = "rgba(246, 242, 233, 0.065)";
+        ctx.beginPath();
+        let pen = false;
+        for (let lat = -84; lat <= 84; lat += 6) {
+          const [x, y, z] = toXYZ(lon, lat);
+          const [sx, sy, sz] = project(x, y, z);
+          if (sz >= -0.02) {
+            if (!pen) { ctx.moveTo(sx, sy); pen = true; } else ctx.lineTo(sx, sy);
+          } else pen = false;
+        }
+        ctx.stroke();
+      }
+
+      // 4. Real Natural Earth 110m Vector Coastlines (front hemisphere crisp ivory contour)
+      ctx.strokeStyle = "rgba(243, 236, 222, 0.28)";
+      ctx.lineWidth = 0.9;
+      for (let r = 0; r < coastRings.length; r++) {
+        const ring = coastRings[r];
+        ctx.beginPath();
+        let pen = false;
+        for (let i = 0; i < ring.length; i += 3) {
+          const [sx, sy, sz] = project(ring[i], ring[i + 1], ring[i + 2]);
+          if (sz > 0.01) {
+            if (!pen) { ctx.moveTo(sx, sy); pen = true; } else ctx.lineTo(sx, sy);
+          } else pen = false;
+        }
+        ctx.stroke();
+      }
+
+      // 5. 3,049 Real Natural Earth Fibonacci Land Dots (volumetric back + luminous front shading)
+      const dotBase = size * 0.0029;
+      for (let i = 0; i < landPts.length; i += 3) {
+        const [sx, sy, sz] = project(landPts[i], landPts[i + 1], landPts[i + 2]);
+        if (sz < 0) {
+          // Subtle ghost back-hemisphere land dots for crystal-clear 3D sphere depth
+          ctx.fillStyle = "rgba(246, 242, 233, 0.055)";
+          ctx.fillRect(sx - 0.6, sy - 0.6, 1.2, 1.2);
+        } else {
+          const lum = 0.28 + Math.pow(sz, 0.72) * 0.72;
+          const rad = dotBase * (0.68 + sz * 0.52);
+          ctx.fillStyle = `rgba(244, 238, 224, ${lum.toFixed(2)})`;
+          ctx.beginPath();
+          ctx.arc(sx, sy, rad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 6. Specular Rim & Inner Edge Vignette
+      const rim = ctx.createRadialGradient(cx, cy, R * 0.76, cx, cy, R);
+      rim.addColorStop(0, "rgba(0,0,0,0)");
+      rim.addColorStop(0.82, "rgba(0,0,0,0.22)");
+      rim.addColorStop(1, "rgba(246, 242, 233, 0.22)");
+      ctx.fillStyle = rim;
+      ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+      ctx.restore();
+
+      // Crisp outer architectural sphere hairline
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(246, 242, 233, 0.24)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // 7. Elevated Geodesic Policy Arcs + Traveling Pulse Comet (cleanly clipped above front hemisphere horizon)
+      const pulseT = (now * 0.00035) % 1;
+      for (const arc of arcPaths) {
+        const isRel = arc.a === activeIdx || arc.b === activeIdx;
+        ctx.beginPath();
+        let pen = false;
+        for (let i = 0; i < arc.pts.length; i++) {
+          const [sx, sy, sz] = project(arc.pts[i][0], arc.pts[i][1], arc.pts[i][2]);
+          if (sz > 0.06 && Math.hypot(sx - cx, sy - cy) <= R * 1.06) {
+            if (!pen) { ctx.moveTo(sx, sy); pen = true; } else ctx.lineTo(sx, sy);
+          } else pen = false;
+        }
+        ctx.strokeStyle = isRel ? "rgba(232, 98, 70, 0.75)" : "rgba(232, 98, 70, 0.22)";
+        ctx.lineWidth = isRel ? 1.85 : 0.9;
+        ctx.stroke();
+
+        if (isRel && !reducedMotion) {
+          const idxF = pulseT * (arc.pts.length - 1);
+          const i0 = Math.floor(idxF);
+          const p = arc.pts[i0];
+          const [sx, sy, sz] = project(p[0], p[1], p[2]);
+          if (sz > 0.08 && Math.hypot(sx - cx, sy - cy) <= R * 1.06) {
+            ctx.beginPath();
+            ctx.arc(sx, sy, 3.2, 0, Math.PI * 2);
+            ctx.fillStyle = "#fff5f2";
+            ctx.fill();
+          }
+        }
+      }
+
+      // 8. Six Real-GPS Policy Beacons + Floating Callout Pill on Active Region
+      markerHitPts = [];
+      const ringPulse = (now * 0.0012) % 1;
+      for (let i = 0; i < LOCS.length; i++) {
+        const [sx, sy, sz] = project(locXYZ[i][0], locXYZ[i][1], locXYZ[i][2]);
+        if (sz < -0.04) continue;
+        const isAct = i === activeIdx;
+        markerHitPts.push({ idx: i, x: sx, y: sy });
+
+        if (isAct) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, 8 + ringPulse * 18, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(232, 98, 70, ${(1 - ringPulse) * 0.85})`;
+          ctx.lineWidth = 1.6;
+          ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, isAct ? 10 : 7.5, 0, Math.PI * 2);
+        ctx.fillStyle = isAct ? "#e86246" : "#182d21";
+        ctx.fill();
+        ctx.lineWidth = isAct ? 2 : 1.5;
+        ctx.strokeStyle = isAct ? "#fffdf9" : "rgba(232, 98, 70, 0.92)";
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = `700 ${isAct ? 9.5 : 8.5}px "DM Sans", sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(String(i + 1), sx, sy + 0.5);
+
+        if (isAct && sz > 0.15) {
+          const text = `${LOCS[i].id} · ${LOCS[i].name.toUpperCase()}`;
+          ctx.font = '700 10px "DM Sans", sans-serif';
+          const tw = ctx.measureText(text).width;
+          const pw = tw + 18;
+          const ph = 22;
+          const px = Math.min(size - pw - 6, Math.max(6, sx + 15));
+          const py = Math.max(8, sy - ph / 2);
+          ctx.fillStyle = "rgba(14, 24, 18, 0.92)";
+          ctx.strokeStyle = "rgba(232, 98, 70, 0.85)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.roundRect(px, py, pw, ph, 11);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#fffdf9";
+          ctx.textAlign = "left";
+          ctx.fillText(text, px + 9, py + ph / 2 + 0.5);
+        }
+      }
+    };
+
+    requestAnimationFrame(drawGlobe);
+  }
+
+  // ─── 5. Header Scroll State, Mobile Nav & Scroll Reveal ───
   const header = document.querySelector(".site-header");
   const heroSection = document.querySelector(".mt-hero");
   const onScroll = () => {
