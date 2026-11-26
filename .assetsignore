@@ -1,0 +1,15 @@
+# Exclude repo metadata, config, and stale files from Cloudflare Static Assets
+.git
+.git/**
+.github
+.github/**
+.gitignore
+.DS_Store
+.wrangler
+.wrangler/**
+node_modules
+node_modules/**
+wrangler.jsonc
+CNAME
+README.md
+final_IPC_website.html

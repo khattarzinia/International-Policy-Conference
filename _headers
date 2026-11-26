@@ -1,0 +1,46 @@
+# Global security headers
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Always revalidate HTML and crawl files
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+# Default caching for static asset directories
+/final_IPC_website_files/*
+  Cache-Control: public, max-age=86400
+
+/assets/*
+  Cache-Control: public, max-age=86400
+
+/documents/*
+  Cache-Control: public, max-age=604800
+
+# Fix MIME type for extensionless Google Fonts stylesheet snapshot
+/final_IPC_website_files/css2
+  Content-Type: text/css; charset=utf-8
+
+# Fix MIME type for WebP hero image saved with a .jpg extension
+/assets/lowell-house-hires.jpg
+  Content-Type: image/webp
+
+# Short cache for unhashed CSS/JS during upcoming redesign (override directory rule)
+/final_IPC_website_files/*.css
+  ! Cache-Control
+  Cache-Control: public, max-age=300, must-revalidate
+
+/final_IPC_website_files/*.js
+  ! Cache-Control
+  Cache-Control: public, max-age=300, must-revalidate
