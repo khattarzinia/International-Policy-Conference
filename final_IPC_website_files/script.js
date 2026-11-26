@@ -263,236 +263,314 @@
     }
   ];
 
-  // ─── 15 Curated 3D Floating Slots Across 3 True Optical Depth-of-Field Planes ───
-  // All Z planes stay strictly >= 10px (in front of z=0 container plane) so Chromium 3D hit-testing reaches EVERY print!
-  const SLOTS = [
-    // Near Foreground (5 crisp prints framing outer corners & lower gallery)
-    { x: 11, y: 21, w: 206, depth: 2, rotZ: -5.2, driftX: 9,  driftY: 10, speed: 0.00055, phase: 0.2, mx: 18, my: 18, mw: 120 },
-    { x: 89, y: 22, w: 208, depth: 2, rotZ:  4.6, driftX: 10, driftY: 10, speed: 0.00051, phase: 1.7, mx: 82, my: 19, mw: 120 },
-    { x: 11, y: 79, w: 210, depth: 2, rotZ:  3.6, driftX: 10, driftY:  9, speed: 0.00049, phase: 3.1, mx: 19, my: 81, mw: 122 },
-    { x: 89, y: 79, w: 208, depth: 2, rotZ: -4.0, driftX: 9,  driftY:  9, speed: 0.00053, phase: 4.5, mx: 81, my: 80, mw: 122 },
-    { x: 65, y: 85, w: 186, depth: 2, rotZ:  2.2, driftX: 8,  driftY:  6, speed: 0.00046, phase: 2.4, hideMobile: true },
-
-    // Mid Ground (5 prints with gentle lens softness around the inner ring)
-    { x: 10, y: 50, w: 184, depth: 1, rotZ: -6.8, driftX: 8, driftY: 9, speed: 0.00042, phase: 0.9, hideMobile: true },
-    { x: 90, y: 51, w: 186, depth: 1, rotZ:  6.2, driftX: 8, driftY: 8, speed: 0.00040, phase: 2.8, hideMobile: true },
-    { x: 31, y: 15, w: 174, depth: 1, rotZ:  3.0, driftX: 7, driftY: 6, speed: 0.00044, phase: 5.2, mx: 50, my: 15, mw: 102 },
-    { x: 69, y: 15, w: 176, depth: 1, rotZ: -3.2, driftX: 7, driftY: 6, speed: 0.00041, phase: 1.1, hideMobile: true },
-    { x: 35, y: 85, w: 174, depth: 1, rotZ: -2.4, driftX: 7, driftY: 6, speed: 0.00038, phase: 3.9, mx: 50, my: 83, mw: 102 },
-
-    // Far Background Bokeh (5 soft atmospheric prints adding unmistakable 3D depth, clear of headline at 1280px+)
-    { x: 20, y: 31, w: 146, depth: 0, rotZ:  5.2, driftX: 5, driftY: 5, speed: 0.00032, phase: 0.5, hideMobile: true },
-    { x: 80, y: 31, w: 146, depth: 0, rotZ: -5.6, driftX: 5, driftY: 5, speed: 0.00030, phase: 2.1, hideMobile: true },
-    { x: 20, y: 69, w: 148, depth: 0, rotZ: -4.4, driftX: 5, driftY: 5, speed: 0.00034, phase: 4.1, hideMobile: true },
-    { x: 80, y: 69, w: 146, depth: 0, rotZ:  4.4, driftX: 5, driftY: 5, speed: 0.00031, phase: 1.5, hideMobile: true },
-    { x: 50, y: 12, w: 144, depth: 0, rotZ:  1.4, driftX: 6, driftY: 4, speed: 0.00029, phase: 5.8, hideMobile: true }
+  // ─── 1. 2008 Beijing Olympics-Inspired 15×9 Kinetic 3D Movable-Type Matrix ───
+  const COLS = 15;
+  const ROWS = 9;
+  // Monumental raised movable-type bitmap spelling I · P · C (15 cols × 9 rows)
+  const IPC_MAP = [
+    '...............',
+    '.###.####.####.',
+    '..#..#..#.#..#.',
+    '..#..#..#.#....',
+    '..#..####.#....',
+    '..#..#....#....',
+    '..#..#....#..#.',
+    '.###.#....####.',
+    '...............'
   ];
 
-  const DEPTH_STYLE = [
-    { blur: '3.2px', opacity: '0.72', z: 5,  zPx: 10,  parallax: 11, shadow: '0 10px 24px rgba(20, 32, 24, 0.09)' },
-    { blur: '1.1px', opacity: '0.92', z: 9,  zPx: 55,  parallax: 22, shadow: '0 16px 36px rgba(20, 32, 24, 0.14)' },
-    { blur: '0px',   opacity: '1',    z: 14, zPx: 110, parallax: 36, shadow: '0 24px 52px rgba(20, 32, 24, 0.21)' }
-  ];
-
-  // ─── 1. Build 15 Floating 3D Press Prints + Orbit & Flip Engine ───
-  const world = document.getElementById('archive-world');
+  const gridEl = document.getElementById('mt-grid');
+  const planeEl = document.getElementById('mt-plane');
+  const stageEl = document.getElementById('mt-stage');
+  const readoutEl = document.getElementById('mt-readout');
   const flipWaveBtn = document.getElementById('archive-flip-btn');
   const openSourcesBtn = document.getElementById('archive-sources-btn');
+  const formationBtns = [...document.querySelectorAll('.mt-formations [data-mode]')];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const defaultReadout = readoutEl?.textContent || '';
 
-  const slotStates = [];
-  let nextPoolIdx = SLOTS.length;
+  let activeMode = 'ipc';
+  let introStartTime = null;
+  let hoveredBlock = null;
+  let pointerGridX = -99;
+  let pointerGridY = -99;
+  let targetTiltX = 22;
+  let targetTiltY = 0;
+  let curTiltX = 22;
+  let curTiltY = 0;
+  const blocks = [];
 
-  const setFaceContent = (faceEl, item) => {
-    const img = faceEl.querySelector('img');
-    const loc = faceEl.querySelector('.print-meta-loc');
-    const yr = faceEl.querySelector('.print-meta-yr');
-    if (img) { img.src = item.src; img.alt = `${item.title} (${item.origin})`; }
-    if (loc) loc.textContent = `${item.id} · ${item.shortLoc}`;
-    if (yr) yr.textContent = item.year;
-  };
+  if (gridEl && planeEl) {
+    // Build 135 interlocking 3D extruded movable-type pillars (15 × 9)
+    const frag = document.createDocumentFragment();
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const isLetter = IPC_MAP[r][c] === '#';
+        // Distribute the 20 verified diplomacy photos with prime strides so adjacent pillars never duplicate
+        const frontIdx = (r * 7 + c * 3) % ARCHIVE_PRINTS.length;
+        const backIdx = (frontIdx + 11) % ARCHIVE_PRINTS.length;
+        const frontItem = ARCHIVE_PRINTS[frontIdx];
+        const backItem = ARCHIVE_PRINTS[backIdx];
 
-  if (world) {
-    SLOTS.forEach((slot, idx) => {
-      const ds = DEPTH_STYLE[slot.depth];
-      const frontItem = ARCHIVE_PRINTS[idx % ARCHIVE_PRINTS.length];
-      const backItem = ARCHIVE_PRINTS[(idx + 10) % ARCHIVE_PRINTS.length];
+        const cell = document.createElement('div');
+        cell.className = 'mt-cell';
 
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'arch-print';
-      btn.style.setProperty('--x', `${slot.x}%`);
-      btn.style.setProperty('--y', `${slot.y}%`);
-      btn.style.setProperty('--w', `${slot.w}px`);
-      if (slot.mx != null) {
-        btn.dataset.mx = '1';
-        btn.style.setProperty('--mx', `${slot.mx}%`);
-        btn.style.setProperty('--my', `${slot.my}%`);
-        btn.style.setProperty('--mw', `${slot.mw}px`);
+        const pillar = document.createElement('button');
+        pillar.type = 'button';
+        pillar.className = 'mt-pillar';
+        pillar.dataset.dof = isLetter ? '2' : '0';
+        pillar.setAttribute('aria-label', `${frontItem.title} (${frontItem.origin}, ${frontItem.year}) — Click for origin and source`);
+
+        pillar.innerHTML = `
+          <span class="mt-wall mt-wall-s" aria-hidden="true"></span>
+          <span class="mt-wall mt-wall-e" aria-hidden="true"></span>
+          <span class="mt-wall mt-wall-w" aria-hidden="true"></span>
+          <span class="mt-top">
+            <span class="mt-top-flip">
+              <span class="mt-face front"><img src="${frontItem.src}" alt="${frontItem.title}" loading="${isLetter ? 'eager' : 'lazy'}" decoding="async"></span>
+              <span class="mt-face back"><img src="${backItem.src}" alt="${backItem.title}" loading="lazy" decoding="async"></span>
+            </span>
+            <span class="mt-hover-tag">${frontItem.id} · ${frontItem.year}</span>
+          </span>`;
+
+        const block = {
+          r,
+          c,
+          isLetter,
+          el: pillar,
+          frontImg: pillar.querySelector('.mt-face.front img'),
+          backImg: pillar.querySelector('.mt-face.back img'),
+          tagEl: pillar.querySelector('.mt-hover-tag'),
+          frontItem,
+          backItem,
+          flipped: false,
+          z: 4,
+          dof: isLetter ? 2 : 0,
+          distCenter: Math.hypot(c - (COLS - 1) / 2, r - (ROWS - 1) / 2),
+          diag: c + r * 0.72
+        };
+
+        const updateHoverReadout = () => {
+          const item = block.flipped ? block.backItem : block.frontItem;
+          if (readoutEl) {
+            readoutEl.textContent = `${item.id} · ${item.title} — ${item.origin} (${item.year}) · Click for source`;
+            readoutEl.classList.add('is-live');
+          }
+          if (block.tagEl) block.tagEl.textContent = `${item.id} · ${item.year}`;
+        };
+
+        pillar.addEventListener('mouseenter', () => {
+          hoveredBlock = block;
+          pointerGridX = c;
+          pointerGridY = r;
+          pillar.classList.add('is-hovered');
+          updateHoverReadout();
+        });
+        pillar.addEventListener('mouseleave', () => {
+          if (hoveredBlock === block) hoveredBlock = null;
+          pillar.classList.remove('is-hovered');
+          if (!hoveredBlock && readoutEl) {
+            readoutEl.textContent = defaultReadout;
+            readoutEl.classList.remove('is-live');
+          }
+        });
+        pillar.addEventListener('focus', () => {
+          hoveredBlock = block;
+          pointerGridX = c;
+          pointerGridY = r;
+          pillar.classList.add('is-hovered');
+          updateHoverReadout();
+        });
+        pillar.addEventListener('blur', () => {
+          if (hoveredBlock === block) hoveredBlock = null;
+          pillar.classList.remove('is-hovered');
+        });
+        pillar.addEventListener('click', () => {
+          const item = block.flipped ? block.backItem : block.frontItem;
+          openPrintModal(ARCHIVE_PRINTS.indexOf(item));
+        });
+
+        cell.appendChild(pillar);
+        frag.appendChild(cell);
+        blocks.push(block);
       }
-      btn.style.setProperty('--dof-blur', ds.blur);
-      btn.style.setProperty('--dof-opacity', ds.opacity);
-      btn.style.setProperty('--dof-shadow', ds.shadow);
-      btn.style.setProperty('--z', String(ds.z));
-      if (slot.hideMobile) btn.dataset.hideMobile = '1';
-      btn.setAttribute('aria-label', `Inspect ${frontItem.title} (${frontItem.origin})`);
+    }
+    gridEl.appendChild(frag);
 
-      btn.innerHTML = `
-        <span class="print-flipper">
-          <span class="print-face front">
-            <span class="print-photo-wrap">
-              <img src="${frontItem.src}" alt="${frontItem.title}" loading="eager" decoding="async">
-              <span class="print-stamp">Origin &amp; Source →</span>
-            </span>
-            <span class="print-meta">
-              <span class="print-meta-loc">${frontItem.id} · ${frontItem.shortLoc}</span>
-              <span class="print-meta-yr">${frontItem.year}</span>
-            </span>
-          </span>
-          <span class="print-face back">
-            <span class="print-photo-wrap">
-              <img src="${backItem.src}" alt="${backItem.title}" loading="lazy" decoding="async">
-              <span class="print-stamp">Origin &amp; Source →</span>
-            </span>
-            <span class="print-meta">
-              <span class="print-meta-loc">${backItem.id} · ${backItem.shortLoc}</span>
-              <span class="print-meta-yr">${backItem.year}</span>
-            </span>
-          </span>
-        </span>`;
-
-      const state = {
-        el: btn,
-        slot,
-        ds,
-        flipped: false,
-        hovered: false,
-        frontItem,
-        backItem,
-        frontFace: btn.querySelector('.print-face.front'),
-        backFace: btn.querySelector('.print-face.back'),
-        ox: 0, oy: 0, oz: ds.zPx, rx: 0, ry: 0, rz: slot.rotZ
-      };
-
-      btn.addEventListener('mouseenter', () => { state.hovered = true; });
-      btn.addEventListener('mouseleave', () => { state.hovered = false; });
-      btn.addEventListener('click', () => {
-        const activeItem = state.flipped ? state.backItem : state.frontItem;
-        openPrintModal(ARCHIVE_PRINTS.indexOf(activeItem));
-      });
-
-      world.appendChild(btn);
-      slotStates.push(state);
+    // Subtle 3D Bird's Nest Camera Perspective Parallax
+    stageEl?.addEventListener('mousemove', e => {
+      const rect = stageEl.getBoundingClientRect();
+      const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      const baseX = window.innerWidth <= 560 ? 16 : 22;
+      targetTiltX = baseX - ny * 4.5;
+      targetTiltY = nx * 6.5;
+    }, { passive: true });
+    stageEl?.addEventListener('mouseleave', () => {
+      targetTiltX = window.innerWidth <= 560 ? 16 : 22;
+      targetTiltY = 0;
+      pointerGridX = -99;
+      pointerGridY = -99;
     });
 
-    // Smooth 3D Cursor Parallax + Continuous Organic Orbital Drift
-    let targetMX = 0, targetMY = 0;
-    let curMX = 0, curMY = 0;
-    const heroEl = document.querySelector('.archive-hero');
-    heroEl?.addEventListener('mousemove', e => {
-      const rect = heroEl.getBoundingClientRect();
-      targetMX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-      targetMY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    }, { passive: true });
-    heroEl?.addEventListener('mouseleave', () => { targetMX = 0; targetMY = 0; });
-
-    const animateOrbit = now => {
-      curMX += (targetMX - curMX) * 0.055;
-      curMY += (targetMY - curMY) * 0.055;
-
-      for (let i = 0; i < slotStates.length; i++) {
-        const s = slotStates[i];
-        const { slot, ds } = s;
-        const t = now * slot.speed + slot.phase;
-        let tx, ty, tz, trx, tryy, trz, lerp;
-        if (s.hovered) {
-          tx = 0;
-          ty = -6;
-          tz = 170;
-          trx = 0;
-          tryy = 0;
-          trz = 0;
-          lerp = 0.16;
-        } else {
-          tx = Math.sin(t) * slot.driftX + curMX * ds.parallax;
-          ty = Math.cos(t * 0.85) * slot.driftY + curMY * ds.parallax;
-          tz = ds.zPx;
-          trz = slot.rotZ + Math.sin(t * 0.7) * 1.8;
-          trx = -curMY * (slot.depth + 1) * 2.2 + Math.sin(t * 0.5) * 2.0;
-          tryy = curMX * (slot.depth + 1) * 2.8 + Math.cos(t * 0.6) * 2.5;
-          lerp = 0.12;
-        }
-        s.ox += (tx - s.ox) * lerp;
-        s.oy += (ty - s.oy) * lerp;
-        s.oz += (tz - s.oz) * lerp;
-        s.rx += (trx - s.rx) * lerp;
-        s.ry += (tryy - s.ry) * lerp;
-        s.rz += (trz - s.rz) * lerp;
-        s.el.style.transform = `translate3d(${s.ox.toFixed(1)}px, ${s.oy.toFixed(1)}px, ${s.oz.toFixed(1)}px) rotateX(${s.rx.toFixed(2)}deg) rotateY(${s.ry.toFixed(2)}deg) rotateZ(${s.rz.toFixed(2)}deg)`;
-      }
-      requestAnimationFrame(animateOrbit);
-    };
-
-    if (!reducedMotion) {
-      requestAnimationFrame(animateOrbit);
-    } else {
-      slotStates.forEach(s => {
-        s.el.style.transform = `translate3d(0, 0, ${s.ds.zPx}px) rotateZ(${s.slot.rotZ}deg)`;
+    // Formation Switcher (I·P·C Relief / Beijing Wave / Concentric Ripple / Great Wall Terrace)
+    formationBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeMode = btn.dataset.mode || 'ipc';
+        formationBtns.forEach(b => b.classList.toggle('is-active', b === btn));
       });
-    }
+    });
 
-    // Periodic Staggered 3D Y-Axis Flips Cycling Through All 20 Verified Photos (avoiding on-screen duplicates)
-    const flipSlot = s => {
-      if (s.hovered) return;
-      const visibleIds = new Set(slotStates.map(st => (st.flipped ? st.backItem.id : st.frontItem.id)));
-      let incoming = ARCHIVE_PRINTS[nextPoolIdx % ARCHIVE_PRINTS.length];
-      for (let tries = 0; tries < ARCHIVE_PRINTS.length; tries++) {
-        const candidate = ARCHIVE_PRINTS[(nextPoolIdx + tries) % ARCHIVE_PRINTS.length];
-        if (!visibleIds.has(candidate.id)) {
-          incoming = candidate;
-          nextPoolIdx = (nextPoolIdx + tries + 1) % ARCHIVE_PRINTS.length;
-          break;
-        }
+    // Kinetic 3D Block Flip Helper (swaps in a fresh verified diplomacy photograph)
+    let poolCursor = 0;
+    const flipBlock = b => {
+      if (hoveredBlock === b) return;
+      const curId = b.flipped ? b.backItem.id : b.frontItem.id;
+      let nextItem = ARCHIVE_PRINTS[poolCursor % ARCHIVE_PRINTS.length];
+      poolCursor += 1;
+      if (nextItem.id === curId) {
+        nextItem = ARCHIVE_PRINTS[poolCursor % ARCHIVE_PRINTS.length];
+        poolCursor += 1;
       }
-      if (!s.flipped) {
-        s.backItem = incoming;
-        setFaceContent(s.backFace, incoming);
-        s.flipped = true;
-        s.el.classList.add('is-flipped');
+      if (!b.flipped) {
+        b.backItem = nextItem;
+        if (b.backImg) { b.backImg.src = nextItem.src; b.backImg.alt = nextItem.title; }
+        b.flipped = true;
+        b.el.classList.add('is-flipped');
       } else {
-        s.frontItem = incoming;
-        setFaceContent(s.frontFace, incoming);
-        s.flipped = false;
-        s.el.classList.remove('is-flipped');
+        b.frontItem = nextItem;
+        if (b.frontImg) { b.frontImg.src = nextItem.src; b.frontImg.alt = nextItem.title; }
+        b.flipped = false;
+        b.el.classList.remove('is-flipped');
       }
-      const shown = s.flipped ? s.backItem : s.frontItem;
-      s.el.setAttribute('aria-label', `Inspect ${shown.title} (${shown.origin})`);
+      const shown = b.flipped ? b.backItem : b.frontItem;
+      if (b.tagEl) b.tagEl.textContent = `${shown.id} · ${shown.year}`;
+      b.el.setAttribute('aria-label', `${shown.title} (${shown.origin}, ${shown.year}) — Click for origin and source`);
     };
 
-    let flipCursor = 0;
+    // Periodic Living Flips across elevated blocks (keeps the sculpture shimmering with diplomacy)
     if (!reducedMotion) {
+      let flipStep = 0;
+      const letterBlocks = blocks.filter(b => b.isLetter);
       setInterval(() => {
         if (document.hidden || document.documentElement.classList.contains('ipc-loading')) return;
-        // Pick next non-hovered slot using coprime step so flips bounce organically across the desk
-        for (let tries = 0; tries < slotStates.length; tries++) {
-          const idx = (flipCursor * 5 + tries) % slotStates.length;
-          if (!slotStates[idx].hovered) {
-            flipSlot(slotStates[idx]);
-            flipCursor += 1;
-            break;
-          }
-        }
-      }, 1750);
+        const pool = activeMode === 'ipc' ? letterBlocks : blocks;
+        const b = pool[(flipStep * 7) % pool.length];
+        flipStep += 1;
+        if (b) flipBlock(b);
+      }, 950);
     }
 
-    // Manual "Flip Wave" button triggers a cascading left-to-right 3D flip across all 14 prints
+    // Manual "↻ Flip Wave" sweeps a Beijing-2008 left-to-right domino flip across all 135 pillars
     flipWaveBtn?.addEventListener('click', () => {
-      const sorted = [...slotStates].sort((a, b) => a.slot.x - b.slot.x);
-      sorted.forEach((s, i) => setTimeout(() => flipSlot(s), i * 85));
+      for (let c = 0; c < COLS; c++) {
+        setTimeout(() => {
+          for (let r = 0; r < ROWS; r++) {
+            const b = blocks[r * COLS + c];
+            if (b) flipBlock(b);
+          }
+        }, c * 52);
+      }
     });
+
+    // Compute Target Pillar Elevation (strictly >= 4px so Chromium 3D hit-testing reaches EVERY block!)
+    const computeTargetZ = (b, sec, isMobile) => {
+      const scale = isMobile ? 0.56 : 1;
+      let h = 6;
+      if (activeMode === 'ipc') {
+        if (b.isLetter) {
+          // Elevated monumental I·P·C relief breathing smoothly like the 897 Beijing performers
+          const breath = Math.sin(sec * 1.45 - b.c * 0.42 + b.r * 0.25) * 6;
+          h = 74 + breath;
+        } else {
+          // Recessed rippling sea of background diplomacy blocks
+          const sea = (Math.sin(sec * 1.25 - b.diag * 0.48) + 1) * 7.5;
+          h = 5 + sea;
+        }
+      } else if (activeMode === 'wave') {
+        // Iconic Beijing 2008 rolling diagonal liquid wave
+        const w = (Math.sin(sec * 2.1 - b.c * 0.52 - b.r * 0.36) + 1) * 0.5;
+        h = 6 + Math.pow(w, 1.35) * 76;
+      } else if (activeMode === 'ripple') {
+        // Concentric stone-in-water stadium rings pulsing outward from center
+        const w = (Math.sin(sec * 2.5 - b.distCenter * 1.05) + 1) * 0.5;
+        h = 6 + Math.pow(w, 1.45) * 76;
+      } else {
+        // "Great Wall" terraced architectural steps + crenellated diagonal crest
+        const ridge = Math.abs((b.r - 4) - Math.sin(b.c * 0.44 + sec * 0.85) * 2.1);
+        const crest = Math.max(0, 1 - ridge / 2.25);
+        const battlement = (b.c % 2 === 0 && crest > 0.55) ? 10 : 0;
+        h = 6 + crest * 66 + battlement;
+      }
+
+      // Interactive physical cursor ripple (nearby blocks surge up toward the cursor!)
+      if (pointerGridX >= 0) {
+        const d = Math.hypot(b.c - pointerGridX, b.r - pointerGridY);
+        if (d === 0) {
+          h = Math.max(h, 96);
+        } else if (d < 2.6) {
+          const boost = (1 - d / 2.6) * 34;
+          h = Math.max(h, h + boost * 0.65);
+        }
+      }
+
+      return Math.max(4, h * scale);
+    };
+
+    const tick = now => {
+      const isLoading = document.documentElement.classList.contains('ipc-loading');
+      if (!isLoading && introStartTime === null) introStartTime = now;
+      const isMobile = window.innerWidth <= 560;
+      const sec = now * 0.001;
+
+      // Smooth 3D perspective camera tilt
+      curTiltX += (targetTiltX - curTiltX) * 0.07;
+      curTiltY += (targetTiltY - curTiltY) * 0.07;
+      planeEl.style.transform = `rotateX(${curTiltX.toFixed(2)}deg) rotateY(${curTiltY.toFixed(2)}deg)`;
+
+      const sharpCut = isMobile ? 28 : 48;
+      const midCut = isMobile ? 16 : 26;
+
+      for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
+        let targetZ = 4;
+        if (!isLoading && introStartTime !== null) {
+          // Staggered Beijing-2008 wave rise from flat floor after loader clears
+          const introElapsed = (now - introStartTime) - 420 - b.diag * 34;
+          const introT = introElapsed <= 0 ? 0 : introElapsed >= 650 ? 1 : 1 - Math.pow(1 - introElapsed / 650, 3);
+          targetZ = 4 + (computeTargetZ(b, sec, isMobile) - 4) * introT;
+        }
+        const lerp = hoveredBlock === b ? 0.24 : 0.14;
+        b.z += (targetZ - b.z) * lerp;
+        b.el.style.transform = `translate3d(0, 0, ${b.z.toFixed(1)}px)`;
+        b.el.style.setProperty('--sh', (b.z / 100).toFixed(3));
+
+        // Discrete GPU-cached optical depth-of-field tier
+        const nextDof = b.z >= sharpCut ? 2 : b.z >= midCut ? 1 : 0;
+        if (nextDof !== b.dof) {
+          b.dof = nextDof;
+          b.el.dataset.dof = String(nextDof);
+        }
+      }
+
+      requestAnimationFrame(tick);
+    };
+
+    if (!reducedMotion) {
+      requestAnimationFrame(tick);
+    } else {
+      const isMobile = window.innerWidth <= 560;
+      blocks.forEach(b => {
+        const z = b.isLetter ? (isMobile ? 42 : 74) : 6;
+        b.z = z;
+        b.el.style.transform = `translate3d(0, 0, ${z}px)`;
+        b.el.style.setProperty('--sh', (z / 100).toFixed(3));
+        b.el.dataset.dof = b.isLetter ? '2' : '0';
+      });
+    }
   }
 
-  // ─── 2. Archival Press Print Light-Table Modal + Full 20-Source Registry ───
+  // ─── 2. Archival Light-Table Modal + Full 20-Source Registry ───
   const printModal = document.getElementById('print-modal');
   const pmImg = document.getElementById('pm-img');
   const pmIndex = document.getElementById('pm-index');
@@ -532,7 +610,6 @@
   pmClose?.addEventListener('click', closePrintModal);
   printModal?.addEventListener('click', e => { if (e.target === printModal) closePrintModal(); });
 
-  // Full 20-Photo Origins & Sources Drawer + Footer List
   const sourcesModal = document.getElementById('sources-modal');
   const sourcesGrid = document.getElementById('sources-grid');
   const sourcesClose = document.getElementById('sources-close');
@@ -707,7 +784,11 @@
 
   // ─── 4. Header Scroll State, Mobile Nav & Scroll Reveal ───
   const header = document.querySelector('.site-header');
-  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 36);
+  const heroSection = document.querySelector('.mt-hero');
+  const onScroll = () => {
+    const threshold = heroSection ? Math.max(120, heroSection.offsetHeight - 96) : 36;
+    header?.classList.toggle('scrolled', window.scrollY > threshold);
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 

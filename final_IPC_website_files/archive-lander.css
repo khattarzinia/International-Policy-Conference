@@ -1,92 +1,139 @@
-/* IPC Floating 3D Archive Collage Lander — Sunlit Editorial Press Desk */
+/* IPC 2008 Beijing Olympics-Inspired Kinetic 3D Movable-Type Letters Lander */
 :root {
-  --arch-paper: #f7f4ec;
-  --arch-paper-warm: #efe9dc;
-  --arch-ink: #16251c;
-  --arch-muted: #526258;
-  --arch-coral: #e5583d;
-  --arch-coral-dark: #c44128;
-  --arch-line: rgba(22, 37, 28, 0.12);
-  --arch-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --mt-bg: #111613;
+  --mt-bg-deep: #0b0f0d;
+  --mt-ivory: #f6f2e9;
+  --mt-ivory-muted: rgba(246, 242, 233, 0.72);
+  --mt-ivory-line: rgba(246, 242, 233, 0.14);
+  --mt-coral: #e86246;
+  --mt-coral-dark: #c44128;
+  --mt-arch-ink: #16251c;
+  --mt-arch-muted: #526258;
+  --mt-arch-paper: #f7f4ec;
+  --mt-arch-line: rgba(22, 37, 28, 0.12);
+  --mt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --mt-shaft: 100px;
 }
 
-/* ─── Minimal Floating Header over Full-Bleed Lander (starts at y = 0) ─── */
+/* ─── Adaptive Header (Luminous Ivory over Dark Architectural Stage → Frosted Light Paper on Scroll) ─── */
 .site-header {
   position: fixed !important;
   top: 0;
   left: 0;
   right: 0;
-  height: 76px !important;
+  height: 72px !important;
   z-index: 120 !important;
-  background: rgba(247, 244, 236, 0) !important;
+  background: linear-gradient(180deg, rgba(14, 19, 16, 0.72) 0%, rgba(14, 19, 16, 0) 100%) !important;
   border-bottom: 1px solid transparent !important;
-  transition: background 0.35s var(--arch-ease), border-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+  transition: background 0.35s var(--mt-ease), border-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
 }
-.site-header.scrolled {
-  background: rgba(252, 250, 245, 0.92) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom-color: var(--arch-line) !important;
-  box-shadow: 0 6px 26px rgba(22, 37, 28, 0.06);
+.site-header .brand {
+  color: var(--mt-ivory) !important;
+  transition: color 0.3s ease;
 }
 .site-header .brand-logo {
-  width: 48px !important;
-  height: 44px !important;
+  width: 46px !important;
+  height: 42px !important;
   padding: 3px;
   border-radius: 10px;
   background: #ffffff;
-  border: 1px solid rgba(22, 37, 28, 0.08);
-  box-shadow: 0 3px 12px rgba(22, 37, 28, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
   mix-blend-mode: normal !important;
 }
 .site-header nav a {
+  color: rgba(246, 242, 233, 0.86) !important;
   font-weight: 500;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+.site-header nav a:hover {
+  color: #ffffff !important;
+}
+.site-header nav a.nav-cta {
+  border-color: rgba(246, 242, 233, 0.38) !important;
+  color: #ffffff !important;
+}
+.site-header nav a.nav-cta:hover {
+  background: var(--mt-coral) !important;
+  border-color: var(--mt-coral) !important;
+  color: #ffffff !important;
+}
+.site-header .menu-button span {
+  background: var(--mt-ivory) !important;
 }
 
-/* ─── Full-Bleed 100dvh Floating 3D Archive Collage Hero ─── */
-.hero.archive-hero {
+/* Scrolled header flips cleanly to match original light sections below */
+.site-header.scrolled {
+  background: rgba(252, 250, 245, 0.94) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--mt-arch-line) !important;
+  box-shadow: 0 6px 26px rgba(22, 37, 28, 0.08);
+}
+.site-header.scrolled .brand {
+  color: var(--mt-arch-ink) !important;
+}
+.site-header.scrolled .brand-logo {
+  border-color: rgba(22, 37, 28, 0.1);
+  box-shadow: 0 2px 10px rgba(22, 37, 28, 0.07);
+}
+.site-header.scrolled nav a {
+  color: var(--mt-arch-ink) !important;
+}
+.site-header.scrolled nav a.nav-cta {
+  border-color: rgba(22, 37, 28, 0.32) !important;
+  color: var(--mt-arch-ink) !important;
+}
+.site-header.scrolled nav a.nav-cta:hover {
+  background: var(--mt-arch-ink) !important;
+  border-color: var(--mt-arch-ink) !important;
+  color: #ffffff !important;
+}
+.site-header.scrolled .menu-button span {
+  background: var(--mt-arch-ink) !important;
+}
+
+/* ─── Full-Bleed 100dvh Architectural Movable-Type Stage (starts at y = 0) ─── */
+.hero.mt-hero {
   position: relative;
-  min-height: max(100dvh, 680px) !important;
-  height: clamp(680px, 100dvh, 1060px);
-  padding: 0 !important;
+  min-height: max(100dvh, 700px) !important;
+  height: clamp(700px, 100dvh, 1080px);
+  padding: 72px 0 0 !important;
   background:
-    radial-gradient(circle at 50% 46%, #ffffff 0%, #f7f4ec 58%, #ede6d8 100%) !important;
+    radial-gradient(ellipse 85% 65% at 50% 34%, #202823 0%, #141a17 55%, #0c100e 100%) !important;
   background-image:
-    radial-gradient(circle at 50% 46%, #ffffff 0%, #f7f4ec 58%, #ede6d8 100%) !important;
-  color: var(--arch-ink);
+    radial-gradient(ellipse 85% 65% at 50% 34%, #202823 0%, #141a17 55%, #0c100e 100%) !important;
+  color: var(--mt-ivory);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   overflow: hidden;
-  border-bottom: 1px solid var(--arch-line);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Subtle museum contact-sheet registration marks in corners */
-.archive-grid-bg {
+.mt-ambient-glow {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image:
-    linear-gradient(to right, rgba(22, 37, 28, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(22, 37, 28, 0.035) 1px, transparent 1px);
-  background-size: 96px 96px;
-  mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.9) 70%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.9) 70%, transparent 100%);
+  background:
+    radial-gradient(circle at 50% 36%, rgba(232, 98, 70, 0.08) 0%, transparent 48%),
+    radial-gradient(circle at 22% 18%, rgba(246, 242, 233, 0.06) 0%, transparent 42%),
+    radial-gradient(circle at 78% 22%, rgba(145, 184, 219, 0.07) 0%, transparent 44%);
 }
 
-/* Vivid full-bleed diplomacy contact-sheet visible behind the IPC white cutout until P/I/C clear the edges, then dissolves cleanly into sunlit paper */
+/* Full-bleed diplomacy contact-sheet visible behind the pure-white IPC cutout during load */
 .loader-mosaic {
   position: absolute;
   inset: 0;
-  z-index: 25;
+  z-index: 35;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.55s var(--arch-ease) 0.72s;
+  transition: opacity 0.58s var(--mt-ease) 0.72s;
 }
 html.ipc-loading .loader-mosaic {
   opacity: 1;
@@ -100,318 +147,479 @@ html.ipc-loading .loader-mosaic {
   filter: saturate(1.08) contrast(1.06) brightness(0.92);
 }
 
-/* ─── 3D Perspective Stage for 15 Floating Press Prints ─── */
-.archive-stage {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  perspective: 1400px;
-  perspective-origin: 50% 50%;
-  overflow: hidden;
-}
-.archive-world {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  transition: opacity 0.8s var(--arch-ease) 0.66s, transform 1s var(--arch-ease) 0.62s;
-}
-html.ipc-loading .archive-world {
-  opacity: 0;
-  transform: scale(0.86);
+/* ─── 3D Perspective Movable-Type Stage (Bird's Nest Stadium Elevation) ─── */
+.mt-stage {
+  position: relative;
+  z-index: 5;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px clamp(16px, 3vw, 48px) 8px;
+  perspective: 1450px;
+  perspective-origin: 50% 42%;
 }
 
-/* Individual Floating Press Print Slot */
-.arch-print {
-  display: block;
+.mt-plane {
+  position: relative;
+  width: min(1200px, 92vw);
+  height: min(545px, 60dvh);
+  transform-style: preserve-3d;
+  transform: rotateX(22deg) rotateY(0deg);
+  will-change: transform;
+  transition: opacity 0.65s ease 0.62s;
+}
+html.ipc-loading .mt-plane {
+  opacity: 0;
+}
+
+/* Architectural Recessed Base Bed Beneath the 135 Pillars */
+.mt-plane::before {
+  content: "";
   position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: var(--w);
-  height: calc(var(--w) * 0.75);
-  margin-left: calc(var(--w) * -0.5);
-  margin-top: calc(var(--w) * -0.375);
-  border: 0;
+  inset: -12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #090c0a 0%, #0d120f 100%);
+  border: 1px solid rgba(246, 242, 233, 0.1);
+  box-shadow:
+    0 42px 96px rgba(0, 0, 0, 0.72),
+    0 12px 28px rgba(0, 0, 0, 0.48),
+    inset 0 0 40px rgba(0, 0, 0, 0.85);
+  transform: translateZ(-2px);
+  pointer-events: none;
+}
+
+.mt-grid {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  gap: 5px;
+  transform-style: preserve-3d;
+}
+
+.mt-cell {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Individual 3D Movable-Type Printing Block Pillar */
+.mt-pillar {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
   padding: 0;
+  border: 0;
   background: transparent;
   cursor: pointer;
   transform-style: preserve-3d;
-  will-change: transform, opacity;
-  opacity: var(--dof-opacity, 1);
-  z-index: var(--z, 10);
-  transition: opacity 0.4s var(--arch-ease);
-}
-.arch-print:hover,
-.arch-print:focus-visible {
-  opacity: 1 !important;
-  z-index: 60 !important;
+  will-change: transform;
   outline: none;
 }
 
-/* True 3D Two-Sided Y-Axis Flipper */
-.print-flipper {
+/* 3D Extruded Pillar Walls — Exact height = pillar Z so ZERO walls ever pierce the floor plane! */
+.mt-wall {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.mt-wall-s {
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--mt-shaft);
+  transform-origin: top center;
+  transform: rotateX(-90deg) scaleY(var(--sh, 0.06));
+  background: linear-gradient(180deg, #e2dac9 0%, #a59d8d 42%, #4a504b 82%, #181d1a 100%);
+  border-top: 1px solid rgba(255, 252, 245, 0.58);
+  box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.16);
+}
+.mt-wall-e {
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: var(--mt-shaft);
+  transform-origin: left center;
+  transform: rotateY(90deg) scaleX(var(--sh, 0.06));
+  background: linear-gradient(90deg, #beb6a6 0%, #736d63 45%, #2a302c 84%, #121614 100%);
+}
+.mt-wall-w {
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: var(--mt-shaft);
+  transform-origin: right center;
+  transform: rotateY(-90deg) scaleX(var(--sh, 0.06));
+  background: linear-gradient(270deg, #ede6d7 0%, #ada595 44%, #3f4540 84%, #141816 100%);
+}
+
+/* Subtle darker stone flanks for deeply recessed background blocks */
+.mt-pillar[data-dof="0"] .mt-wall-s {
+  background: linear-gradient(180deg, #5c605a 0%, #313632 52%, #121614 100%);
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.mt-pillar[data-dof="0"] .mt-wall-e {
+  background: linear-gradient(90deg, #434843 0%, #202421 55%, #0d110f 100%);
+}
+.mt-pillar[data-dof="0"] .mt-wall-w {
+  background: linear-gradient(270deg, #686d67 0%, #2f3531 55%, #0f1311 100%);
+}
+
+/* Hovered pillar glows with subtle coral-ivory architectural edge */
+.mt-pillar.is-hovered .mt-wall-s {
+  background: linear-gradient(180deg, #f3a48f 0%, #c96850 42%, #47322c 84%, #151211 100%);
+  border-top-color: #ffffff;
+}
+
+/* Top Face of Movable-Type Pillar — Borderless Full-Bleed Diplomacy Photo + Optical Depth of Field */
+.mt-top {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 1.5px;
+  background: linear-gradient(135deg, #c9c1b0 0%, #6d685e 100%);
+  perspective: 420px;
+  transform: translateZ(0.5px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 240, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.28s ease;
+}
+
+/* Optical Depth of Field Tiers (GPU-cached discrete blur tiers for buttery 60fps across 135 pillars!) */
+.mt-top-flip {
   display: block;
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.95s cubic-bezier(0.45, 0.05, 0.22, 1);
-  transform: rotateY(0deg);
+  transition: transform 0.78s cubic-bezier(0.45, 0.05, 0.22, 1);
 }
-.arch-print.is-flipped .print-flipper {
+.mt-pillar.is-flipped .mt-top-flip {
   transform: rotateY(180deg);
 }
-.arch-print:hover .print-flipper,
-.arch-print:focus-visible .print-flipper {
-  transform: rotateY(0deg) scale(1.12);
-}
-.arch-print.is-flipped:hover .print-flipper,
-.arch-print.is-flipped:focus-visible .print-flipper {
-  transform: rotateY(180deg) scale(1.12);
-}
 
-/* Physical Archival Press-Print Card Face (Optical Depth-of-Field blur lives on face so preserve-3d never flattens) */
-.print-face {
+.mt-face {
+  display: block;
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: #fffdf9;
-  padding: 6px 6px 26px;
-  border-radius: 3px;
-  border: 1px solid rgba(22, 37, 28, 0.12);
-  box-shadow: var(--dof-shadow, 0 18px 42px rgba(20, 32, 24, 0.16));
-  display: flex;
-  flex-direction: column;
-  filter: blur(var(--dof-blur, 0px));
-  transition: filter 0.42s var(--arch-ease), box-shadow 0.35s ease, border-color 0.25s ease;
 }
-.print-face.back {
+.mt-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 14, 12, 0);
+  pointer-events: none;
+  transition: background 0.36s var(--mt-ease);
+}
+.mt-face.back {
   transform: rotateY(180deg);
 }
-.arch-print:hover .print-face,
-.arch-print:focus-visible .print-face {
-  filter: blur(0px) !important;
-  border-color: var(--arch-coral);
-  box-shadow: 0 32px 68px rgba(20, 32, 24, 0.28), 0 0 0 1px rgba(229, 88, 61, 0.35);
-}
-.print-photo-wrap {
-  display: block;
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  overflow: hidden;
-  background: #dfe3dc;
-  border-radius: 1.5px;
-}
-.print-photo-wrap img {
+.mt-face img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: filter 0.36s var(--mt-ease), transform 0.36s var(--mt-ease);
 }
-.print-stamp {
+
+/* Recessed blocks: soft optical bokeh + cool architectural shadow scrim */
+.mt-pillar[data-dof="0"] .mt-face::after {
+  background: rgba(9, 13, 11, 0.56);
+}
+.mt-pillar[data-dof="0"] .mt-face img {
+  filter: blur(2.4px) saturate(0.7);
+  transform: scale(1.06);
+}
+/* Mid-elevation transition blocks */
+.mt-pillar[data-dof="1"] .mt-face::after {
+  background: rgba(9, 13, 11, 0.24);
+}
+.mt-pillar[data-dof="1"] .mt-face img {
+  filter: blur(0.9px) saturate(0.92);
+  transform: scale(1.02);
+}
+/* Raised sculptural blocks (I·P·C monoliths & wave crests): razor-sharp native rendering (filter: none prevents Chromium 3D RenderPass sorting glitches!) */
+.mt-pillar[data-dof="2"] .mt-top {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 252, 245, 0.7),
+    inset 0 0 0 1px rgba(255, 248, 236, 0.45),
+    0 12px 24px rgba(0, 0, 0, 0.52);
+}
+.mt-pillar[data-dof="2"] .mt-face img {
+  filter: none;
+  transform: none;
+}
+
+/* Hover optical pull-focus override — ANY block snaps to crisp razor focus */
+.mt-pillar.is-hovered .mt-top,
+.mt-pillar:focus-visible .mt-top {
+  box-shadow:
+    inset 0 0 0 2px var(--mt-coral),
+    0 18px 34px rgba(0, 0, 0, 0.68);
+}
+.mt-pillar.is-hovered .mt-face::after,
+.mt-pillar:focus-visible .mt-face::after {
+  background: rgba(9, 13, 11, 0) !important;
+}
+.mt-pillar.is-hovered .mt-face img,
+.mt-pillar:focus-visible .mt-face img {
+  filter: none !important;
+  transform: none !important;
+}
+
+/* Subtle hover micro-badge on elevated pillar */
+.mt-hover-tag {
   display: block;
   position: absolute;
-  bottom: 6px;
-  right: 6px;
-  padding: 3px 7px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  padding: 2px 4px;
   border-radius: 2px;
-  background: rgba(22, 37, 28, 0.86);
+  background: rgba(14, 19, 16, 0.86);
   color: #fffdf9;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.25s ease, transform 0.25s var(--arch-ease);
+  transform: translateY(3px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.22s var(--mt-ease);
 }
-.arch-print:hover .print-stamp,
-.arch-print:focus-visible .print-stamp {
+.mt-pillar.is-hovered .mt-hover-tag,
+.mt-pillar:focus-visible .mt-hover-tag {
   opacity: 1;
   transform: none;
 }
-.print-meta {
-  position: absolute;
-  left: 7px;
-  right: 7px;
-  bottom: 5px;
-  height: 16px;
+
+/* ─── Grounded Lower Editorial Nameplate & Kinetic Controls ─── */
+.mt-lower {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  padding: 12px clamp(20px, 4vw, 64px) 18px;
+  background: linear-gradient(180deg, rgba(11, 15, 13, 0) 0%, rgba(11, 15, 13, 0.86) 28%, rgba(11, 15, 13, 0.96) 100%);
+  transition: opacity 0.65s ease 0.78s, transform 0.75s var(--mt-ease) 0.78s;
+}
+html.ipc-loading .mt-lower {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.mt-editorial {
+  max-width: 1260px;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.mt-title-block {
+  max-width: 860px;
+}
+.mt-eyebrow-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.mt-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--arch-muted);
-  white-space: nowrap;
-  overflow: hidden;
+  color: rgba(246, 242, 233, 0.62);
 }
-.print-meta-loc {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.mt-announce-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(246, 242, 233, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--mt-ivory);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
-.print-meta-yr {
-  display: block;
-  color: var(--arch-coral);
-  font-variant-numeric: tabular-nums;
+.mt-announce-inline:hover {
+  border-color: var(--mt-coral);
+  background: rgba(232, 98, 70, 0.18);
+}
+.mt-announce-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mt-coral);
   flex-shrink: 0;
 }
 
-/* ─── Center Editorial Typography (Clear Focal Island Framed by Orbiting Prints) ─── */
-.archive-center {
-  position: relative;
-  z-index: 18;
-  text-align: center;
-  max-width: 620px;
-  padding: 20px 24px;
-  pointer-events: none;
-  background: transparent;
-  transition: opacity 0.65s ease 0.78s, transform 0.75s var(--arch-ease) 0.78s;
-}
-html.ipc-loading .archive-center,
-html.ipc-loading .archive-bar {
-  opacity: 0;
-  transform: translateY(18px);
-}
-.archive-center a,
-.archive-center button { pointer-events: auto; }
-.archive-announce {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 14px;
-  margin-bottom: 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(22, 37, 28, 0.16);
-  background: rgba(255, 253, 249, 0.92);
-  backdrop-filter: blur(8px);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--arch-ink);
-  text-decoration: none;
-  box-shadow: 0 4px 16px rgba(22, 37, 28, 0.05);
-  transition: border-color 0.2s ease, transform 0.25s var(--arch-ease), background 0.2s ease;
-}
-.archive-announce:hover {
-  border-color: var(--arch-coral);
-  background: #fff;
-  transform: translateY(-1px);
-}
-.archive-announce-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--arch-coral);
-}
-.archive-center .eyebrow {
-  color: var(--arch-muted);
-  margin-bottom: 14px;
-  letter-spacing: 0.2em;
-}
-.archive-center h1 {
+.mt-title-block h1 {
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(44px, 5.5vw, 88px);
+  font-size: clamp(32px, 4.1vw, 56px);
   font-weight: 600;
-  line-height: 0.96;
-  letter-spacing: -0.045em;
-  color: var(--arch-ink);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--mt-ivory);
+  margin: 0;
 }
-.archive-center h1 em {
-  color: var(--arch-coral);
+.mt-title-block h1 em {
+  color: var(--mt-coral);
   font-style: italic;
   font-weight: 600;
 }
-.archive-sub {
-  margin: 20px auto 0;
-  max-width: 500px;
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--arch-muted);
+.mt-sub {
+  margin: 7px 0 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--mt-ivory-muted);
 }
-.archive-cta-row {
-  margin-top: 28px;
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-.arch-btn {
-  display: inline-flex;
+
+.mt-cta-row {
+  display: flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 24px;
+  flex-shrink: 0;
+}
+.mt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
   border-radius: 999px;
   font-size: 13.5px;
   font-weight: 700;
   text-decoration: none;
-  border: 1px solid var(--arch-ink);
-  transition: transform 0.25s var(--arch-ease), background 0.22s ease, color 0.22s ease, border-color 0.22s ease, box-shadow 0.25s ease;
+  border: 1px solid var(--mt-ivory);
+  transition: transform 0.25s var(--mt-ease), background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
 }
-.arch-btn-solid {
-  background: var(--arch-ink);
-  color: #fffdf9;
-  box-shadow: 0 10px 26px rgba(22, 37, 28, 0.16);
+.mt-btn-solid {
+  background: var(--mt-ivory);
+  color: var(--mt-arch-ink);
 }
-.arch-btn-solid:hover {
-  background: var(--arch-coral);
-  border-color: var(--arch-coral);
+.mt-btn-solid:hover {
+  background: var(--mt-coral);
+  border-color: var(--mt-coral);
+  color: #ffffff;
   transform: translateY(-2px);
 }
-.arch-btn-outline {
-  background: rgba(255, 253, 249, 0.85);
-  color: var(--arch-ink);
-  backdrop-filter: blur(8px);
+.mt-btn-outline {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(246, 242, 233, 0.36);
+  color: var(--mt-ivory);
 }
-.arch-btn-outline:hover {
-  background: var(--arch-ink);
-  color: #fffdf9;
+.mt-btn-outline:hover {
+  background: var(--mt-ivory);
+  border-color: var(--mt-ivory);
+  color: var(--mt-arch-ink);
   transform: translateY(-2px);
 }
 
-/* ─── Delicate Museum Catalog Bottom Bar ─── */
-.archive-bar {
-  position: absolute;
-  left: clamp(20px, 4vw, 64px);
-  right: clamp(20px, 4vw, 64px);
-  bottom: 20px;
-  z-index: 20;
+/* Museum Control & Live Readout Strip */
+.mt-bar {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--mt-ivory-line);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
-  pointer-events: none;
-  transition: opacity 0.6s ease 0.86s, transform 0.7s var(--arch-ease) 0.86s;
 }
-.archive-bar-note {
-  pointer-events: auto;
+.mt-formations {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.mt-readout-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.mt-readout {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--arch-muted);
-  background: rgba(247, 244, 236, 0.84);
-  backdrop-filter: blur(8px);
+  color: rgba(246, 242, 233, 0.68);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 480px;
+  transition: color 0.2s ease;
+}
+.mt-readout.is-live {
+  color: #fffdf9;
+}
+
+.mt-chip {
+  appearance: none;
+  border: 1px solid rgba(246, 242, 233, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(246, 242, 233, 0.88);
   padding: 6px 12px;
   border-radius: 999px;
-  border: 1px solid var(--arch-line);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
-.archive-bar-actions {
-  pointer-events: auto;
-  display: flex;
-  gap: 8px;
+.mt-chip:hover {
+  border-color: var(--mt-coral);
+  background: rgba(232, 98, 70, 0.18);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
+.mt-chip.is-active {
+  background: var(--mt-ivory);
+  border-color: var(--mt-ivory);
+  color: var(--mt-arch-ink);
+}
+.mt-chip-accent {
+  border-color: rgba(232, 98, 70, 0.45);
+  color: #ffb8a8;
+}
+.mt-chip-accent:hover {
+  background: var(--mt-coral);
+  border-color: var(--mt-coral);
+  color: #ffffff;
+}
+.mt-chip-sources {
+  flex-shrink: 0;
+  background: rgba(246, 242, 233, 0.1);
+}
+
+/* Shared Chip for Light Modals */
 .archive-chip {
   appearance: none;
-  border: 1px solid var(--arch-line);
-  background: rgba(255, 253, 249, 0.9);
-  backdrop-filter: blur(8px);
-  color: var(--arch-ink);
+  border: 1px solid var(--mt-arch-line);
+  background: #fffdf9;
+  color: var(--mt-arch-ink);
   padding: 7px 13px;
   border-radius: 999px;
   font-family: inherit;
@@ -420,13 +628,12 @@ html.ipc-loading .archive-bar {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 .archive-chip:hover {
-  border-color: var(--arch-coral);
-  background: var(--arch-ink);
+  border-color: var(--mt-coral);
+  background: var(--mt-arch-ink);
   color: #fffdf9;
-  transform: translateY(-1px);
 }
 
 /* ─── Light-Table Print Zoom Modal (Origin + Source + Context) ─── */
@@ -438,7 +645,7 @@ html.ipc-loading .archive-bar {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(16, 26, 20, 0.78);
+  background: rgba(10, 15, 12, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -450,12 +657,12 @@ html.ipc-loading .archive-bar {
   max-height: 90dvh;
   overflow-y: auto;
   background: #fffdf9;
-  color: var(--arch-ink);
+  color: var(--mt-arch-ink);
   border-radius: 10px;
-  box-shadow: 0 36px 90px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 36px 90px rgba(0, 0, 0, 0.5);
   display: grid;
   grid-template-columns: 1.25fr 0.95fr;
-  animation: printZoomIn 0.32s var(--arch-ease);
+  animation: printZoomIn 0.32s var(--mt-ease);
 }
 @keyframes printZoomIn {
   from { opacity: 0; transform: scale(0.94) translateY(16px); }
@@ -491,36 +698,36 @@ html.ipc-loading .archive-bar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--arch-line);
-  background: rgba(255, 253, 249, 0.92);
-  color: var(--arch-ink);
+  border: 1px solid var(--mt-arch-line);
+  background: rgba(255, 253, 249, 0.94);
+  color: var(--mt-arch-ink);
   font-size: 20px;
   cursor: pointer;
 }
-.print-modal-close:hover { background: var(--arch-coral); color: #fff; border-color: var(--arch-coral); }
+.print-modal-close:hover { background: var(--mt-coral); color: #fff; border-color: var(--mt-coral); }
 .print-modal-index {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--arch-coral);
+  color: var(--mt-coral);
   margin-bottom: 8px;
 }
 .print-modal-title {
   font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(22px, 2.3vw, 29px);
   line-height: 1.15;
-  color: var(--arch-ink);
+  color: var(--mt-arch-ink);
   margin-bottom: 14px;
 }
 .print-modal-story {
   font-size: 14.5px;
   line-height: 1.65;
-  color: var(--arch-muted);
+  color: var(--mt-arch-muted);
   margin-bottom: 18px;
 }
 .print-facts {
-  border-top: 1px solid var(--arch-line);
+  border-top: 1px solid var(--mt-arch-line);
   padding-top: 14px;
   display: grid;
   gap: 10px;
@@ -536,20 +743,20 @@ html.ipc-loading .archive-bar {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--arch-muted);
+  color: var(--mt-arch-muted);
   padding-top: 2px;
 }
 .print-fact-val {
-  color: var(--arch-ink);
+  color: var(--mt-arch-ink);
   font-weight: 500;
 }
 .print-fact-val a {
-  color: var(--arch-coral-dark);
+  color: var(--mt-coral-dark);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 .print-modal-nav {
-  border-top: 1px solid var(--arch-line);
+  border-top: 1px solid var(--mt-arch-line);
   padding-top: 16px;
   display: flex;
   justify-content: space-between;
@@ -566,7 +773,7 @@ html.ipc-loading .archive-bar {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(16, 26, 20, 0.76);
+  background: rgba(10, 15, 12, 0.8);
   backdrop-filter: blur(10px);
 }
 .sources-modal.open { display: flex; }
@@ -576,16 +783,16 @@ html.ipc-loading .archive-bar {
   max-width: 980px;
   max-height: 86dvh;
   background: #fffdf9;
-  color: var(--arch-ink);
+  color: var(--mt-arch-ink);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
 }
 .sources-head {
   padding: 22px 28px;
-  border-bottom: 1px solid var(--arch-line);
+  border-bottom: 1px solid var(--mt-arch-line);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -604,9 +811,9 @@ html.ipc-loading .archive-bar {
   grid-template-columns: 88px 1fr;
   gap: 14px;
   padding: 12px;
-  border: 1px solid var(--arch-line);
+  border: 1px solid var(--mt-arch-line);
   border-radius: 8px;
-  background: var(--arch-paper);
+  background: var(--mt-arch-paper);
   align-items: center;
 }
 .source-entry img {
@@ -619,20 +826,20 @@ html.ipc-loading .archive-bar {
 .source-entry-title {
   font-weight: 700;
   font-size: 13.5px;
-  color: var(--arch-ink);
+  color: var(--mt-arch-ink);
   margin-bottom: 3px;
 }
 .source-entry-origin {
   font-size: 12px;
-  color: var(--arch-muted);
+  color: var(--mt-arch-muted);
   margin-bottom: 4px;
 }
 .source-entry-credit {
   font-size: 11px;
-  color: var(--arch-muted);
+  color: var(--mt-arch-muted);
 }
 .source-entry-credit a {
-  color: var(--arch-coral-dark);
+  color: var(--mt-coral-dark);
   text-decoration: underline;
 }
 
@@ -665,37 +872,49 @@ html.ipc-loading .archive-bar {
 .footer-sources-list a { color: #fffdf8; text-underline-offset: 2px; }
 
 /* ─── Responsive Adjustments ─── */
-@media (max-width: 1024px) {
+@media (max-width: 1080px) {
+  .mt-readout { display: none; }
   .print-modal-sheet { grid-template-columns: 1fr; }
   .sources-grid, .footer-sources-list { grid-template-columns: 1fr; }
 }
 @media (max-width: 850px) {
-  .arch-print[data-hide-mobile="1"] { display: none; }
-  .arch-print[data-mx] {
-    left: var(--mx);
-    top: var(--my);
-    width: var(--mw);
-    height: calc(var(--mw) * 0.75);
-    margin-left: calc(var(--mw) * -0.5);
-    margin-top: calc(var(--mw) * -0.375);
+  .site-header nav {
+    top: 72px !important;
+    background: rgba(16, 22, 19, 0.97) !important;
+    border-bottom: 1px solid rgba(246, 242, 233, 0.12);
   }
-  .archive-center { padding: 20px 18px; max-width: 94vw; }
-  .site-header nav { top: 76px !important; }
+  .site-header.scrolled nav {
+    background: rgba(252, 250, 245, 0.98) !important;
+  }
+  .mt-plane {
+    width: 94vw;
+    height: min(320px, 42dvh);
+  }
+  .mt-grid { gap: 3px; }
+  .mt-editorial { gap: 16px; }
 }
 @media (max-width: 560px) {
-  .hero.archive-hero { height: 100dvh; min-height: 680px; }
-  .archive-announce { font-size: 11px; padding: 6px 12px; gap: 7px; }
-  .archive-center h1 { font-size: 42px; }
-  .archive-sub { font-size: 14px; margin-top: 14px; }
-  .archive-cta-row { margin-top: 20px; gap: 10px; }
-  .arch-btn { padding: 11px 19px; font-size: 13px; }
-  .archive-bar { justify-content: center; bottom: 12px; }
-  .archive-bar-note { display: none; }
-  .print-face { padding: 4px 4px 18px; }
-  .print-meta { font-size: 7.5px; bottom: 2px; left: 5px; right: 5px; height: 13px; }
+  .hero.mt-hero {
+    min-height: max(100dvh, 660px) !important;
+    height: auto;
+    padding-bottom: 8px !important;
+  }
+  .mt-stage { padding: 14px 12px 10px; }
+  .mt-plane {
+    width: 94vw;
+    height: 224px;
+  }
+  .mt-plane::before { inset: -6px; }
+  .mt-grid { gap: 2.5px; }
+  .mt-title-block h1 { font-size: 32px; }
+  .mt-sub { font-size: 13.5px; }
+  .mt-cta-row { width: 100%; }
+  .mt-btn { flex: 1; justify-content: center; padding: 11px 14px; font-size: 13px; }
+  .mt-bar { justify-content: space-between; gap: 8px; }
+  .mt-chip { padding: 5px 9px; font-size: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arch-print { transition: none; }
-  .print-flipper { transition: transform 0.25s ease; }
+  .mt-top-flip { transition: transform 0.2s ease; }
+  .mt-face { transition: none; }
 }
