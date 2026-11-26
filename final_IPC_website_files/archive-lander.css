@@ -1,10 +1,7 @@
-/* IPC 2008 Beijing Olympics-Inspired Kinetic 3D Movable-Type Letters Lander */
+/* IPC Full-Screen 2008 Beijing Olympics-Inspired Kinetic 3D Movable-Type Letters Lander */
 :root {
-  --mt-bg: #111613;
-  --mt-bg-deep: #0b0f0d;
+  --mt-bg: #0b0f0d;
   --mt-ivory: #f6f2e9;
-  --mt-ivory-muted: rgba(246, 242, 233, 0.72);
-  --mt-ivory-line: rgba(246, 242, 233, 0.14);
   --mt-coral: #e86246;
   --mt-coral-dark: #c44128;
   --mt-arch-ink: #16251c;
@@ -15,20 +12,21 @@
   --mt-shaft: 100px;
 }
 
-/* ─── Adaptive Header (Luminous Ivory over Dark Architectural Stage → Frosted Light Paper on Scroll) ─── */
+/* ─── Adaptive Floating Header (Crisp over Full-Bleed Monument → Frosted Light Paper on Scroll) ─── */
 .site-header {
   position: fixed !important;
   top: 0;
   left: 0;
   right: 0;
-  height: 72px !important;
+  height: 74px !important;
   z-index: 120 !important;
-  background: linear-gradient(180deg, rgba(14, 19, 16, 0.72) 0%, rgba(14, 19, 16, 0) 100%) !important;
+  background: linear-gradient(180deg, rgba(9, 13, 11, 0.78) 0%, rgba(9, 13, 11, 0.34) 64%, rgba(9, 13, 11, 0) 100%) !important;
   border-bottom: 1px solid transparent !important;
   transition: background 0.35s var(--mt-ease), border-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
 }
 .site-header .brand {
   color: var(--mt-ivory) !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
   transition: color 0.3s ease;
 }
 .site-header .brand-logo {
@@ -38,19 +36,21 @@
   border-radius: 10px;
   background: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.38);
   mix-blend-mode: normal !important;
 }
 .site-header nav a {
-  color: rgba(246, 242, 233, 0.86) !important;
+  color: rgba(246, 242, 233, 0.92) !important;
   font-weight: 500;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
   transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
 .site-header nav a:hover {
   color: #ffffff !important;
 }
 .site-header nav a.nav-cta {
-  border-color: rgba(246, 242, 233, 0.38) !important;
+  border-color: rgba(246, 242, 233, 0.45) !important;
+  background: rgba(9, 13, 11, 0.32);
   color: #ffffff !important;
 }
 .site-header nav a.nav-cta:hover {
@@ -72,6 +72,7 @@
 }
 .site-header.scrolled .brand {
   color: var(--mt-arch-ink) !important;
+  text-shadow: none;
 }
 .site-header.scrolled .brand-logo {
   border-color: rgba(22, 37, 28, 0.1);
@@ -79,9 +80,11 @@
 }
 .site-header.scrolled nav a {
   color: var(--mt-arch-ink) !important;
+  text-shadow: none;
 }
 .site-header.scrolled nav a.nav-cta {
   border-color: rgba(22, 37, 28, 0.32) !important;
+  background: transparent;
   color: var(--mt-arch-ink) !important;
 }
 .site-header.scrolled nav a.nav-cta:hover {
@@ -93,33 +96,18 @@
   background: var(--mt-arch-ink) !important;
 }
 
-/* ─── Full-Bleed 100dvh Architectural Movable-Type Stage (starts at y = 0) ─── */
+/* ─── Full-Screen 100vw × 100dvh Edge-to-Edge Kinetic Movable-Type Stage ─── */
 .hero.mt-hero {
   position: relative;
-  min-height: max(100dvh, 700px) !important;
-  height: clamp(700px, 100dvh, 1080px);
-  padding: 72px 0 0 !important;
-  background:
-    radial-gradient(ellipse 85% 65% at 50% 34%, #202823 0%, #141a17 55%, #0c100e 100%) !important;
-  background-image:
-    radial-gradient(ellipse 85% 65% at 50% 34%, #202823 0%, #141a17 55%, #0c100e 100%) !important;
-  color: var(--mt-ivory);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  width: 100%;
+  min-height: 100dvh !important;
+  height: 100dvh;
+  padding: 0 !important;
+  margin: 0;
+  background: var(--mt-bg) !important;
+  background-image: none !important;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.mt-ambient-glow {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 36%, rgba(232, 98, 70, 0.08) 0%, transparent 48%),
-    radial-gradient(circle at 22% 18%, rgba(246, 242, 233, 0.06) 0%, transparent 42%),
-    radial-gradient(circle at 78% 22%, rgba(145, 184, 219, 0.07) 0%, transparent 44%);
+  display: block;
 }
 
 /* Full-bleed diplomacy contact-sheet visible behind the pure-white IPC cutout during load */
@@ -147,47 +135,31 @@ html.ipc-loading .loader-mosaic {
   filter: saturate(1.08) contrast(1.06) brightness(0.92);
 }
 
-/* ─── 3D Perspective Movable-Type Stage (Bird's Nest Stadium Elevation) ─── */
+/* ─── Full-Screen 3D Perspective Stage (Oversized Tilted Matrix Bleeds Past All 4 Edges) ─── */
 .mt-stage {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 5;
-  flex: 1 1 auto;
-  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px clamp(16px, 3vw, 48px) 8px;
+  overflow: hidden;
   perspective: 1450px;
-  perspective-origin: 50% 42%;
+  perspective-origin: 50% 46%;
 }
 
 .mt-plane {
   position: relative;
-  width: min(1200px, 92vw);
-  height: min(545px, 60dvh);
+  flex-shrink: 0;
+  width: 120vw;
+  height: 118dvh;
   transform-style: preserve-3d;
-  transform: rotateX(22deg) rotateY(0deg);
+  transform: translateY(-1%) rotateX(17deg) rotateY(0deg);
   will-change: transform;
-  transition: opacity 0.65s ease 0.62s;
+  transition: opacity 0.6s ease 0.58s;
 }
 html.ipc-loading .mt-plane {
   opacity: 0;
-}
-
-/* Architectural Recessed Base Bed Beneath the 135 Pillars */
-.mt-plane::before {
-  content: "";
-  position: absolute;
-  inset: -12px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #090c0a 0%, #0d120f 100%);
-  border: 1px solid rgba(246, 242, 233, 0.1);
-  box-shadow:
-    0 42px 96px rgba(0, 0, 0, 0.72),
-    0 12px 28px rgba(0, 0, 0, 0.48),
-    inset 0 0 40px rgba(0, 0, 0, 0.85);
-  transform: translateZ(-2px);
-  pointer-events: none;
 }
 
 .mt-grid {
@@ -195,8 +167,8 @@ html.ipc-loading .mt-plane {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(15, 1fr);
-  grid-template-rows: repeat(9, 1fr);
+  grid-template-columns: repeat(var(--mt-cols, 19), 1fr);
+  grid-template-rows: repeat(var(--mt-rows, 11), 1fr);
   gap: 5px;
   transform-style: preserve-3d;
 }
@@ -221,7 +193,7 @@ html.ipc-loading .mt-plane {
   outline: none;
 }
 
-/* 3D Extruded Pillar Walls — Exact height = pillar Z so ZERO walls ever pierce the floor plane! */
+/* 3D Extruded Pillar Walls — Exact height = pillar Z so ZERO walls ever pierce the floor */
 .mt-wall {
   display: block;
   position: absolute;
@@ -236,8 +208,8 @@ html.ipc-loading .mt-plane {
   height: var(--mt-shaft);
   transform-origin: top center;
   transform: rotateX(-90deg) scaleY(var(--sh, 0.06));
-  background: linear-gradient(180deg, #e2dac9 0%, #a59d8d 42%, #4a504b 82%, #181d1a 100%);
-  border-top: 1px solid rgba(255, 252, 245, 0.58);
+  background: linear-gradient(180deg, #e5ddcc 0%, #a8a090 42%, #4a504b 82%, #141816 100%);
+  border-top: 1px solid rgba(255, 252, 245, 0.62);
   box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.16);
 }
 .mt-wall-e {
@@ -247,7 +219,7 @@ html.ipc-loading .mt-plane {
   width: var(--mt-shaft);
   transform-origin: left center;
   transform: rotateY(90deg) scaleX(var(--sh, 0.06));
-  background: linear-gradient(90deg, #beb6a6 0%, #736d63 45%, #2a302c 84%, #121614 100%);
+  background: linear-gradient(90deg, #c1b9a9 0%, #756f65 45%, #2a302c 84%, #101412 100%);
 }
 .mt-wall-w {
   top: 0;
@@ -256,22 +228,22 @@ html.ipc-loading .mt-plane {
   width: var(--mt-shaft);
   transform-origin: right center;
   transform: rotateY(-90deg) scaleX(var(--sh, 0.06));
-  background: linear-gradient(270deg, #ede6d7 0%, #ada595 44%, #3f4540 84%, #141816 100%);
+  background: linear-gradient(270deg, #efe8d9 0%, #b0a898 44%, #3f4540 84%, #121614 100%);
 }
 
 /* Subtle darker stone flanks for deeply recessed background blocks */
 .mt-pillar[data-dof="0"] .mt-wall-s {
-  background: linear-gradient(180deg, #5c605a 0%, #313632 52%, #121614 100%);
-  border-top-color: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, #565b55 0%, #2d322e 52%, #0e1210 100%);
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
 .mt-pillar[data-dof="0"] .mt-wall-e {
-  background: linear-gradient(90deg, #434843 0%, #202421 55%, #0d110f 100%);
+  background: linear-gradient(90deg, #3e433e 0%, #1d211e 55%, #0b0f0d 100%);
 }
 .mt-pillar[data-dof="0"] .mt-wall-w {
-  background: linear-gradient(270deg, #686d67 0%, #2f3531 55%, #0f1311 100%);
+  background: linear-gradient(270deg, #626761 0%, #2b312d 55%, #0c100e 100%);
 }
 
-/* Hovered pillar glows with subtle coral-ivory architectural edge */
+/* Hovered pillar glows with warm coral-ivory architectural flank */
 .mt-pillar.is-hovered .mt-wall-s {
   background: linear-gradient(180deg, #f3a48f 0%, #c96850 42%, #47322c 84%, #151211 100%);
   border-top-color: #ffffff;
@@ -288,12 +260,11 @@ html.ipc-loading .mt-plane {
   perspective: 420px;
   transform: translateZ(0.5px);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 250, 240, 0.16),
+    inset 0 0 0 1px rgba(255, 250, 240, 0.15),
     0 2px 6px rgba(0, 0, 0, 0.45);
-  transition: box-shadow 0.28s ease;
+  transition: box-shadow 0.25s ease;
 }
 
-/* Optical Depth of Field Tiers (GPU-cached discrete blur tiers for buttery 60fps across 135 pillars!) */
 .mt-top-flip {
   display: block;
   position: relative;
@@ -317,9 +288,9 @@ html.ipc-loading .mt-plane {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(10, 14, 12, 0);
+  background: rgba(9, 13, 11, 0);
   pointer-events: none;
-  transition: background 0.36s var(--mt-ease);
+  transition: background 0.34s var(--mt-ease);
 }
 .mt-face.back {
   transform: rotateY(180deg);
@@ -329,47 +300,47 @@ html.ipc-loading .mt-plane {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: filter 0.36s var(--mt-ease), transform 0.36s var(--mt-ease);
+  transition: filter 0.34s var(--mt-ease), transform 0.34s var(--mt-ease);
 }
 
-/* Recessed blocks: soft optical bokeh + cool architectural shadow scrim */
+/* Recessed background sea: soft optical bokeh + cool architectural shadow scrim */
 .mt-pillar[data-dof="0"] .mt-face::after {
-  background: rgba(9, 13, 11, 0.56);
+  background: rgba(8, 12, 10, 0.56);
 }
 .mt-pillar[data-dof="0"] .mt-face img {
-  filter: blur(2.4px) saturate(0.7);
+  filter: blur(2.5px) saturate(0.68);
   transform: scale(1.06);
 }
-/* Mid-elevation transition blocks */
+/* Mid-elevation ripple transition */
 .mt-pillar[data-dof="1"] .mt-face::after {
-  background: rgba(9, 13, 11, 0.24);
+  background: rgba(8, 12, 10, 0.24);
 }
 .mt-pillar[data-dof="1"] .mt-face img {
-  filter: blur(0.9px) saturate(0.92);
+  filter: blur(0.95px) saturate(0.92);
   transform: scale(1.02);
 }
-/* Raised sculptural blocks (I·P·C monoliths & wave crests): razor-sharp native rendering (filter: none prevents Chromium 3D RenderPass sorting glitches!) */
+/* Elevated monumental I·P·C letter blocks: razor-sharp focus, gleaming ivory bevel */
 .mt-pillar[data-dof="2"] .mt-top {
   box-shadow:
-    inset 0 1px 0 rgba(255, 252, 245, 0.7),
-    inset 0 0 0 1px rgba(255, 248, 236, 0.45),
-    0 12px 24px rgba(0, 0, 0, 0.52);
+    inset 0 1px 0 rgba(255, 252, 245, 0.72),
+    inset 0 0 0 1px rgba(255, 248, 236, 0.44),
+    0 14px 28px rgba(0, 0, 0, 0.55);
 }
 .mt-pillar[data-dof="2"] .mt-face img {
   filter: none;
   transform: none;
 }
 
-/* Hover optical pull-focus override — ANY block snaps to crisp razor focus */
+/* Hover optical pull-focus override — ANY block pulls crisp & bright */
 .mt-pillar.is-hovered .mt-top,
 .mt-pillar:focus-visible .mt-top {
   box-shadow:
     inset 0 0 0 2px var(--mt-coral),
-    0 18px 34px rgba(0, 0, 0, 0.68);
+    0 18px 36px rgba(0, 0, 0, 0.68);
 }
 .mt-pillar.is-hovered .mt-face::after,
 .mt-pillar:focus-visible .mt-face::after {
-  background: rgba(9, 13, 11, 0) !important;
+  background: rgba(8, 12, 10, 0) !important;
 }
 .mt-pillar.is-hovered .mt-face img,
 .mt-pillar:focus-visible .mt-face img {
@@ -377,18 +348,18 @@ html.ipc-loading .mt-plane {
   transform: none !important;
 }
 
-/* Subtle hover micro-badge on elevated pillar */
+/* Subtle micro-label only when inspecting a block */
 .mt-hover-tag {
   display: block;
   position: absolute;
-  left: 3px;
-  right: 3px;
-  bottom: 3px;
-  padding: 2px 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  padding: 2px 5px;
   border-radius: 2px;
-  background: rgba(14, 19, 16, 0.86);
+  background: rgba(12, 17, 14, 0.88);
   color: #fffdf9;
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -405,213 +376,6 @@ html.ipc-loading .mt-plane {
 .mt-pillar:focus-visible .mt-hover-tag {
   opacity: 1;
   transform: none;
-}
-
-/* ─── Grounded Lower Editorial Nameplate & Kinetic Controls ─── */
-.mt-lower {
-  position: relative;
-  z-index: 20;
-  width: 100%;
-  padding: 12px clamp(20px, 4vw, 64px) 18px;
-  background: linear-gradient(180deg, rgba(11, 15, 13, 0) 0%, rgba(11, 15, 13, 0.86) 28%, rgba(11, 15, 13, 0.96) 100%);
-  transition: opacity 0.65s ease 0.78s, transform 0.75s var(--mt-ease) 0.78s;
-}
-html.ipc-loading .mt-lower {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-.mt-editorial {
-  max-width: 1260px;
-  margin: 0 auto 14px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.mt-title-block {
-  max-width: 860px;
-}
-.mt-eyebrow-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-.mt-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(246, 242, 233, 0.62);
-}
-.mt-announce-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 4px 11px;
-  border-radius: 999px;
-  border: 1px solid rgba(246, 242, 233, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--mt-ivory);
-  font-size: 11px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-.mt-announce-inline:hover {
-  border-color: var(--mt-coral);
-  background: rgba(232, 98, 70, 0.18);
-}
-.mt-announce-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--mt-coral);
-  flex-shrink: 0;
-}
-
-.mt-title-block h1 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(32px, 4.1vw, 56px);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
-  color: var(--mt-ivory);
-  margin: 0;
-}
-.mt-title-block h1 em {
-  color: var(--mt-coral);
-  font-style: italic;
-  font-weight: 600;
-}
-.mt-sub {
-  margin: 7px 0 0;
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: var(--mt-ivory-muted);
-}
-
-.mt-cta-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-.mt-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
-  border-radius: 999px;
-  font-size: 13.5px;
-  font-weight: 700;
-  text-decoration: none;
-  border: 1px solid var(--mt-ivory);
-  transition: transform 0.25s var(--mt-ease), background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
-}
-.mt-btn-solid {
-  background: var(--mt-ivory);
-  color: var(--mt-arch-ink);
-}
-.mt-btn-solid:hover {
-  background: var(--mt-coral);
-  border-color: var(--mt-coral);
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-.mt-btn-outline {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(246, 242, 233, 0.36);
-  color: var(--mt-ivory);
-}
-.mt-btn-outline:hover {
-  background: var(--mt-ivory);
-  border-color: var(--mt-ivory);
-  color: var(--mt-arch-ink);
-  transform: translateY(-2px);
-}
-
-/* Museum Control & Live Readout Strip */
-.mt-bar {
-  max-width: 1260px;
-  margin: 0 auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--mt-ivory-line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-.mt-formations {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.mt-readout-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.mt-readout {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(246, 242, 233, 0.68);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 480px;
-  transition: color 0.2s ease;
-}
-.mt-readout.is-live {
-  color: #fffdf9;
-}
-
-.mt-chip {
-  appearance: none;
-  border: 1px solid rgba(246, 242, 233, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(246, 242, 233, 0.88);
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-.mt-chip:hover {
-  border-color: var(--mt-coral);
-  background: rgba(232, 98, 70, 0.18);
-  color: #ffffff;
-  transform: translateY(-1px);
-}
-.mt-chip.is-active {
-  background: var(--mt-ivory);
-  border-color: var(--mt-ivory);
-  color: var(--mt-arch-ink);
-}
-.mt-chip-accent {
-  border-color: rgba(232, 98, 70, 0.45);
-  color: #ffb8a8;
-}
-.mt-chip-accent:hover {
-  background: var(--mt-coral);
-  border-color: var(--mt-coral);
-  color: #ffffff;
-}
-.mt-chip-sources {
-  flex-shrink: 0;
-  background: rgba(246, 242, 233, 0.1);
 }
 
 /* Shared Chip for Light Modals */
@@ -662,10 +426,10 @@ html.ipc-loading .mt-lower {
   box-shadow: 0 36px 90px rgba(0, 0, 0, 0.5);
   display: grid;
   grid-template-columns: 1.25fr 0.95fr;
-  animation: printZoomIn 0.32s var(--mt-ease);
+  animation: printZoomIn 0.3s var(--mt-ease);
 }
 @keyframes printZoomIn {
-  from { opacity: 0; transform: scale(0.94) translateY(16px); }
+  from { opacity: 0; transform: scale(0.95) translateY(12px); }
   to { opacity: 1; transform: none; }
 }
 .print-modal-media {
@@ -873,48 +637,30 @@ html.ipc-loading .mt-lower {
 
 /* ─── Responsive Adjustments ─── */
 @media (max-width: 1080px) {
-  .mt-readout { display: none; }
   .print-modal-sheet { grid-template-columns: 1fr; }
   .sources-grid, .footer-sources-list { grid-template-columns: 1fr; }
 }
 @media (max-width: 850px) {
   .site-header nav {
-    top: 72px !important;
-    background: rgba(16, 22, 19, 0.97) !important;
+    top: 74px !important;
+    background: rgba(14, 19, 16, 0.97) !important;
     border-bottom: 1px solid rgba(246, 242, 233, 0.12);
   }
   .site-header.scrolled nav {
     background: rgba(252, 250, 245, 0.98) !important;
   }
+  .mt-grid { gap: 3.5px; }
+}
+@media (max-width: 720px) {
   .mt-plane {
-    width: 94vw;
-    height: min(320px, 42dvh);
+    width: 118vw;
+    height: 118dvh;
   }
   .mt-grid { gap: 3px; }
-  .mt-editorial { gap: 16px; }
-}
-@media (max-width: 560px) {
-  .hero.mt-hero {
-    min-height: max(100dvh, 660px) !important;
-    height: auto;
-    padding-bottom: 8px !important;
-  }
-  .mt-stage { padding: 14px 12px 10px; }
-  .mt-plane {
-    width: 94vw;
-    height: 224px;
-  }
-  .mt-plane::before { inset: -6px; }
-  .mt-grid { gap: 2.5px; }
-  .mt-title-block h1 { font-size: 32px; }
-  .mt-sub { font-size: 13.5px; }
-  .mt-cta-row { width: 100%; }
-  .mt-btn { flex: 1; justify-content: center; padding: 11px 14px; font-size: 13px; }
-  .mt-bar { justify-content: space-between; gap: 8px; }
-  .mt-chip { padding: 5px 9px; font-size: 10px; }
+  .mt-hover-tag { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mt-top-flip { transition: transform 0.2s ease; }
-  .mt-face { transition: none; }
+  .mt-face img, .mt-face::after { transition: none; }
 }

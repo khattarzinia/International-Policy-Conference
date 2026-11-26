@@ -263,50 +263,54 @@
     }
   ];
 
-  // ─── 1. 2008 Beijing Olympics-Inspired 15×9 Kinetic 3D Movable-Type Matrix ───
-  const COLS = 15;
-  const ROWS = 9;
-  // Monumental raised movable-type bitmap spelling I · P · C (15 cols × 9 rows)
-  const IPC_MAP = [
-    '...............',
-    '.###.####.####.',
-    '..#..#..#.#..#.',
-    '..#..#..#.#....',
-    '..#..####.#....',
-    '..#..#....#....',
-    '..#..#....#..#.',
-    '.###.#....####.',
-    '...............'
+  // ─── 1. Full-Screen Edge-to-Edge 2008 Beijing Olympics Kinetic 3D Movable-Type Matrix ───
+  const IPC_CORE = [
+    '###.####.####',
+    '.#..#..#.#..#',
+    '.#..#..#.#...',
+    '.#..####.#...',
+    '.#..#....#...',
+    '.#..#....#..#',
+    '###.#....####'
   ];
 
   const gridEl = document.getElementById('mt-grid');
   const planeEl = document.getElementById('mt-plane');
   const stageEl = document.getElementById('mt-stage');
-  const readoutEl = document.getElementById('mt-readout');
-  const flipWaveBtn = document.getElementById('archive-flip-btn');
-  const openSourcesBtn = document.getElementById('archive-sources-btn');
-  const formationBtns = [...document.querySelectorAll('.mt-formations [data-mode]')];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const defaultReadout = readoutEl?.textContent || '';
-
-  let activeMode = 'ipc';
-  let introStartTime = null;
-  let hoveredBlock = null;
-  let pointerGridX = -99;
-  let pointerGridY = -99;
-  let targetTiltX = 22;
-  let targetTiltY = 0;
-  let curTiltX = 22;
-  let curTiltY = 0;
-  const blocks = [];
 
   if (gridEl && planeEl) {
-    // Build 135 interlocking 3D extruded movable-type pillars (15 × 9)
+    const isPortrait = window.innerWidth <= 720;
+    const COLS = isPortrait ? 17 : 19;
+    const ROWS = isPortrait ? 17 : 11;
+    const offC = isPortrait ? 2 : 3;
+    const offR = isPortrait ? 5 : 2;
+
+    gridEl.style.setProperty('--mt-cols', String(COLS));
+    gridEl.style.setProperty('--mt-rows', String(ROWS));
+
+    let introStartTime = null;
+    let hoveredBlock = null;
+    let pointerGridX = -99;
+    let pointerGridY = -99;
+    const baseTiltX = isPortrait ? 13 : 17;
+    let targetTiltX = baseTiltX;
+    let targetTiltY = 0;
+    let curTiltX = baseTiltX;
+    let curTiltY = 0;
+    const blocks = [];
+
+    const isLetterCell = (r, c) => {
+      const lr = r - offR;
+      const lc = c - offC;
+      if (lr < 0 || lr >= IPC_CORE.length || lc < 0 || lc >= IPC_CORE[0].length) return false;
+      return IPC_CORE[lr][lc] === '#';
+    };
+
     const frag = document.createDocumentFragment();
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
-        const isLetter = IPC_MAP[r][c] === '#';
-        // Distribute the 20 verified diplomacy photos with prime strides so adjacent pillars never duplicate
+        const isLetter = isLetterCell(r, c);
         const frontIdx = (r * 7 + c * 3) % ARCHIVE_PRINTS.length;
         const backIdx = (frontIdx + 11) % ARCHIVE_PRINTS.length;
         const frontItem = ARCHIVE_PRINTS[frontIdx];
@@ -346,17 +350,7 @@
           flipped: false,
           z: 4,
           dof: isLetter ? 2 : 0,
-          distCenter: Math.hypot(c - (COLS - 1) / 2, r - (ROWS - 1) / 2),
           diag: c + r * 0.72
-        };
-
-        const updateHoverReadout = () => {
-          const item = block.flipped ? block.backItem : block.frontItem;
-          if (readoutEl) {
-            readoutEl.textContent = `${item.id} · ${item.title} — ${item.origin} (${item.year}) · Click for source`;
-            readoutEl.classList.add('is-live');
-          }
-          if (block.tagEl) block.tagEl.textContent = `${item.id} · ${item.year}`;
         };
 
         pillar.addEventListener('mouseenter', () => {
@@ -364,22 +358,16 @@
           pointerGridX = c;
           pointerGridY = r;
           pillar.classList.add('is-hovered');
-          updateHoverReadout();
         });
         pillar.addEventListener('mouseleave', () => {
           if (hoveredBlock === block) hoveredBlock = null;
           pillar.classList.remove('is-hovered');
-          if (!hoveredBlock && readoutEl) {
-            readoutEl.textContent = defaultReadout;
-            readoutEl.classList.remove('is-live');
-          }
         });
         pillar.addEventListener('focus', () => {
           hoveredBlock = block;
           pointerGridX = c;
           pointerGridY = r;
           pillar.classList.add('is-hovered');
-          updateHoverReadout();
         });
         pillar.addEventListener('blur', () => {
           if (hoveredBlock === block) hoveredBlock = null;
@@ -397,31 +385,22 @@
     }
     gridEl.appendChild(frag);
 
-    // Subtle 3D Bird's Nest Camera Perspective Parallax
+    // Subtle 3D Camera Parallax over Full-Bleed Matrix
     stageEl?.addEventListener('mousemove', e => {
       const rect = stageEl.getBoundingClientRect();
       const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
       const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-      const baseX = window.innerWidth <= 560 ? 16 : 22;
-      targetTiltX = baseX - ny * 4.5;
-      targetTiltY = nx * 6.5;
+      targetTiltX = baseTiltX - ny * 3.2;
+      targetTiltY = nx * 4.2;
     }, { passive: true });
     stageEl?.addEventListener('mouseleave', () => {
-      targetTiltX = window.innerWidth <= 560 ? 16 : 22;
+      targetTiltX = baseTiltX;
       targetTiltY = 0;
       pointerGridX = -99;
       pointerGridY = -99;
     });
 
-    // Formation Switcher (I·P·C Relief / Beijing Wave / Concentric Ripple / Great Wall Terrace)
-    formationBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeMode = btn.dataset.mode || 'ipc';
-        formationBtns.forEach(b => b.classList.toggle('is-active', b === btn));
-      });
-    });
-
-    // Kinetic 3D Block Flip Helper (swaps in a fresh verified diplomacy photograph)
+    // Periodic Staggered 3D Block Flips Cycling Verified Diplomacy Photos across I·P·C
     let poolCursor = 0;
     const flipBlock = b => {
       if (hoveredBlock === b) return;
@@ -448,62 +427,31 @@
       b.el.setAttribute('aria-label', `${shown.title} (${shown.origin}, ${shown.year}) — Click for origin and source`);
     };
 
-    // Periodic Living Flips across elevated blocks (keeps the sculpture shimmering with diplomacy)
     if (!reducedMotion) {
       let flipStep = 0;
       const letterBlocks = blocks.filter(b => b.isLetter);
       setInterval(() => {
         if (document.hidden || document.documentElement.classList.contains('ipc-loading')) return;
-        const pool = activeMode === 'ipc' ? letterBlocks : blocks;
-        const b = pool[(flipStep * 7) % pool.length];
+        const b = letterBlocks[(flipStep * 7) % letterBlocks.length];
         flipStep += 1;
         if (b) flipBlock(b);
       }, 950);
     }
 
-    // Manual "↻ Flip Wave" sweeps a Beijing-2008 left-to-right domino flip across all 135 pillars
-    flipWaveBtn?.addEventListener('click', () => {
-      for (let c = 0; c < COLS; c++) {
-        setTimeout(() => {
-          for (let r = 0; r < ROWS; r++) {
-            const b = blocks[r * COLS + c];
-            if (b) flipBlock(b);
-          }
-        }, c * 52);
-      }
-    });
-
-    // Compute Target Pillar Elevation (strictly >= 4px so Chromium 3D hit-testing reaches EVERY block!)
-    const computeTargetZ = (b, sec, isMobile) => {
-      const scale = isMobile ? 0.56 : 1;
-      let h = 6;
-      if (activeMode === 'ipc') {
-        if (b.isLetter) {
-          // Elevated monumental I·P·C relief breathing smoothly like the 897 Beijing performers
-          const breath = Math.sin(sec * 1.45 - b.c * 0.42 + b.r * 0.25) * 6;
-          h = 74 + breath;
-        } else {
-          // Recessed rippling sea of background diplomacy blocks
-          const sea = (Math.sin(sec * 1.25 - b.diag * 0.48) + 1) * 7.5;
-          h = 5 + sea;
-        }
-      } else if (activeMode === 'wave') {
-        // Iconic Beijing 2008 rolling diagonal liquid wave
-        const w = (Math.sin(sec * 2.1 - b.c * 0.52 - b.r * 0.36) + 1) * 0.5;
-        h = 6 + Math.pow(w, 1.35) * 76;
-      } else if (activeMode === 'ripple') {
-        // Concentric stone-in-water stadium rings pulsing outward from center
-        const w = (Math.sin(sec * 2.5 - b.distCenter * 1.05) + 1) * 0.5;
-        h = 6 + Math.pow(w, 1.45) * 76;
+    const computeTargetZ = (b, sec) => {
+      const scale = isPortrait ? 0.56 : 1;
+      let h;
+      if (b.isLetter) {
+        // Elevated monumental I·P·C relief breathing smoothly like the 897 Beijing performers
+        const breath = Math.sin(sec * 1.4 - b.c * 0.4 + b.r * 0.25) * 6.5;
+        h = 80 + breath;
       } else {
-        // "Great Wall" terraced architectural steps + crenellated diagonal crest
-        const ridge = Math.abs((b.r - 4) - Math.sin(b.c * 0.44 + sec * 0.85) * 2.1);
-        const crest = Math.max(0, 1 - ridge / 2.25);
-        const battlement = (b.c % 2 === 0 && crest > 0.55) ? 10 : 0;
-        h = 6 + crest * 66 + battlement;
+        // Recessed gently rippling sea of background diplomacy blocks
+        const sea = (Math.sin(sec * 1.2 - b.diag * 0.46) + 1) * 7.5;
+        h = 6 + sea;
       }
 
-      // Interactive physical cursor ripple (nearby blocks surge up toward the cursor!)
+      // Interactive physical cursor ripple
       if (pointerGridX >= 0) {
         const d = Math.hypot(b.c - pointerGridX, b.r - pointerGridY);
         if (d === 0) {
@@ -520,32 +468,29 @@
     const tick = now => {
       const isLoading = document.documentElement.classList.contains('ipc-loading');
       if (!isLoading && introStartTime === null) introStartTime = now;
-      const isMobile = window.innerWidth <= 560;
       const sec = now * 0.001;
 
-      // Smooth 3D perspective camera tilt
       curTiltX += (targetTiltX - curTiltX) * 0.07;
       curTiltY += (targetTiltY - curTiltY) * 0.07;
-      planeEl.style.transform = `rotateX(${curTiltX.toFixed(2)}deg) rotateY(${curTiltY.toFixed(2)}deg)`;
+      planeEl.style.transform = `translateY(-1%) rotateX(${curTiltX.toFixed(2)}deg) rotateY(${curTiltY.toFixed(2)}deg)`;
 
-      const sharpCut = isMobile ? 28 : 48;
-      const midCut = isMobile ? 16 : 26;
+      const sharpCut = isPortrait ? 28 : 50;
+      const midCut = isPortrait ? 16 : 28;
 
       for (let i = 0; i < blocks.length; i++) {
         const b = blocks[i];
         let targetZ = 4;
         if (!isLoading && introStartTime !== null) {
           // Staggered Beijing-2008 wave rise from flat floor after loader clears
-          const introElapsed = (now - introStartTime) - 420 - b.diag * 34;
+          const introElapsed = (now - introStartTime) - 420 - b.diag * 28;
           const introT = introElapsed <= 0 ? 0 : introElapsed >= 650 ? 1 : 1 - Math.pow(1 - introElapsed / 650, 3);
-          targetZ = 4 + (computeTargetZ(b, sec, isMobile) - 4) * introT;
+          targetZ = 4 + (computeTargetZ(b, sec) - 4) * introT;
         }
         const lerp = hoveredBlock === b ? 0.24 : 0.14;
         b.z += (targetZ - b.z) * lerp;
         b.el.style.transform = `translate3d(0, 0, ${b.z.toFixed(1)}px)`;
         b.el.style.setProperty('--sh', (b.z / 100).toFixed(3));
 
-        // Discrete GPU-cached optical depth-of-field tier
         const nextDof = b.z >= sharpCut ? 2 : b.z >= midCut ? 1 : 0;
         if (nextDof !== b.dof) {
           b.dof = nextDof;
@@ -559,9 +504,8 @@
     if (!reducedMotion) {
       requestAnimationFrame(tick);
     } else {
-      const isMobile = window.innerWidth <= 560;
       blocks.forEach(b => {
-        const z = b.isLetter ? (isMobile ? 42 : 74) : 6;
+        const z = b.isLetter ? (isPortrait ? 44 : 80) : 8;
         b.z = z;
         b.el.style.transform = `translate3d(0, 0, ${z}px)`;
         b.el.style.setProperty('--sh', (z / 100).toFixed(3));
@@ -643,7 +587,6 @@
     });
   }
 
-  openSourcesBtn?.addEventListener('click', () => sourcesModal?.classList.add('open'));
   sourcesClose?.addEventListener('click', () => sourcesModal?.classList.remove('open'));
   sourcesModal?.addEventListener('click', e => { if (e.target === sourcesModal) sourcesModal.classList.remove('open'); });
 
