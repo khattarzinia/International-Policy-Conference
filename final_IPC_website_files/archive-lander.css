@@ -1061,12 +1061,16 @@ section[id], footer[id] {
   margin: 0 !important;
 }
 
-/* ─── Flat Architectural Rotating Cylinder Pyramid Award Tiers (#awards — Original IPC Palette) ─── */
+/* ─── Top-Connected Thick Graphic-3D Cylinder Pyramid Award Tiers (#awards — Original IPC Palette) ─── */
 .awards.awards-rotational {
   background: #f1c0ad !important;
   color: var(--ink, #18261d);
-  padding: 0 0 clamp(60px, 7vw, 92px) !important;
+  padding: 0 0 28px !important;
   border-top: 2px solid #18261d !important;
+}
+.awards-monument {
+  position: relative;
+  width: 100%;
 }
 .awards-pyramid-band {
   width: 100%;
@@ -1079,20 +1083,28 @@ section[id], footer[id] {
   display: block;
   cursor: pointer;
 }
-.awards-shell {
-  max-width: 1220px;
-  margin: clamp(40px, 4.8vw, 64px) auto 0;
-  padding: 0 clamp(24px, 7vw, 110px);
+
+/* Explanations & Ledger nested cleanly into the two open flanks beside the thinner lower cylinders */
+.awards-wings {
+  pointer-events: none;
 }
-.awards-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 20px 56px;
-  flex-wrap: wrap;
-  padding-bottom: 24px;
+.awards-wing-left,
+.awards-wing-right {
+  position: absolute;
+  bottom: 10px;
+  width: min(23.5vw, 336px);
+  pointer-events: auto;
+  z-index: 3;
 }
-.awards-top .eyebrow {
+.awards-wing-left {
+  left: clamp(22px, 2.8vw, 52px);
+  padding-bottom: 4px;
+}
+.awards-wing-right {
+  right: clamp(22px, 2.8vw, 52px);
+}
+
+.awards-wing-left .eyebrow {
   font-family: "Instrument Sans", "DM Sans", sans-serif;
   font-size: 11px;
   font-weight: 600;
@@ -1100,48 +1112,56 @@ section[id], footer[id] {
   color: #213c2b;
   margin-bottom: 10px;
 }
-.awards-top h2 {
+.awards-wing-left h2 {
   font-family: "Instrument Sans", "DM Sans", sans-serif;
-  font-size: clamp(38px, 4.8vw, 62px);
+  font-size: clamp(34px, 3.6vw, 52px);
   font-weight: 600;
   font-style: normal;
   line-height: 1.02;
   letter-spacing: -0.04em;
   color: #18261d;
-  margin: 0;
+  margin: 0 0 16px;
 }
 .awards-intro {
-  flex: 0 1 440px;
   font-family: "Instrument Sans", "DM Sans", sans-serif;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 400;
   line-height: 1.58;
-  color: rgba(24, 38, 29, 0.86);
-  margin: 0 0 4px;
+  color: rgba(24, 38, 29, 0.88);
+  margin: 0 0 18px;
+}
+.awards-footnote {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(24, 38, 29, 0.24);
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 12.5px;
+  line-height: 1.52;
+  color: rgba(24, 38, 29, 0.72);
 }
 
-/* Original Flat 6-Column Bordered Ledger */
+/* Compact Flat Hairline Ledger tucked cleanly into the right flank */
 .awards-ledger {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  border-top: 1px solid rgba(24, 38, 29, 0.32);
-  border-left: 1px solid rgba(24, 38, 29, 0.32);
+  grid-template-columns: 1fr;
+  border-top: 1px solid rgba(24, 38, 29, 0.34);
+  border-left: 1px solid rgba(24, 38, 29, 0.34);
   background: #fffdf8;
 }
 .award-row {
   appearance: none;
   border: 0;
-  border-right: 1px solid rgba(24, 38, 29, 0.32);
-  border-bottom: 1px solid rgba(24, 38, 29, 0.32);
+  border-right: 1px solid rgba(24, 38, 29, 0.34);
+  border-bottom: 1px solid rgba(24, 38, 29, 0.34);
   border-radius: 0;
   background: transparent;
   color: #18261d;
   text-align: left;
   font-family: "Instrument Sans", "DM Sans", sans-serif;
-  padding: 20px 18px 22px;
+  padding: 8px 13px 9px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
   cursor: pointer;
   transition: background 0.16s ease, color 0.16s ease;
 }
@@ -1156,14 +1176,29 @@ section[id], footer[id] {
   background: #f2684e;
   color: #fffdf8;
 }
-.award-pct {
-  font-size: 10.5px;
+.award-row-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.award-row strong {
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 14.5px;
   font-weight: 600;
-  letter-spacing: 0.13em;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: inherit;
+}
+.award-pct {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
   color: #213c2b;
-  margin-bottom: 10px;
+  white-space: nowrap;
 }
 .award-row[data-tier="5"] .award-pct {
   color: #c44128;
@@ -1174,31 +1209,14 @@ section[id], footer[id] {
 .award-row[data-tier="5"].is-active .award-pct {
   color: #fffdf8;
 }
-.award-row strong {
-  display: block;
-  font-family: "Instrument Sans", "DM Sans", sans-serif;
-  font-size: 16.5px;
-  font-weight: 600;
-  font-style: normal;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  color: inherit;
-}
 .award-desc {
   display: block;
-  font-size: 12.5px;
-  line-height: 1.48;
+  font-size: 12px;
+  line-height: 1.38;
   color: #46544a;
 }
 .award-row.is-active .award-desc {
-  color: rgba(255, 253, 248, 0.85);
-}
-.awards-footnote {
-  margin: 18px 0 0;
-  font-family: "Instrument Sans", "DM Sans", sans-serif;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: rgba(24, 38, 29, 0.78);
+  color: rgba(255, 253, 248, 0.86);
 }
 
 /* ─── Option C: Flat Compact Think-Tank Shelf (#documents — Original IPC Palette) ─── */
@@ -1378,10 +1396,29 @@ section[id], footer[id] {
 }
 
 /* ─── Responsive Adjustments ─── */
+@media (max-width: 1120px) {
+  .awards.awards-rotational { padding: 0 0 56px !important; }
+  .awards-wings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 1000px;
+    margin: 36px auto 0;
+    padding: 0 clamp(24px, 6vw, 56px);
+    align-items: start;
+  }
+  .awards-wing-left,
+  .awards-wing-right {
+    position: static;
+    width: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+}
 @media (max-width: 1080px) {
   .about-header { grid-template-columns: 1fr; align-items: start; }
   .about-grid, .brief-shelf { grid-template-columns: 1fr; }
-  .awards-ledger { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .dossier-card { border-bottom: 1px solid rgba(24, 38, 29, 0.25); }
   .dossier-card:last-child { border-bottom: 0; }
   .about-rail { order: 2; }
@@ -1391,8 +1428,10 @@ section[id], footer[id] {
   .print-modal-sheet { grid-template-columns: 1fr; }
   .sources-grid, .footer-sources-list { grid-template-columns: 1fr; }
 }
+@media (max-width: 760px) {
+  .awards-wings { grid-template-columns: 1fr; gap: 24px; }
+}
 @media (max-width: 600px) {
-  .awards-ledger { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dossier-card { grid-template-columns: 1fr; padding: 22px; }
   .dossier-sleeve { width: 152px; }
 }

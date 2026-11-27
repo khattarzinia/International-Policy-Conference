@@ -35,10 +35,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Sans:wght@400..700&family=Playfair+Display:ital,wght@0,500..900;1,500..700&display=swap" rel="stylesheet">
     <link rel="preload" as="image" href="./assets/archive/01-un-general-assembly.webp" fetchpriority="high">
-    <link rel="stylesheet" href="./final_IPC_website_files/styles.css?v=20261127k">
-    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css?v=20261127k">
-    <link rel="stylesheet" href="./final_IPC_website_files/extended.css?v=20261127k">
-    <link rel="stylesheet" href="./final_IPC_website_files/archive-lander.css?v=20261127k">
+    <link rel="stylesheet" href="./final_IPC_website_files/styles.css?v=20261127m">
+    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css?v=20261127m">
+    <link rel="stylesheet" href="./final_IPC_website_files/extended.css?v=20261127m">
+    <link rel="stylesheet" href="./final_IPC_website_files/archive-lander.css?v=20261127m">
     <style>
       .hero-copy.reveal { opacity: 1; transform: none; }
       html.ipc-loading .site-header {
@@ -658,52 +658,66 @@
       </section>
 
       <section id="awards" class="awards awards-rotational section">
-        <div class="awards-pyramid-band">
-          <canvas id="ipc-awards-canvas" aria-label="Flat rotating inverted cylinder pyramid of six award tiers from Distinction (Top 25%) at the top down to Gold Medal (Top 1) at the bottom"></canvas>
-        </div>
+        <div class="awards-monument">
+          <div class="awards-pyramid-band">
+            <canvas id="ipc-awards-canvas" aria-label="Rotating graphic 3D inverted cylinder pyramid of six award tiers from Distinction (Top 25%) at the top down to Gold Medal (Top 1) at the bottom"></canvas>
+          </div>
 
-        <div class="awards-shell">
-          <div class="awards-top reveal">
-            <div>
+          <div class="awards-wings">
+            <div class="awards-wing-left reveal">
               <p class="eyebrow">Recognition</p>
               <h2>Award Tiers</h2>
+              <p class="awards-intro">Six recognition levels narrowing from the top quarter of submissions down to the session champion, determined by composite scores across judged stages.</p>
+              <p class="awards-footnote">All recognized teams receive an official certificate of achievement following integrated paper, video, and live adjudication.</p>
             </div>
-            <p class="awards-intro">Six recognition levels narrowing from the top quarter of submissions down to the session champion, determined by composite scores across judged stages.</p>
-          </div>
 
-          <div class="awards-ledger reveal" id="awards-ledger">
-            <button type="button" class="award-row" data-tier="0">
-              <span class="award-pct">Top 25%</span>
-              <strong>Distinction</strong>
-              <span class="award-desc">Commended for quality of work</span>
-            </button>
-            <button type="button" class="award-row" data-tier="1">
-              <span class="award-pct">Top 15%</span>
-              <strong>Honorable Mention</strong>
-              <span class="award-desc">Strong performance across stages</span>
-            </button>
-            <button type="button" class="award-row" data-tier="2">
-              <span class="award-pct">Top 8</span>
-              <strong>Finalist</strong>
-              <span class="award-desc">Invited to the live finals round</span>
-            </button>
-            <button type="button" class="award-row" data-tier="3">
-              <span class="award-pct">Top 3</span>
-              <strong>Bronze Medal</strong>
-              <span class="award-desc">Third-place team of the session</span>
-            </button>
-            <button type="button" class="award-row" data-tier="4">
-              <span class="award-pct">Top 2</span>
-              <strong>Silver Medal</strong>
-              <span class="award-desc">Runner-up team of the session</span>
-            </button>
-            <button type="button" class="award-row is-active" data-tier="5">
-              <span class="award-pct">Top 1</span>
-              <strong>Gold Medal</strong>
-              <span class="award-desc">Champion team of the session</span>
-            </button>
+            <div class="awards-wing-right reveal">
+              <div class="awards-ledger" id="awards-ledger">
+                <button type="button" class="award-row" data-tier="0">
+                  <span class="award-row-head">
+                    <strong>Distinction</strong>
+                    <span class="award-pct">Top 25%</span>
+                  </span>
+                  <span class="award-desc">Commended for quality of work</span>
+                </button>
+                <button type="button" class="award-row" data-tier="1">
+                  <span class="award-row-head">
+                    <strong>Honorable Mention</strong>
+                    <span class="award-pct">Top 15%</span>
+                  </span>
+                  <span class="award-desc">Strong performance across stages</span>
+                </button>
+                <button type="button" class="award-row" data-tier="2">
+                  <span class="award-row-head">
+                    <strong>Finalist</strong>
+                    <span class="award-pct">Top 8</span>
+                  </span>
+                  <span class="award-desc">Invited to the live finals round</span>
+                </button>
+                <button type="button" class="award-row" data-tier="3">
+                  <span class="award-row-head">
+                    <strong>Bronze Medal</strong>
+                    <span class="award-pct">Top 3</span>
+                  </span>
+                  <span class="award-desc">Third-place team of the session</span>
+                </button>
+                <button type="button" class="award-row" data-tier="4">
+                  <span class="award-row-head">
+                    <strong>Silver Medal</strong>
+                    <span class="award-pct">Top 2</span>
+                  </span>
+                  <span class="award-desc">Runner-up team of the session</span>
+                </button>
+                <button type="button" class="award-row is-active" data-tier="5">
+                  <span class="award-row-head">
+                    <strong>Gold Medal</strong>
+                    <span class="award-pct">Top 1</span>
+                  </span>
+                  <span class="award-desc">Champion team of the session</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <p class="awards-footnote reveal">All recognized teams receive an official certificate of achievement following integrated paper, video, and live adjudication.</p>
         </div>
       </section>
 
@@ -897,8 +911,8 @@
       </details>
       <p class="footer-bottom">© 2026 International Policy Conference <a href="#top">Back to top ↑</a></p>
     </footer>
-    <script src="./final_IPC_website_files/world-data.js?v=20261127k" defer></script>
-    <script src="./final_IPC_website_files/script.js?v=20261127k" defer></script>
+    <script src="./final_IPC_website_files/world-data.js?v=20261127m" defer></script>
+    <script src="./final_IPC_website_files/script.js?v=20261127m" defer></script>
   
 
 </body></html>
