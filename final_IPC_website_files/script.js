@@ -1693,49 +1693,51 @@
   if (awardsCanvas) {
     const actx = awardsCanvas.getContext("2d");
     // Big (widest) at TOP → Small (rarest Gold apex) at BOTTOM
+    // Texture widths scale proportionally to cylinder circumference so text has ZERO horizontal squishing on any tier
     const TIERS = [
       {
-        name: "DISTINCTION", pct: "TOP 25%", rFrac: 0.445, repeats: 3, speed: 0.16,
+        name: "DISTINCTION", pct: "TOP 25%", rFrac: 0.445, repeats: 4, speed: 0.15,
         bodyTop: "#27473f", bodyMid: "#1b332d", bodyBot: "#122420",
         capLight: "#335c52", capDark: "#172b26", rim: "rgba(116, 212, 189, 0.55)",
         text: "#f4f1e8", pctColor: "#89e0ca"
       },
       {
-        name: "HONORABLE MENTION", pct: "TOP 15%", rFrac: 0.388, repeats: 2, speed: -0.18,
+        name: "HONORABLE MENTION", pct: "TOP 15%", rFrac: 0.388, repeats: 3, speed: -0.17,
         bodyTop: "#33385c", bodyMid: "#242845", bodyBot: "#181b31",
         capLight: "#444a75", capDark: "#1d213a", rim: "rgba(155, 165, 240, 0.55)",
         text: "#f4f1e8", pctColor: "#b5beff"
       },
       {
-        name: "FINALIST", pct: "TOP 8 TEAMS", rFrac: 0.332, repeats: 3, speed: 0.2,
+        name: "FINALIST", pct: "TOP 8 TEAMS", rFrac: 0.334, repeats: 3, speed: 0.19,
         bodyTop: "#7c372d", bodyMid: "#5b261f", bodyBot: "#3f1914",
         capLight: "#9a483c", capDark: "#4a1f19", rim: "rgba(244, 146, 125, 0.6)",
         text: "#fff9f4", pctColor: "#ffc2b5"
       },
       {
-        name: "BRONZE MEDAL", pct: "TOP 3", rFrac: 0.276, repeats: 2, speed: -0.22,
+        name: "BRONZE MEDAL", pct: "TOP 3", rFrac: 0.282, repeats: 3, speed: -0.21,
         bodyTop: "#9f643e", bodyMid: "#784729", bodyBot: "#532f19",
         capLight: "#be7d52", capDark: "#63381f", rim: "rgba(242, 184, 140, 0.68)",
         text: "#fff8f0", pctColor: "#ffd8b8"
       },
       {
-        name: "SILVER MEDAL", pct: "TOP 2", rFrac: 0.222, repeats: 2, speed: 0.24,
+        name: "SILVER MEDAL", pct: "TOP 2", rFrac: 0.232, repeats: 2, speed: 0.23,
         bodyTop: "#9aa5b1", bodyMid: "#737d89", bodyBot: "#4f5761",
         capLight: "#bac5d1", capDark: "#636c77", rim: "rgba(245, 250, 255, 0.78)",
         text: "#10171d", pctColor: "#1b2733"
       },
       {
-        name: "GOLD MEDAL", pct: "TOP TEAM", rFrac: 0.168, repeats: 2, speed: -0.27,
+        name: "GOLD MEDAL", pct: "TOP TEAM", rFrac: 0.186, repeats: 2, speed: -0.25,
         bodyTop: "#e3bc58", bodyMid: "#be9230", bodyBot: "#896518",
         capLight: "#f4d47c", capDark: "#a67d22", rim: "rgba(255, 243, 194, 0.92)",
         text: "#191306", pctColor: "#2e2107"
       }
     ];
 
-    // Pre-render ultra-crisp HiDPI cylindrical wrap textures once fonts settle
+    // Pre-render ultra-crisp 1:1 aspect-correct cylindrical wrap textures once fonts settle
     const buildCylTexture = tier => {
-      const tw = 2048;
       const th = 128;
+      // Exact circumference-to-height ratio (2 * pi * rFrac * 600 / (0.112 * 500) * 128) => true 1:1 non-stretched lettering
+      const tw = Math.max(1500, Math.round(tier.rFrac * 8620));
       const off = document.createElement("canvas");
       off.width = tw;
       off.height = th;
@@ -1764,13 +1766,11 @@
       // Repeat award title + top % evenly around the 360° circumference
       const segW = tw / tier.repeats;
       g.textBaseline = "middle";
-      g.textAlign = "center";
       for (let i = 0; i < tier.repeats; i++) {
         const mid = i * segW + segW * 0.5;
-        // Measure & center "[AWARD]   ·   [TOP %]"
-        g.font = '600 44px "Playfair Display", Georgia, serif';
+        g.font = '600 42px "Playfair Display", Georgia, serif';
         const wTitle = g.measureText(tier.name).width;
-        g.font = '700 28px "DM Sans", Arial, sans-serif';
+        g.font = '700 26px "DM Sans", Arial, sans-serif';
         const sep = "   ·   ";
         const wSep = g.measureText(sep).width;
         const wPct = g.measureText(tier.pct).width;
@@ -1778,18 +1778,18 @@
         let x = mid - totalW / 2;
 
         g.textAlign = "left";
-        g.font = '600 44px "Playfair Display", Georgia, serif';
+        g.font = '600 42px "Playfair Display", Georgia, serif';
         g.fillStyle = tier.text;
         g.fillText(tier.name, x, th * 0.52);
         x += wTitle;
 
-        g.font = '700 28px "DM Sans", Arial, sans-serif';
+        g.font = '700 26px "DM Sans", Arial, sans-serif';
         g.fillStyle = tier.pctColor;
         g.fillText(sep + tier.pct, x, th * 0.53);
 
         // Diamond divider between circumference repeats
         g.textAlign = "center";
-        g.font = '700 22px "DM Sans", Arial, sans-serif';
+        g.font = '700 20px "DM Sans", Arial, sans-serif';
         g.fillStyle = tier.rim;
         g.fillText("◆", i * segW, th * 0.52);
       }
@@ -1843,11 +1843,13 @@
     awardsObs.observe(awardsCanvas);
 
     let lastAwardTime = performance.now();
+    let awardsRenderedOnce = false;
     const drawAwards = now => {
       requestAnimationFrame(drawAwards);
       const dt = Math.min(0.05, (now - lastAwardTime) * 0.001);
       lastAwardTime = now;
-      if (!awardsVisible || document.hidden) return;
+      if ((!awardsVisible || document.hidden) && awardsRenderedOnce) return;
+      awardsRenderedOnce = true;
 
       const rect = awardsCanvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1862,10 +1864,10 @@
       actx.clearRect(0, 0, W, H);
 
       const cx = W * 0.5;
-      const tiltSin = 0.245; // Elevated architectural perspective showing elliptical top caps & curved belly
-      const cylH = H * 0.112;
+      const tiltSin = 0.205; // Sleek architectural perspective showing elliptical top caps & crisp wall lettering
+      const cylH = H * 0.114;
       const stepY = H * 0.128;
-      const startY = H * 0.145;
+      const startY = H * 0.135;
 
       // Advance slow rotational angles (gentle slow-down on hovered cylinder for easy reading)
       if (!reducedMotion) {
