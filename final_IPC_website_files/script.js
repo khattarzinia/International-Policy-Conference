@@ -1692,21 +1692,21 @@
 
   if (awardsCanvas) {
     const actx = awardsCanvas.getContext("2d");
-    // Thick, tall clean graphic-3D drums anchored flush to the top border (y = 0) with deep tapering so explanations & ledger nest cleanly into both lower flanks
+    // Monumental, deep-scrolling graphic-3D drums anchored flush to the top border (y = 0) so visitors scroll down to earn the rare Gold apex
     const TIERS = [
-      { name: "DISTINCTION",       pct: "TOP 25%", rDesk: 0.44,  rMob: 0.465, speed:  0.105, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad" },
-      { name: "HONORABLE MENTION", pct: "TOP 15%", rDesk: 0.365, rMob: 0.41,  speed: -0.12,  bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b" },
-      { name: "FINALIST",          pct: "TOP 8",   rDesk: 0.29,  rMob: 0.355, speed:  0.135, bg: "#f5efe3", text: "#18261d", pctColor: "#f2684e" },
-      { name: "BRONZE MEDAL",      pct: "TOP 3",   rDesk: 0.215, rMob: 0.30,  speed: -0.15,  bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad" },
-      { name: "SILVER MEDAL",      pct: "TOP 2",   rDesk: 0.162, rMob: 0.25,  speed:  0.165, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b" },
-      { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.118, rMob: 0.205, speed: -0.18,  bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8" }
+      { name: "DISTINCTION",       pct: "TOP 25%", rDesk: 0.45,  rMob: 0.47,  speed:  0.10,  bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad" },
+      { name: "HONORABLE MENTION", pct: "TOP 15%", rDesk: 0.375, rMob: 0.415, speed: -0.115, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b" },
+      { name: "FINALIST",          pct: "TOP 8",   rDesk: 0.30,  rMob: 0.36,  speed:  0.13,  bg: "#f5efe3", text: "#18261d", pctColor: "#f2684e" },
+      { name: "BRONZE MEDAL",      pct: "TOP 3",   rDesk: 0.228, rMob: 0.305, speed: -0.145, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad" },
+      { name: "SILVER MEDAL",      pct: "TOP 2",   rDesk: 0.172, rMob: 0.255, speed:  0.16,  bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b" },
+      { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.126, rMob: 0.21,  speed: -0.175, bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8" }
     ];
 
-    // Pre-render crisp neo-grotesque cylindrical wrap strips (clean Instrument Sans, generous breathing room inside thicker drums)
+    // Pre-render crisp neo-grotesque cylindrical wrap strips where uppercase cap-height ≈ 1/3 of cylinder height
     const buildCylTexture = (tier, bandR, visH, isMob) => {
-      const th = 240;
+      const th = isMob ? 296 : 440;
       const circumference = 2 * Math.PI * bandR;
-      const tw = Math.max(1200, Math.round(circumference * (th / visH)));
+      const tw = Math.max(1400, Math.round(circumference * (th / visH)));
       const off = document.createElement("canvas");
       off.width = tw;
       off.height = th;
@@ -1715,9 +1715,10 @@
       g.fillStyle = tier.bg;
       g.fillRect(0, 0, tw, th);
 
-      let titlePx = Math.round(th * (isMob ? 0.23 : 0.23));
-      let pctPx = Math.round(th * (isMob ? 0.15 : 0.15));
-      const sep = "   /   ";
+      // In Instrument Sans 600, uppercase cap-height ≈ 0.72 * fontSize => 0.455 * th renders at ~33% (1/3) of the cylinder height
+      let titlePx = Math.round(th * (isMob ? 0.42 : 0.455));
+      let pctPx = Math.round(th * (isMob ? 0.25 : 0.275));
+      const sep = "  /  ";
       const measure = () => {
         g.font = `600 ${titlePx}px "Instrument Sans", "DM Sans", -apple-system, sans-serif`;
         const wT = g.measureText(tier.name).width;
@@ -1727,11 +1728,12 @@
         return { wT, wS, wP, total: wT + wS + wP };
       };
 
-      const pad = isMob ? 150 : 280;
+      const pad = isMob ? 170 : 380;
       let m = measure();
-      while (m.total + pad > tw / 2 && titlePx > 32) {
-        titlePx -= 2;
-        pctPx = Math.max(22, Math.round(titlePx * 0.64));
+      // Keep at least 2 repeats around 360° (scaling slightly only on the narrowest Gold/Silver drums if needed)
+      while (m.total + pad > tw / 2 && titlePx > Math.round(th * 0.26)) {
+        titlePx -= 4;
+        pctPx = Math.max(Math.round(th * 0.16), Math.round(titlePx * 0.6));
         m = measure();
       }
       const repeats = Math.max(2, Math.floor(tw / (m.total + pad)));
@@ -1826,10 +1828,10 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const W = Math.max(320, Math.round(rect.width));
       const isMob = W < 640;
-      const visH = isMob ? 84 : Math.round(Math.min(128, Math.max(110, ((window.innerHeight || 900) - 108) / 6.15))); // Thick stages sized to frame cleanly with both lower flanks in one screen
+      const visH = isMob ? 148 : 220; // Deep vertical progression (~1,345px desktop) requiring a deliberate scroll to reach Gold
       const radii = TIERS.map(t => W * (isMob ? t.rMob : t.rDesk));
-      // Clean graphic elliptical 3D bottom arcs (no realistic CGI lighting or heavy shadows)
-      const rys = radii.map(r => Math.min(isMob ? 16 : 26, Math.max(11, r * 0.085)));
+      // Clean graphic elliptical 3D bottom arcs proportional to deeper drums
+      const rys = radii.map(r => Math.min(isMob ? 22 : 36, Math.max(15, r * 0.095)));
 
       const frontBots = [];
       const edgeBots = [];
