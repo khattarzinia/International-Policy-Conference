@@ -1930,11 +1930,38 @@
     requestAnimationFrame(drawAwards);
   }
 
-  // ─── 6. Header Scroll State, Mobile Nav & Reliable Scroll Reveal ───
+  // ─── 6. Competition Page Requirements Tab Switcher (#req-tabs) ───
+  const reqTabsWrap = document.getElementById("req-tabs");
+  const reqPanelsWrap = document.getElementById("req-panels");
+  if (reqTabsWrap && reqPanelsWrap) {
+    const tabs = [...reqTabsWrap.querySelectorAll(".req-tab")];
+    const panels = [...reqPanelsWrap.querySelectorAll(".req-panel")];
+    const selectStage = stage => {
+      tabs.forEach(t => {
+        const active = t.dataset.stage === stage;
+        t.classList.toggle("is-active", active);
+        t.setAttribute("aria-selected", String(active));
+      });
+      if (stage === "all") {
+        panels.forEach(p => p.classList.add("is-active"));
+      } else {
+        panels.forEach(p => p.classList.toggle("is-active", p.dataset.panel === stage));
+      }
+    };
+    tabs.forEach(t => t.addEventListener("click", () => selectStage(t.dataset.stage)));
+    const initialHash = window.location.hash.replace("#", "");
+    if (["brief", "pitch", "finals"].includes(initialHash)) selectStage(initialHash);
+  }
+
+  // ─── 7. Header Scroll State, Mobile Nav & Reliable Scroll Reveal ───
   const header = document.querySelector(".site-header");
   const heroSection = document.querySelector(".mt-hero");
   const onScroll = () => {
-    const threshold = heroSection ? Math.max(120, heroSection.offsetHeight - 96) : 36;
+    if (!heroSection) {
+      header?.classList.add("scrolled");
+      return;
+    }
+    const threshold = Math.max(120, heroSection.offsetHeight - 96);
     header?.classList.toggle("scrolled", window.scrollY > threshold);
   };
   window.addEventListener("scroll", onScroll, { passive: true });

@@ -5,11 +5,20 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
-# Always revalidate HTML and crawl files
+# Always revalidate HTML pages and crawl files
 /
   Cache-Control: public, max-age=0, must-revalidate
 
 /index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/competition/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/resources/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/chapters/
   Cache-Control: public, max-age=0, must-revalidate
 
 /robots.txt
@@ -36,7 +45,7 @@
 /assets/lowell-house-hires.jpg
   Content-Type: image/webp
 
-# Short cache for unhashed CSS/JS during upcoming redesign (override directory rule)
+# Short cache for unhashed CSS/JS during redesign (override directory rule)
 /final_IPC_website_files/*.css
   ! Cache-Control
   Cache-Control: public, max-age=300, must-revalidate

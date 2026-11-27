@@ -35,10 +35,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Sans:wght@400..700&family=Playfair+Display:ital,wght@0,500..900;1,500..700&display=swap" rel="stylesheet">
     <link rel="preload" as="image" href="./assets/archive/01-un-general-assembly.webp" fetchpriority="high">
-    <link rel="stylesheet" href="./final_IPC_website_files/styles.css?v=20261127n">
-    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css?v=20261127n">
-    <link rel="stylesheet" href="./final_IPC_website_files/extended.css?v=20261127n">
-    <link rel="stylesheet" href="./final_IPC_website_files/archive-lander.css?v=20261127n">
+    <link rel="stylesheet" href="./final_IPC_website_files/styles.css?v=20261127q">
+    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css?v=20261127q">
+    <link rel="stylesheet" href="./final_IPC_website_files/extended.css?v=20261127q">
+    <link rel="stylesheet" href="./final_IPC_website_files/archive-lander.css?v=20261127q">
     <style>
       .hero-copy.reveal { opacity: 1; transform: none; }
       html.ipc-loading .site-header {
@@ -174,7 +174,10 @@
       </a>
       <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span></button>
       <nav aria-label="Main navigation">
-        <a href="#about">About</a><a href="#categories">Categories</a><a href="#stages">Stages</a><a href="#requirements">Requirements</a><a href="#documents">Documents</a><a href="#leadership">Leadership</a>
+        <a href="./" class="is-current" aria-current="page">Home</a>
+        <a href="./competition/">Competition</a>
+        <a href="./resources/">Resources</a>
+        <a href="./chapters/">People &amp; Chapters</a>
         <a class="nav-cta" href="#contact">Contact</a>
       </nav>
     </header>
@@ -196,22 +199,9 @@
           <div class="about-header reveal">
             <div class="about-header-left">
               <p class="eyebrow">Our mission</p>
-              <h2>About the <span>International Policy Conference</span></h2>
+              <h2>About the International Policy Conference</h2>
             </div>
-            <div class="about-ledger" aria-label="IPC key facts">
-              <div class="about-stat">
-                <strong>2026</strong>
-                <span>Founded at Harvard</span>
-              </div>
-              <div class="about-stat">
-                <strong>Global</strong>
-                <span>High School &amp; Collegiate</span>
-              </div>
-              <div class="about-stat">
-                <strong>8 Fields</strong>
-                <span>Direct to Legislators</span>
-              </div>
-            </div>
+            <p class="about-dateline">Est. 2026 · Founded at Harvard<br>High School &amp; Collegiate · Spring 2027 Finals, Cambridge</p>
           </div>
 
           <div class="about-grid">
@@ -247,42 +237,23 @@
               <p>We strive to encourage students to take some of the problems they might have seen in their communities and ask not just “what is the problem” but “why does it persist, how can we solve it, and who can we work with to change it.”</p>
               <p>IPC challenges students by delving deep into fields they might never have encountered in school, such as economics, international law, public health, environmental science, and more. In the process of developing research, synthesis, public speaking, negotiation, and persuasive communication skills, students will be given the unique opportunity to get their policy recommendations to the legislators whose vote influences real-world outcomes in their communities.</p>
 
-              <div class="about-skills" aria-label="Core skills developed at IPC">
-                <span>Research</span>
-                <span>Synthesis</span>
-                <span>Public Speaking</span>
-                <span>Negotiation</span>
-                <span>Persuasive Communication</span>
-              </div>
-
               <div class="about-actions">
-                <a class="about-btn-primary" href="#categories">Explore Eight Policy Categories <span>↓</span></a>
-                <a class="about-btn-link" href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" rel="noopener noreferrer">Start a Chapter <span>→</span></a>
+                <a class="about-btn-primary" href="./competition/">Explore the Competition <span>→</span></a>
+                <a class="about-btn-link" href="./chapters/">Start a Chapter <span>→</span></a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="categories" class="categories section">
-        <div class="section-heading reveal"><p class="eyebrow">A world of questions</p><h2><span>Eight</span> Policy Categories</h2></div>
-        <div class="category-grid">
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-health.jpg" alt="Healthcare professionals"><h3>Health</h3><p>Healthcare financing, pharmaceutical regulation, mental health infrastructure, public health preparedness, and insurance market design.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-environment.webp" alt="Coastal environment"><h3>Environmental</h3><p>Climate mitigation, carbon pricing, biodiversity regulation, environmental justice, and international climate governance.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-rights.jpg" alt="Federal Reserve building"><h3>Economic &amp; Fiscal</h3><p>Tax policy, public expenditure, labor markets, trade policy, income inequality, and macroeconomic stabilization.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-tech.webp" alt="Laboratory technology"><h3>AI &amp; Technology</h3><p>AI regulation, data privacy, algorithmic accountability, platform governance, cybersecurity, and digital infrastructure.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/harvard.webp" alt="University campus"><h3>Education</h3><p>School funding equity, higher education access, early childhood development, curriculum policy, and teacher workforce.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/flags.jpg" alt="International flags"><h3>International Relations</h3><p>Foreign policy, arms control, multilateral institutions, humanitarian law, refugee policy, and non-proliferation.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-housing.jpg" alt="City skyline"><h3>Housing &amp; Urban</h3><p>Affordable housing production, zoning and land use, homelessness, urban infrastructure, and community development.</p></article>
-          <article class="category-card reveal"><img src="./final_IPC_website_files/category-economy.jpg" alt="Civil rights demonstration"><h3>Civil Rights</h3><p>Policing policy, sentencing reform, juvenile justice, voting rights, civil liberties, and anti-discrimination law.</p></article>
-        </div>
-      </section>
-
       <section id="examples" class="examples examples-atlas section">
         <div class="examples-shell">
-          <div class="section-heading centered reveal">
-            <p class="eyebrow">Past Proposals</p>
-            <h2>Policy Examples from <span>Around the World</span></h2>
+          <div class="examples-head reveal">
+            <div>
+              <p class="eyebrow">Past Proposals</p>
+              <h2>Policy Examples from Around the World</h2>
+            </div>
+            <p class="examples-head-note">Drag the globe or pick any region to inspect sample issues tackled across IPC’s eight policy fields.</p>
           </div>
 
           <div class="examples-content reveal">
@@ -367,296 +338,6 @@
         </div>
       </section>
 
-      <section id="stages" class="stages section">
-        <div class="section-heading centered reveal"><p class="eyebrow">From idea to impact</p><h2>Overview of International Policy<br>Conference Stages</h2></div>
-        <div class="stage-list">
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-1.webp" alt="Students collaborating at a table"></div><div class="stage-text"><span>Stage I</span><h3>Policy Research</h3><p>Build the foundation: define a policy problem, investigate its context, and develop a research-backed recommendation.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-2.webp" alt="A policy report on a desk"></div><div class="stage-text"><span>Stage II</span><h3>Policy Brief</h3><p>Translate your research into a concise, rigorous policy brief that makes a compelling case for action.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-3.jpeg" alt="Student presenting"></div><div class="stage-text"><span>Stage III</span><h3>Video Pitch</h3><p>Bring your proposal to life in a clear and creative pitch for a broad public audience.</p></div></article>
-          <article class="stage reveal"><div class="stage-image"><img src="./final_IPC_website_files/stage-4.jpg" alt="Conference speaker addressing a room"></div><div class="stage-text"><span>Stage IV</span><h3>Finals</h3><p>Selected finalists present their ideas and take part in an executive question-and-answer session in Boston.</p></div></article>
-        </div>
-      </section>
-
-      <section id="requirements" class="requirements-detail section">
-        <div class="section-heading centered reveal">
-          <p class="eyebrow">Competition Standards</p>
-          <h2>Requirements <em>&amp;</em> Judging Criteria</h2>
-        </div>
-
-        <div class="stage-requirements">
-          <div class="req-stage reveal">
-            <div class="req-header">
-              <span class="req-number">I</span>
-              <h3>Policy Brief Requirements</h3>
-            </div>
-
-            <div class="req-section">
-              <h4>Mandatory Brief Structure</h4>
-              <div class="req-items">
-                <div class="req-item">
-                  <div class="req-item-header">Executive Summary</div>
-                  <div class="req-item-body">150 words max. State the problem, proposed intervention, and expected primary outcome in jargon-free prose.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Problem Definition and Scope</div>
-                  <div class="req-item-body">Define the problem with at least one quantitative indicator of its magnitude. Specify jurisdiction and time horizon.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Background and Context</div>
-                  <div class="req-item-body">Summarize the relevant policy history and prior interventions. Cite at least three independent sources.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Stakeholder Analysis</div>
-                  <div class="req-item-body">Identify at least three distinct stakeholder groups; describe each group's interest, influence, and how the proposed policy affects them.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Policy Options</div>
-                  <div class="req-item-body">Present at minimum two distinct approaches evaluated against the same criteria: cost, feasibility, equity, and evidence base.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Recommended Policy</div>
-                  <div class="req-item-body">State the preferred approach, implementing authority, and a realistic implementation timeline.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Anticipated Objections</div>
-                  <div class="req-item-body">Address at least two significant objections with substantive responses.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">References</div>
-                  <div class="req-item-body">Full bibliography. Minimum 8 sources; at least 4 primary or peer-reviewed.</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="req-section">
-              <h4>Academic Integrity Requirements</h4>
-              <ul class="integrity-list">
-                <li>All submissions are screened for plagiarism. A match rate above 15 percent (excluding the reference list) will trigger manual review and may result in disqualification.</li>
-                <li>Use of AI language model tools to draft or substantively write any portion of a policy brief is not permitted. Students certify at submission that all written work is entirely their own.</li>
-                <li>Faculty advisors may assist students in identifying sources and reviewing argument structure, but may not draft, substantially edit, or revise student text.</li>
-                <li>Students must disclose any familial, professional, or personal connection to organizations cited or analyzed in their brief. Failure to disclose constitutes a conflict of interest violation.</li>
-              </ul>
-            </div>
-
-            <div class="req-section rubric-section">
-              <h4>Judging Rubric (100 points)</h4>
-              <table class="rubric-table">
-                <thead>
-                  <tr>
-                    <th>Criterion</th>
-                    <th>Description</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Problem Definition</td>
-                    <td>Clarity and precision; use of quantitative indicators; appropriate scoping</td>
-                    <td>15</td>
-                  </tr>
-                  <tr>
-                    <td>Evidence Quality</td>
-                    <td>Quality, recency, and independence of sources; correct interpretation of causal vs. correlational claims</td>
-                    <td>25</td>
-                  </tr>
-                  <tr>
-                    <td>Analytical Rigor</td>
-                    <td>Depth of stakeholder analysis; quality of options comparison; soundness of trade-off reasoning</td>
-                    <td>25</td>
-                  </tr>
-                  <tr>
-                    <td>Policy Recommendation</td>
-                    <td>Specificity of proposed intervention; feasibility; identification of implementing authority</td>
-                    <td>20</td>
-                  </tr>
-                  <tr>
-                    <td>Counter-Argument Engagement</td>
-                    <td>Substantiveness of objections addressed; quality of responses</td>
-                    <td>10</td>
-                  </tr>
-                  <tr>
-                    <td>Writing and Structure</td>
-                    <td>Clarity, organization, adherence to required structure</td>
-                    <td>5</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="req-stage reveal">
-            <div class="req-header">
-              <span class="req-number">II</span>
-              <h3>Video Pitch Requirements</h3>
-            </div>
-
-            <div class="req-section">
-              <h4>Technical Specifications</h4>
-              <ul class="spec-list">
-                <li><strong>Duration:</strong> 8 minutes minimum, 12 minutes maximum. Videos outside this range are disqualified without review.</li>
-                <li><strong>Format:</strong> MP4 or MOV, minimum 720p (1280×720). Audio must be clear and free of significant background noise.</li>
-                <li><strong>File size:</strong> Maximum 2GB. Submit via IPC upload portal only; external platform links are not accepted.</li>
-                <li>Students may appear on camera, narrate over slides, or combine both; no requirement for on-camera presentation.</li>
-                <li>Submissions must be in English. Students may include subtitles but must present in English.</li>
-                <li>No background music, dramatic effects, or theatrical elements.</li>
-              </ul>
-            </div>
-
-            <div class="req-section">
-              <h4>Required Content Elements</h4>
-              <div class="req-items">
-                <div class="req-item">
-                  <div class="req-item-header">Opening Statement (≈90 sec)</div>
-                  <div class="req-item-body">Identify the policy problem and state at least one quantitative measure of its scale or severity. Lead with evidence.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Policy Proposal (≈2–3 min)</div>
-                  <div class="req-item-body">Identify the implementing authority, target population, and primary mechanism of effect.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Evidence Base (≈2 min)</div>
-                  <div class="req-item-body">Cite at least two independent studies or data sources. Distinguish correlational from causal evidence where relevant.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Objections and Trade-offs (≈2 min)</div>
-                  <div class="req-item-body">Address at least one significant objection and describe the primary limitation or equity concern.</div>
-                </div>
-
-                <div class="req-item">
-                  <div class="req-item-header">Conclusion (≈60 sec)</div>
-                  <div class="req-item-body">State the primary expected outcome and the condition under which it is most likely to be achieved.</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="req-section rubric-section">
-              <h4>Judging Rubric (100 points)</h4>
-              <table class="rubric-table">
-                <thead>
-                  <tr>
-                    <th>Criterion</th>
-                    <th>Description</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Problem Framing</td>
-                    <td>Evidence-grounded introduction within the time allotted</td>
-                    <td>15</td>
-                  </tr>
-                  <tr>
-                    <td>Clarity of Proposal</td>
-                    <td>Precision of the intervention; whether the mechanism of effect is clearly explained</td>
-                    <td>20</td>
-                  </tr>
-                  <tr>
-                    <td>Evidence Presentation</td>
-                    <td>Quality of empirical evidence and effectiveness of communication to a generalist audience</td>
-                    <td>25</td>
-                  </tr>
-                  <tr>
-                    <td>Objection Handling</td>
-                    <td>Credibility and thoroughness of objections addressed</td>
-                    <td>20</td>
-                  </tr>
-                  <tr>
-                    <td>Communication</td>
-                    <td>Clarity, pace, structure, and accessibility of the video as a standalone presentation</td>
-                    <td>20</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="req-stage reveal">
-            <div class="req-header">
-              <span class="req-number">III</span>
-              <h3>Finals Requirements</h3>
-            </div>
-
-            <div class="req-section">
-              <h4>Live Pitch Requirements</h4>
-              <ul class="spec-list">
-                <li><strong>Duration:</strong> 12 minutes. Timing is enforced; finalists will be signaled at 10 minutes and stopped at 12.</li>
-                <li>Slides or visual materials must be submitted to the organizing committee by 9:00 PM the evening before the presentation slot.</li>
-                <li>All team members must be present at the podium. Speaking responsibilities may be divided at the team's discretion.</li>
-                <li>Finalists must present from memory or notes; reading verbatim from a prepared text is not permitted.</li>
-                <li>Presentations will be recorded for the competition archive. Recording constitutes consent for non-commercial use by IPC.</li>
-              </ul>
-            </div>
-
-            <div class="req-section">
-              <h4>Executive Q&amp;A Format</h4>
-              <ul class="spec-list">
-                <li><strong>Duration:</strong> 15 minutes, moderated by the IPC Chair of Proceedings.</li>
-                <li>The executive panel may ask any question related to the proposal, evidence cited, analytical methodology, or implementation.</li>
-                <li>Questions may be adversarial; panel members may adopt a skeptical position regardless of their personal views.</li>
-                <li>Students may consult their notes and submitted brief during Q&amp;A. No external materials or devices are permitted.</li>
-                <li>Team members may confer briefly (under 30 seconds) before responding.</li>
-                <li>Responses should be direct and concise. Non-responsive answers are evaluated negatively regardless of length.</li>
-              </ul>
-            </div>
-
-            <div class="req-section">
-              <h4>Updated Policy Summary</h4>
-              <p class="summary-note">All finalists must submit a 500-word updated policy summary on Day 2, due by 11:59 PM local time. Required elements: the policy recommendation in one sentence; the three strongest pieces of supporting evidence; the primary implementation challenge; and the proposed metric by which the policy's effectiveness should be evaluated within five years. This document is provided to the executive judges prior to the Day 3 Q&amp;A session.</p>
-            </div>
-
-            <div class="req-section rubric-section">
-              <h4>Judging Rubric (100 points)</h4>
-              <table class="rubric-table">
-                <thead>
-                  <tr>
-                    <th>Criterion</th>
-                    <th>Description</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Command of Material</td>
-                    <td>Depth of knowledge; ability to cite specific data without notes; familiarity with the literature</td>
-                    <td>25</td>
-                  </tr>
-                  <tr>
-                    <td>Pitch Effectiveness</td>
-                    <td>Clarity, structure, and persuasive coherence of the 12-minute live presentation</td>
-                    <td>20</td>
-                  </tr>
-                  <tr>
-                    <td>Q&amp;A Responsiveness</td>
-                    <td>How directly and substantively each question was addressed</td>
-                    <td>30</td>
-                  </tr>
-                  <tr>
-                    <td>Policy Realism</td>
-                    <td>How implementable and politically viable the proposal appears to working policymakers</td>
-                    <td>15</td>
-                  </tr>
-                  <tr>
-                    <td>Intellectual Honesty</td>
-                    <td>Acknowledgment of limitations; willingness to update positions in response to new information</td>
-                    <td>10</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="awards" class="awards awards-rotational section">
         <div class="awards-monument">
           <div class="awards-pyramid-band">
@@ -721,145 +402,27 @@
         </div>
       </section>
 
-      <section class="documents brief-shelf-section section" id="documents">
-        <div class="shelf-shell">
-          <div class="shelf-head reveal">
-            <div class="shelf-head-title">
-              <p class="eyebrow">Competition Resources</p>
-              <h2>Sample Policy Briefs</h2>
-            </div>
-            <p class="shelf-intro">Exemplary finals briefs developed with the Harvard Kennedy School’s Institute of Politics.</p>
-          </div>
-
-          <div class="brief-shelf reveal">
-            <article class="dossier-card">
-              <a class="dossier-sleeve" href="./documents/Health Team Fall 2025 Final Brief.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open Health Policy Final Brief PDF">
-                <img src="./assets/briefs/health-brief-p1.webp" alt="Page 1 of Combatting Medical Debt in Massachusetts policy brief" loading="lazy" decoding="async">
-              </a>
-              <div class="dossier-body">
-                <p class="dossier-meta">Fall 2025 · Health Policy · 3.6 MB</p>
-                <h3>Combatting Medical Debt in Massachusetts</h3>
-                <p class="dossier-desc">State-level care access reforms and patient cost regulations prepared for the Finals brief round.</p>
-                <div class="dossier-actions">
-                  <a href="./documents/Health Team Fall 2025 Final Brief.pdf" class="dossier-btn" download>Download PDF <span>↓</span></a>
-                  <a href="./documents/Health Team Fall 2025 Final Brief.pdf" class="dossier-open" target="_blank" rel="noopener noreferrer">Open ↗</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="dossier-card">
-              <a class="dossier-sleeve" href="./documents/Tech Team Spring 2026 Final Brief.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open Technology Policy Final Brief PDF">
-                <img src="./assets/briefs/tech-brief-p1.webp" alt="Page 1 of Genomic Data Privacy Regulations and Governance under Frontier LLM Use policy brief" loading="lazy" decoding="async">
-              </a>
-              <div class="dossier-body">
-                <p class="dossier-meta">Spring 2026 · AI &amp; Technology · 1.4 MB</p>
-                <h3>Genomic Data Privacy &amp; Frontier LLM Governance</h3>
-                <p class="dossier-desc">Regulatory assessment of genomic data privacy compliance and oversight under frontier AI deployment.</p>
-                <div class="dossier-actions">
-                  <a href="./documents/Tech Team Spring 2026 Final Brief.pdf" class="dossier-btn" download>Download PDF <span>↓</span></a>
-                  <a href="./documents/Tech Team Spring 2026 Final Brief.pdf" class="dossier-open" target="_blank" rel="noopener noreferrer">Open ↗</a>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <p class="shelf-notice reveal">Additional competition guidelines, research templates, and submission instructions will be published ahead of the 2027 cycle.</p>
-        </div>
-      </section>
-
-      <section class="timeline section" id="dates">
-        <div class="section-heading reveal centered">
-          <p class="eyebrow">2027 cycle</p>
-          <h2>Key dates at a glance</h2>
-        </div>
-        <div class="timeline-horizontal reveal" aria-label="2027 competition timeline">
-          <div class="timeline-line"></div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <em>Fall 2026</em>
-              <h3>Registration</h3>
-              <p>Sign up for updates to receive the registration announcement first.</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <em>Winter 2027</em>
-              <h3>Research &amp; Policy Brief</h3>
-              <p>Teams investigate a problem and submit a research-backed recommendation.</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <em>Spring 2027</em>
-              <h3>Video Pitch</h3>
-              <p>Selected teams communicate their ideas in a concise recorded pitch.</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <em>Summer 2027</em>
-              <h3>Boston Finals</h3>
-              <p>Finalists present live, take part in executive Q&amp;A, and celebrate their work.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="faq section" id="faq"><div class="section-heading reveal"><p class="eyebrow">Questions, answered</p><h2>Frequently asked questions</h2></div><div class="faq-list"><details class="reveal"><summary>Who can participate?<span>+</span></summary><p>IPC is open to high school and collegiate students worldwide. Participants may compete as individuals or in teams. Full eligibility requirements will be published with registration for Spring 2027.</p></details><details class="reveal"><summary>What do participants submit?<span>+</span></summary><p>Participants (individuals or teams) progress through research, a written policy brief, and a short video pitch. Finalists also prepare for a live presentation and executive question-and-answer session.</p></details><details class="reveal"><summary>How are entries judged?<span>+</span></summary><p>Judges assess the quality of research, clarity of the policy recommendation, feasibility, evidence, equity, and the team’s ability to communicate their work persuasively.</p></details><details class="reveal"><summary>When will registration details be released?<span>+</span></summary><p>Join the IPC mailing list through the contact section to receive the Spring 2027 timeline, eligibility requirements, and participant resources when they are announced.</p></details></div></section>
-
-      <section id="leadership" class="team section">
-        <div class="section-heading centered reveal"><p class="eyebrow">The people behind IPC</p><h2>Leadership &amp; Advisors</h2></div>
-
-        <div class="reveal" style="max-width: 600px; margin: 65px auto 0;">
-          <div class="leadership-column" style="background: #fafbfc; padding: 40px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,.05);">
-            <h3 class="column-header">Student Leadership</h3>
-
-            <div class="leader-profile">
-              <img src="./final_IPC_website_files/zinia-portrait.jpeg" alt="Zinia Khattar">
-              <div>
-                <p class="eyebrow">Founder, Co-Chair</p>
-                <h4>Zinia Khattar</h4>
-                <p class="leader-school">Harvard College ‘29</p>
-              </div>
-            </div>
-
-            <div class="leader-profile">
-              <img src="./final_IPC_website_files/hugh-portrait.jpeg" alt="Hugh Hankenson">
-              <div>
-                <p class="eyebrow">Co-Chair</p>
-                <h4>Hugh Hankenson</h4>
-                <p class="leader-school">Harvard College ‘26, University of Oxford ‘28, Harvard Law School ‘31</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Chapters Section -->
-        <div class="reveal" style="margin-top: 90px;">
-          <div style="text-align: center; margin-bottom: 45px;">
-            <p class="eyebrow" style="text-align: center;">Building a Global Network</p>
-            <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(42px, 5.8vw, 72px); letter-spacing: -0.055em; margin: 0 auto; max-width: 900px; text-align: center;">
-              <span style="position: relative; z-index: 0;">IPC Chapters<span style="content: ''; height: 0.21em; background: #efbaa9; position: absolute; bottom: 0.01em; left: -0.04em; right: -0.04em; z-index: -1; transform: rotate(-1.5deg); display: inline-block; width: 100%;"></span></span>
-            </h2>
-          </div>
-
-          <div style="max-width: 1100px; margin: 0 auto; background: linear-gradient(135deg, #fafbfc 0%, #f5efe3 100%); padding: 60px 50px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;">
-            <p style="font-size: 19px; line-height: 1.7; margin-bottom: 40px; color: #213c2b; max-width: 850px; margin-left: auto; margin-right: auto;">
-              We are building IPC chapters at leading high schools and universities worldwide. Chapter leaders coordinate local outreach, organize information sessions, and support participants through the competition process.
-            </p>
-
-            <div style="background: white; padding: 45px 50px; border-radius: 10px; box-shadow: 0 6px 24px rgba(242,104,78,0.15); border: 3px solid #f2684e; max-width: 750px; margin: 0 auto;">
-              <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 32px; color: #213c2b; margin-bottom: 20px; letter-spacing: -0.03em; font-weight: 600;">Start a Chapter at Your School</h3>
-              <p style="font-size: 17px; line-height: 1.7; margin-bottom: 28px; color: #18261d;">
-                Applications are being reviewed on a rolling basis. Apply by <strong style="color: #f2684e;">Friday, August 21, 2026</strong> for priority consideration.
-              </p>
-              <a href="https://forms.gle/FaFyzFemNM54AjED7" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #f2684e; color: white; padding: 16px 40px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(242,104,78,0.3);">Apply to Start a Chapter</a>
-            </div>
-          </div>
+      <!-- Compact Directory Doorways into Dedicated Pages -->
+      <section class="home-directory" aria-label="Explore IPC pages">
+        <div class="home-dir-grid">
+          <a class="home-dir-item" href="./competition/">
+            <span class="home-dir-num">01</span>
+            <h3>Competition &amp; Rubrics</h3>
+            <p>Eight policy categories, four stages from research to Finals, 100-point judging rubrics, and 2027 cycle dates.</p>
+            <span class="home-dir-cta">View Competition →</span>
+          </a>
+          <a class="home-dir-item" href="./resources/">
+            <span class="home-dir-num">02</span>
+            <h3>Sample Briefs &amp; FAQ</h3>
+            <p>Read real finals briefs developed with the Harvard Kennedy School’s Institute of Politics and answers to common questions.</p>
+            <span class="home-dir-cta">Open Resources →</span>
+          </a>
+          <a class="home-dir-item" href="./chapters/">
+            <span class="home-dir-num">03</span>
+            <h3>People &amp; Chapters</h3>
+            <p>Meet the student leadership behind IPC and apply to launch an IPC chapter at your school or university.</p>
+            <span class="home-dir-cta">Meet Team &amp; Chapters →</span>
+          </a>
         </div>
       </section>
     </main>
@@ -903,16 +466,16 @@
     </div>
 
     <footer id="contact">
-      <div><p class="eyebrow">International Policy Conference</p><h3 style="font-size: 32px; letter-spacing: -0.03em;">Questions? Let’s talk.</h3></div>
+      <div><p class="eyebrow">International Policy Conference</p><h3 class="footer-heading">Questions? Let’s talk.</h3></div>
       <a class="footer-email" href="mailto:internationalpolicyconference@gmail.com">internationalpolicyconference@gmail.com <span>↗</span></a>
       <details class="footer-sources">
         <summary>Archival Photography Origins &amp; Sources (61 prints) ▾</summary>
         <ul class="footer-sources-list" id="footer-sources-list"></ul>
       </details>
-      <p class="footer-bottom">© 2026 International Policy Conference <a href="#top">Back to top ↑</a></p>
+      <p class="footer-bottom">© 2026 International Policy Conference <span class="footer-nav-links"><a href="./competition/">Competition</a> · <a href="./resources/">Resources</a> · <a href="./chapters/">People &amp; Chapters</a> · <a href="#top">Top ↑</a></span></p>
     </footer>
-    <script src="./final_IPC_website_files/world-data.js?v=20261127n" defer></script>
-    <script src="./final_IPC_website_files/script.js?v=20261127n" defer></script>
+    <script src="./final_IPC_website_files/world-data.js?v=20261127q" defer></script>
+    <script src="./final_IPC_website_files/script.js?v=20261127q" defer></script>
   
 
 </body></html>
