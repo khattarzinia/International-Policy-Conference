@@ -1686,7 +1686,299 @@
     requestAnimationFrame(drawGlobe);
   }
 
-  // ─── 5. Header Scroll State, Mobile Nav & Scroll Reveal ───
+  // ─── 5. Rotational 3D Inverted Cylinder Pyramid for Award Tiers (#awards) ───
+  const awardsCanvas = document.getElementById("ipc-awards-canvas");
+  const awardRows = [...document.querySelectorAll("#awards-ledger .award-row")];
+
+  if (awardsCanvas) {
+    const actx = awardsCanvas.getContext("2d");
+    // Big (widest) at TOP → Small (rarest Gold apex) at BOTTOM
+    const TIERS = [
+      {
+        name: "DISTINCTION", pct: "TOP 25%", rFrac: 0.445, repeats: 3, speed: 0.16,
+        bodyTop: "#27473f", bodyMid: "#1b332d", bodyBot: "#122420",
+        capLight: "#335c52", capDark: "#172b26", rim: "rgba(116, 212, 189, 0.55)",
+        text: "#f4f1e8", pctColor: "#89e0ca"
+      },
+      {
+        name: "HONORABLE MENTION", pct: "TOP 15%", rFrac: 0.388, repeats: 2, speed: -0.18,
+        bodyTop: "#33385c", bodyMid: "#242845", bodyBot: "#181b31",
+        capLight: "#444a75", capDark: "#1d213a", rim: "rgba(155, 165, 240, 0.55)",
+        text: "#f4f1e8", pctColor: "#b5beff"
+      },
+      {
+        name: "FINALIST", pct: "TOP 8 TEAMS", rFrac: 0.332, repeats: 3, speed: 0.2,
+        bodyTop: "#7c372d", bodyMid: "#5b261f", bodyBot: "#3f1914",
+        capLight: "#9a483c", capDark: "#4a1f19", rim: "rgba(244, 146, 125, 0.6)",
+        text: "#fff9f4", pctColor: "#ffc2b5"
+      },
+      {
+        name: "BRONZE MEDAL", pct: "TOP 3", rFrac: 0.276, repeats: 2, speed: -0.22,
+        bodyTop: "#9f643e", bodyMid: "#784729", bodyBot: "#532f19",
+        capLight: "#be7d52", capDark: "#63381f", rim: "rgba(242, 184, 140, 0.68)",
+        text: "#fff8f0", pctColor: "#ffd8b8"
+      },
+      {
+        name: "SILVER MEDAL", pct: "TOP 2", rFrac: 0.222, repeats: 2, speed: 0.24,
+        bodyTop: "#9aa5b1", bodyMid: "#737d89", bodyBot: "#4f5761",
+        capLight: "#bac5d1", capDark: "#636c77", rim: "rgba(245, 250, 255, 0.78)",
+        text: "#10171d", pctColor: "#1b2733"
+      },
+      {
+        name: "GOLD MEDAL", pct: "TOP TEAM", rFrac: 0.168, repeats: 2, speed: -0.27,
+        bodyTop: "#e3bc58", bodyMid: "#be9230", bodyBot: "#896518",
+        capLight: "#f4d47c", capDark: "#a67d22", rim: "rgba(255, 243, 194, 0.92)",
+        text: "#191306", pctColor: "#2e2107"
+      }
+    ];
+
+    // Pre-render ultra-crisp HiDPI cylindrical wrap textures once fonts settle
+    const buildCylTexture = tier => {
+      const tw = 2048;
+      const th = 128;
+      const off = document.createElement("canvas");
+      off.width = tw;
+      off.height = th;
+      const g = off.getContext("2d");
+
+      // Brushed metallic vertical gradient
+      const bg = g.createLinearGradient(0, 0, 0, th);
+      bg.addColorStop(0, tier.bodyTop);
+      bg.addColorStop(0.5, tier.bodyMid);
+      bg.addColorStop(1, tier.bodyBot);
+      g.fillStyle = bg;
+      g.fillRect(0, 0, tw, th);
+
+      // Subtle architectural brushed metal micro-bands
+      g.fillStyle = "rgba(255,255,255,0.045)";
+      g.fillRect(0, 0, tw, 10);
+      g.fillStyle = "rgba(0,0,0,0.16)";
+      g.fillRect(0, th - 10, tw, 10);
+
+      // Crisp top/bottom machined bevel hairlines
+      g.fillStyle = tier.rim;
+      g.fillRect(0, 0, tw, 3);
+      g.fillStyle = "rgba(0,0,0,0.45)";
+      g.fillRect(0, th - 3, tw, 3);
+
+      // Repeat award title + top % evenly around the 360° circumference
+      const segW = tw / tier.repeats;
+      g.textBaseline = "middle";
+      g.textAlign = "center";
+      for (let i = 0; i < tier.repeats; i++) {
+        const mid = i * segW + segW * 0.5;
+        // Measure & center "[AWARD]   ·   [TOP %]"
+        g.font = '600 44px "Playfair Display", Georgia, serif';
+        const wTitle = g.measureText(tier.name).width;
+        g.font = '700 28px "DM Sans", Arial, sans-serif';
+        const sep = "   ·   ";
+        const wSep = g.measureText(sep).width;
+        const wPct = g.measureText(tier.pct).width;
+        const totalW = wTitle + wSep + wPct;
+        let x = mid - totalW / 2;
+
+        g.textAlign = "left";
+        g.font = '600 44px "Playfair Display", Georgia, serif';
+        g.fillStyle = tier.text;
+        g.fillText(tier.name, x, th * 0.52);
+        x += wTitle;
+
+        g.font = '700 28px "DM Sans", Arial, sans-serif';
+        g.fillStyle = tier.pctColor;
+        g.fillText(sep + tier.pct, x, th * 0.53);
+
+        // Diamond divider between circumference repeats
+        g.textAlign = "center";
+        g.font = '700 22px "DM Sans", Arial, sans-serif';
+        g.fillStyle = tier.rim;
+        g.fillText("◆", i * segW, th * 0.52);
+      }
+      return off;
+    };
+
+    let textures = TIERS.map(buildCylTexture);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => { textures = TIERS.map(buildCylTexture); });
+    }
+
+    const angles = TIERS.map(t => Math.PI / t.repeats);
+    let activeTier = 5; // Highlight Gold apex by default
+    let hoveredTier = -1;
+    let awardsVisible = true;
+    let cylHitBands = [];
+
+    const setActiveTier = idx => {
+      activeTier = idx;
+      awardRows.forEach((row, i) => row.classList.toggle("is-active", i === idx));
+    };
+
+    awardRows.forEach((row, idx) => {
+      row.addEventListener("mouseenter", () => { hoveredTier = idx; setActiveTier(idx); });
+      row.addEventListener("mouseleave", () => { hoveredTier = -1; });
+      row.addEventListener("click", () => setActiveTier(idx));
+    });
+
+    awardsCanvas.addEventListener("pointermove", e => {
+      const rect = awardsCanvas.getBoundingClientRect();
+      const px = e.clientX - rect.left;
+      const py = e.clientY - rect.top;
+      let hit = -1;
+      for (const b of cylHitBands) {
+        if (py >= b.yTop && py <= b.yBot && Math.abs(px - b.cx) <= b.R) {
+          hit = b.idx;
+          break;
+        }
+      }
+      hoveredTier = hit;
+      if (hit !== -1) setActiveTier(hit);
+    });
+    awardsCanvas.addEventListener("pointerleave", () => { hoveredTier = -1; });
+    awardsCanvas.addEventListener("click", () => {
+      if (hoveredTier !== -1) setActiveTier(hoveredTier);
+    });
+
+    const awardsObs = new IntersectionObserver(entries => {
+      awardsVisible = entries[0]?.isIntersecting ?? true;
+    }, { threshold: 0.05 });
+    awardsObs.observe(awardsCanvas);
+
+    let lastAwardTime = performance.now();
+    const drawAwards = now => {
+      requestAnimationFrame(drawAwards);
+      const dt = Math.min(0.05, (now - lastAwardTime) * 0.001);
+      lastAwardTime = now;
+      if (!awardsVisible || document.hidden) return;
+
+      const rect = awardsCanvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const W = Math.max(280, Math.round(rect.width));
+      const H = Math.round(W * (5 / 6));
+      if (awardsCanvas.width !== Math.round(W * dpr) || awardsCanvas.height !== Math.round(H * dpr)) {
+        awardsCanvas.width = Math.round(W * dpr);
+        awardsCanvas.height = Math.round(H * dpr);
+      }
+
+      actx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      actx.clearRect(0, 0, W, H);
+
+      const cx = W * 0.5;
+      const tiltSin = 0.245; // Elevated architectural perspective showing elliptical top caps & curved belly
+      const cylH = H * 0.112;
+      const stepY = H * 0.128;
+      const startY = H * 0.145;
+
+      // Advance slow rotational angles (gentle slow-down on hovered cylinder for easy reading)
+      if (!reducedMotion) {
+        for (let k = 0; k < TIERS.length; k++) {
+          const factor = hoveredTier === k ? 0.22 : activeTier === k ? 0.65 : 1;
+          angles[k] += TIERS[k].speed * factor * dt;
+        }
+      }
+
+      // Subtle golden ambient pedestal glow beneath the bottom Gold Medal apex
+      const apexY = startY + 5 * stepY + cylH + 10;
+      const glow = actx.createRadialGradient(cx, apexY, 4, cx, apexY, W * 0.26);
+      glow.addColorStop(0, "rgba(228, 190, 92, 0.28)");
+      glow.addColorStop(0.55, "rgba(228, 190, 92, 0.06)");
+      glow.addColorStop(1, "rgba(228, 190, 92, 0)");
+      actx.fillStyle = glow;
+      actx.beginPath();
+      actx.ellipse(cx, apexY, W * 0.26, W * 0.055, 0, 0, Math.PI * 2);
+      actx.fill();
+
+      cylHitBands = [];
+      // Paint strictly BOTTOM (k=5 Gold) → TOP (k=0 Distinction) so each wider upper cylinder naturally occludes the narrower top cap beneath it!
+      for (let k = TIERS.length - 1; k >= 0; k--) {
+        const tier = TIERS[k];
+        const tex = textures[k];
+        const R = W * tier.rFrac;
+        const ry = R * tiltSin;
+        const topY = startY + k * stepY;
+        const isFocus = k === activeTier || k === hoveredTier;
+
+        cylHitBands.push({ idx: k, cx, R, yTop: topY - ry, yBot: topY + cylH + ry });
+
+        // Soft cast shadow dropped below each cylinder onto the cylinder beneath
+        actx.save();
+        actx.fillStyle = "rgba(0, 0, 0, 0.42)";
+        actx.beginPath();
+        actx.ellipse(cx, topY + cylH + 9, R * 0.96, ry * 0.92, 0, 0, Math.PI * 2);
+        actx.fill();
+        actx.restore();
+
+        // 1. Curved Cylindrical Front Body (2px vertical texture-mapped strips with true elliptical curvature + metallic lighting)
+        const slices = Math.max(72, Math.round(R * 0.85));
+        const dTheta = Math.PI / slices;
+        for (let s = 0; s < slices; s++) {
+          const t0 = -Math.PI / 2 + s * dTheta;
+          const t1 = t0 + dTheta;
+          const tm = (t0 + t1) * 0.5;
+          const x0 = cx + R * Math.sin(t0);
+          const x1 = cx + R * Math.sin(t1);
+          const sw = x1 - x0;
+          if (sw <= 0.15) continue;
+
+          const curveY = ry * Math.cos(tm);
+          // Wrap texture U coordinate continuously with slow rotation angle
+          let u = ((tm + angles[k]) / (Math.PI * 2)) % 1;
+          if (u < 0) u += 1;
+          const srcX = u * tex.width;
+          const srcW = Math.max(1, (dTheta / (Math.PI * 2)) * tex.width);
+          const safeSrcW = Math.min(srcW, tex.width - srcX);
+
+          actx.drawImage(tex, srcX, 0, safeSrcW, tex.height, x0, topY + curveY, sw + 0.65, cylH);
+
+          // Cylindrical cosine wrap shading + front-left brushed metallic specular gleam
+          const facing = Math.cos(tm);
+          const spec = Math.pow(Math.max(0, Math.cos(tm + 0.42)), 7);
+          const shadeAlpha = (1 - facing) * 0.58;
+          if (shadeAlpha > 0.01) {
+            actx.fillStyle = `rgba(5, 9, 7, ${shadeAlpha.toFixed(3)})`;
+            actx.fillRect(x0, topY + curveY, sw + 0.65, cylH);
+          }
+          if (spec > 0.03) {
+            actx.fillStyle = `rgba(255, 252, 240, ${(spec * (isFocus ? 0.24 : 0.14)).toFixed(3)})`;
+            actx.fillRect(x0, topY + curveY, sw + 0.65, cylH);
+          }
+        }
+
+        // Bottom curved metallic edge hairline
+        actx.beginPath();
+        actx.ellipse(cx, topY + cylH, R, ry, 0, 0, Math.PI);
+        actx.strokeStyle = isFocus ? tier.rim : "rgba(0, 0, 0, 0.45)";
+        actx.lineWidth = isFocus ? 1.4 : 1;
+        actx.stroke();
+
+        // 2. Solid Machined 3D Elliptical Top Cap
+        const capGrad = actx.createRadialGradient(cx - R * 0.26, topY - ry * 0.2, R * 0.05, cx, topY, R);
+        capGrad.addColorStop(0, tier.capLight);
+        capGrad.addColorStop(0.7, tier.bodyMid);
+        capGrad.addColorStop(1, tier.capDark);
+        actx.beginPath();
+        actx.ellipse(cx, topY, R, ry, 0, 0, Math.PI * 2);
+        actx.fillStyle = capGrad;
+        actx.fill();
+
+        // Subtle lathe-turned inner ring on top cap
+        actx.beginPath();
+        actx.ellipse(cx, topY, R * 0.78, ry * 0.78, 0, 0, Math.PI * 2);
+        actx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+        actx.lineWidth = 0.8;
+        actx.stroke();
+
+        // Crisp illuminated top bevel rim
+        actx.beginPath();
+        actx.ellipse(cx, topY, R, ry, 0, 0, Math.PI * 2);
+        actx.strokeStyle = isFocus ? "#fff6d6" : tier.rim;
+        actx.lineWidth = isFocus ? 1.8 : 1.05;
+        actx.stroke();
+      }
+    };
+
+    requestAnimationFrame(drawAwards);
+  }
+
+  // ─── 6. Header Scroll State, Mobile Nav & Reliable Scroll Reveal ───
   const header = document.querySelector(".site-header");
   const heroSection = document.querySelector(".mt-hero");
   const onScroll = () => {
@@ -1707,6 +1999,7 @@
     button?.setAttribute("aria-expanded", "false");
   }));
 
+  const revealItems = [...document.querySelectorAll(".reveal")];
   const observer = new IntersectionObserver(
     entries => entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1714,7 +2007,23 @@
         observer.unobserve(entry.target);
       }
     }),
-    { threshold: 0.12 }
+    { threshold: 0.01, rootMargin: "0px 0px -24px 0px" }
   );
-  document.querySelectorAll(".reveal").forEach(item => observer.observe(item));
+  revealItems.forEach(item => observer.observe(item));
+
+  // Ensure any element already in or above the viewport on load/hash jump reveals immediately
+  const flushVisibleReveals = () => {
+    const vh = window.innerHeight || 900;
+    revealItems.forEach(el => {
+      if (el.classList.contains("in-view")) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < vh + 40) {
+        el.classList.add("in-view");
+        observer.unobserve(el);
+      }
+    });
+  };
+  window.addEventListener("hashchange", () => setTimeout(flushVisibleReveals, 80));
+  window.addEventListener("scroll", flushVisibleReveals, { passive: true });
+  setTimeout(flushVisibleReveals, 200);
 })();
