@@ -1093,27 +1093,30 @@ section[id], footer[id] {
   padding-bottom: 24px;
 }
 .awards-top .eyebrow {
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   color: #213c2b;
   margin-bottom: 10px;
 }
 .awards-top h2 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(44px, 5.5vw, 76px);
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: clamp(38px, 4.8vw, 62px);
   font-weight: 600;
-  line-height: 0.96;
-  letter-spacing: -0.055em;
+  font-style: normal;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   color: #18261d;
   margin: 0;
 }
-.awards-top h2 em {
-  color: #213c2b;
-  font-style: italic;
-}
 .awards-intro {
   flex: 0 1 440px;
-  font-size: 15.5px;
-  line-height: 1.6;
-  color: #18261d;
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.58;
+  color: rgba(24, 38, 29, 0.86);
   margin: 0 0 4px;
 }
 
@@ -1134,7 +1137,7 @@ section[id], footer[id] {
   background: transparent;
   color: #18261d;
   text-align: left;
-  font-family: inherit;
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
   padding: 20px 18px 22px;
   display: flex;
   flex-direction: column;
@@ -1155,9 +1158,10 @@ section[id], footer[id] {
 }
 .award-pct {
   font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
   color: #213c2b;
   margin-bottom: 10px;
 }
@@ -1172,17 +1176,18 @@ section[id], footer[id] {
 }
 .award-row strong {
   display: block;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 20px;
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 16.5px;
   font-weight: 600;
-  line-height: 1.12;
+  font-style: normal;
+  line-height: 1.2;
   letter-spacing: -0.025em;
   color: inherit;
 }
 .award-desc {
   display: block;
   font-size: 12.5px;
-  line-height: 1.45;
+  line-height: 1.48;
   color: #46544a;
 }
 .award-row.is-active .award-desc {
@@ -1190,7 +1195,8 @@ section[id], footer[id] {
 }
 .awards-footnote {
   margin: 18px 0 0;
-  font-size: 13px;
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 12.5px;
   line-height: 1.55;
   color: rgba(24, 38, 29, 0.78);
 }
@@ -1221,20 +1227,26 @@ section[id], footer[id] {
   flex: 1 1 360px;
 }
 .shelf-head .eyebrow {
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   color: #f2684e;
   margin-bottom: 10px;
 }
 .shelf-head h2 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(38px, 4.8vw, 64px);
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: clamp(36px, 4.4vw, 56px);
   font-weight: 600;
-  line-height: 0.98;
-  letter-spacing: -0.05em;
+  font-style: normal;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   color: #18261d;
   margin: 0;
 }
 .shelf-intro {
   flex: 0 1 400px;
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
   font-size: 15px;
   line-height: 1.58;
   color: #4a5950;
@@ -1301,13 +1313,14 @@ section[id], footer[id] {
   margin: 0 0 10px;
 }
 .dossier-body h3 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(22px, 1.9vw, 27px);
+  font-family: "Instrument Sans", "DM Sans", sans-serif;
+  font-size: clamp(20px, 1.7vw, 24px);
   font-weight: 600;
-  line-height: 1.12;
+  font-style: normal;
+  line-height: 1.18;
   letter-spacing: -0.03em;
   color: #18261d;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 .dossier-desc {
   font-size: 14px;

@@ -1702,7 +1702,7 @@
       { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.136, rMob: 0.205, speed: -0.18,  bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8", sepColor: "rgba(255, 253, 248, 0.6)" }
     ];
 
-    // Pre-render crisp flat-color cylindrical wrap strips with generous vertical breathing room inside taller drums
+    // Pre-render crisp neo-grotesque cylindrical wrap strips (clean Instrument Sans, zero serif aliasing)
     const buildCylTexture = (tier, bandR, visH, isMob) => {
       const th = 208;
       const circumference = 2 * Math.PI * bandR;
@@ -1715,23 +1715,23 @@
       g.fillStyle = tier.bg;
       g.fillRect(0, 0, tw, th);
 
-      let titlePx = Math.round(th * (isMob ? 0.27 : 0.29));
-      let pctPx = Math.round(th * (isMob ? 0.16 : 0.17));
-      const sep = "   ·   ";
+      let titlePx = Math.round(th * (isMob ? 0.255 : 0.275));
+      let pctPx = Math.round(th * (isMob ? 0.165 : 0.175));
+      const sep = "   /   ";
       const measure = () => {
-        g.font = `600 ${titlePx}px "Playfair Display", Georgia, serif`;
+        g.font = `600 ${titlePx}px "Instrument Sans", "DM Sans", -apple-system, sans-serif`;
         const wT = g.measureText(tier.name).width;
-        g.font = `700 ${pctPx}px "DM Sans", Arial, sans-serif`;
+        g.font = `500 ${pctPx}px "Instrument Sans", "DM Sans", -apple-system, sans-serif`;
         const wS = g.measureText(sep).width;
         const wP = g.measureText(tier.pct).width;
         return { wT, wS, wP, total: wT + wS + wP };
       };
 
-      const pad = isMob ? 130 : 300;
+      const pad = isMob ? 150 : 340;
       let m = measure();
-      while (m.total + pad > tw / 2 && titlePx > 34) {
+      while (m.total + pad > tw / 2 && titlePx > 32) {
         titlePx -= 2;
-        pctPx = Math.max(22, Math.round(titlePx * 0.58));
+        pctPx = Math.max(22, Math.round(titlePx * 0.63));
         m = measure();
       }
       const repeats = Math.max(2, Math.floor(tw / (m.total + pad)));
@@ -1744,18 +1744,14 @@
         let x = mid - m.total / 2;
 
         g.textAlign = "left";
-        g.font = `600 ${titlePx}px "Playfair Display", Georgia, serif`;
+        g.font = `600 ${titlePx}px "Instrument Sans", "DM Sans", -apple-system, sans-serif`;
         g.fillStyle = tier.text;
-        g.fillText(tier.name, x, th * 0.52);
+        g.fillText(tier.name, x, th * 0.515);
         x += m.wT;
 
-        g.font = `700 ${pctPx}px "DM Sans", Arial, sans-serif`;
+        g.font = `500 ${pctPx}px "Instrument Sans", "DM Sans", -apple-system, sans-serif`;
         g.fillStyle = tier.pctColor;
-        g.fillText(sep + tier.pct, x, th * 0.53);
-
-        // Minimal editorial vertical tick
-        g.fillStyle = tier.sepColor;
-        g.fillRect(Math.round(i * segW) - 1, Math.round(th * 0.37), 2, Math.round(th * 0.26));
+        g.fillText(sep + tier.pct, x, th * 0.52);
       }
       return { canvas: off, repeats };
     };
