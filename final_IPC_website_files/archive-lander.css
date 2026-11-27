@@ -1061,275 +1061,224 @@ section[id], footer[id] {
   margin: 0 !important;
 }
 
-/* ─── Rotational 3D Cylinder Pyramid Award Tiers (#awards) ─── */
+/* ─── Flat Architectural Rotating Cylinder Pyramid Award Tiers (#awards — Original IPC Palette) ─── */
 .awards.awards-rotational {
-  background: radial-gradient(ellipse 85% 70% at 32% 45%, #1c3125 0%, #111e17 56%, #0b130f 100%) !important;
-  color: var(--mt-ivory);
-  padding: clamp(56px, 6vw, 84px) clamp(24px, 7vw, 110px) !important;
-  border-top: 1px solid rgba(246, 242, 233, 0.08) !important;
+  background: #f1c0ad !important;
+  color: var(--ink, #18261d);
+  padding: 0 0 clamp(60px, 7vw, 92px) !important;
+  border-top: 2px solid #18261d !important;
+}
+.awards-pyramid-band {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+#ipc-awards-canvas {
+  width: 100%;
+  display: block;
+  cursor: pointer;
 }
 .awards-shell {
   max-width: 1220px;
-  margin: 0 auto;
+  margin: clamp(40px, 4.8vw, 64px) auto 0;
+  padding: 0 clamp(24px, 7vw, 110px);
 }
 .awards-top {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(24px, 4vw, 64px);
-  align-items: end;
-  padding-bottom: clamp(20px, 2.5vw, 32px);
-  border-bottom: 1px solid rgba(246, 242, 233, 0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px 56px;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
 }
 .awards-top .eyebrow {
-  color: #e4be5c;
-  margin-bottom: 12px;
+  color: #213c2b;
+  margin-bottom: 10px;
 }
 .awards-top h2 {
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(44px, 5.5vw, 76px);
   font-weight: 600;
-  line-height: 0.98;
-  letter-spacing: -0.04em;
-  color: var(--mt-ivory);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  color: #18261d;
+  margin: 0;
 }
 .awards-top h2 em {
-  color: #e4be5c;
+  color: #213c2b;
   font-style: italic;
 }
 .awards-intro {
+  flex: 0 1 440px;
   font-size: 15.5px;
-  line-height: 1.65;
-  color: rgba(246, 242, 233, 0.72);
-  max-width: 480px;
-  justify-self: end;
+  line-height: 1.6;
+  color: #18261d;
+  margin: 0 0 4px;
 }
 
-.awards-stage-grid {
-  margin-top: clamp(24px, 3vw, 38px);
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(28px, 4.5vw, 64px);
-  align-items: center;
-}
-.awards-pyramid-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-#ipc-awards-canvas {
-  width: min(600px, 100%);
-  height: auto;
-  aspect-ratio: 6 / 5;
-  display: block;
-  cursor: pointer;
-}
-.awards-canvas-hint {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(246, 242, 233, 0.48);
-  text-align: center;
-}
-
+/* Original Flat 6-Column Bordered Ledger */
 .awards-ledger {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-top: 1px solid rgba(24, 38, 29, 0.32);
+  border-left: 1px solid rgba(24, 38, 29, 0.32);
+  background: #fffdf8;
 }
 .award-row {
   appearance: none;
-  width: 100%;
+  border: 0;
+  border-right: 1px solid rgba(24, 38, 29, 0.32);
+  border-bottom: 1px solid rgba(24, 38, 29, 0.32);
+  border-radius: 0;
+  background: transparent;
+  color: #18261d;
   text-align: left;
   font-family: inherit;
-  display: grid;
-  grid-template-columns: 12px 1fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 18px;
-  border-radius: 8px;
-  border: 1px solid rgba(246, 242, 233, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--mt-ivory);
+  padding: 20px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   cursor: pointer;
-  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s var(--mt-ease);
+  transition: background 0.16s ease, color 0.16s ease;
 }
 .award-row:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(246, 242, 233, 0.28);
-  transform: translateX(4px);
+  background: #f5efe3;
 }
 .award-row.is-active {
-  background: rgba(246, 242, 233, 0.1);
-  border-color: rgba(228, 190, 92, 0.72);
-  transform: translateX(6px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+  background: #213c2b;
+  color: #fffdf8;
 }
-.award-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--dot, #e4be5c);
-  box-shadow: 0 0 10px var(--dot, #e4be5c);
-}
-.award-row-main strong {
-  display: block;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 19px;
-  font-weight: 600;
-  line-height: 1.15;
-  color: #fffdf9;
-  margin-bottom: 2px;
-}
-.award-row-main span {
-  display: block;
-  font-size: 12.5px;
-  color: rgba(246, 242, 233, 0.65);
+.award-row[data-tier="5"].is-active {
+  background: #f2684e;
+  color: #fffdf8;
 }
 .award-pct {
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(246, 242, 233, 0.18);
-  background: rgba(255, 255, 255, 0.05);
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mt-ivory);
-  white-space: nowrap;
+  color: #213c2b;
+  margin-bottom: 10px;
+}
+.award-row[data-tier="5"] .award-pct {
+  color: #c44128;
 }
 .award-row.is-active .award-pct {
-  background: #e4be5c;
-  border-color: #e4be5c;
-  color: #141a15;
+  color: #f1c0ad;
+}
+.award-row[data-tier="5"].is-active .award-pct {
+  color: #fffdf8;
+}
+.award-row strong {
+  display: block;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: inherit;
+}
+.award-desc {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #46544a;
+}
+.award-row.is-active .award-desc {
+  color: rgba(255, 253, 248, 0.85);
 }
 .awards-footnote {
-  margin-top: 10px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(246, 242, 233, 0.1);
-  font-size: 12.5px;
+  margin: 18px 0 0;
+  font-size: 13px;
   line-height: 1.55;
-  color: rgba(246, 242, 233, 0.56);
+  color: rgba(24, 38, 29, 0.78);
 }
 
-/* ─── Option C: Compact Think-Tank Dossier Shelf (#documents) ─── */
+/* ─── Option C: Flat Compact Think-Tank Shelf (#documents — Original IPC Palette) ─── */
 .documents.brief-shelf-section {
-  background: linear-gradient(180deg, #faf7f0 0%, #f3ede0 100%) !important;
-  padding: clamp(56px, 6vw, 84px) clamp(24px, 7vw, 110px) !important;
-  color: var(--mt-arch-ink);
+  background: #fffdf8 !important;
+  padding: clamp(64px, 7vw, 96px) clamp(24px, 7vw, 110px) !important;
+  color: #18261d;
+  border-top: 1px solid rgba(24, 38, 29, 0.18) !important;
 }
 .documents.brief-shelf-section::before {
   display: none !important;
 }
 .shelf-shell {
-  max-width: 1180px;
+  max-width: 1220px;
   margin: 0 auto;
 }
 .shelf-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 20px 44px;
+  gap: 20px 48px;
   flex-wrap: wrap;
-  padding-bottom: 22px;
-  border-bottom: 1px solid rgba(22, 37, 28, 0.14);
+  padding-bottom: 24px;
 }
 .shelf-head-title {
   flex: 1 1 360px;
 }
 .shelf-head .eyebrow {
-  color: var(--mt-coral-dark);
-  margin-bottom: 8px;
+  color: #f2684e;
+  margin-bottom: 10px;
 }
 .shelf-head h2 {
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(34px, 4vw, 52px);
+  font-size: clamp(38px, 4.8vw, 64px);
   font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  color: var(--mt-arch-ink);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  color: #18261d;
   margin: 0;
 }
 .shelf-intro {
-  flex: 0 1 380px;
-  font-size: 14.5px;
-  line-height: 1.55;
-  color: var(--mt-arch-muted);
+  flex: 0 1 400px;
+  font-size: 15px;
+  line-height: 1.58;
+  color: #4a5950;
   margin: 0 0 4px;
 }
 
 .brief-shelf {
-  margin-top: 28px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(18px, 2.4vw, 28px);
+  border-top: 1px solid rgba(24, 38, 29, 0.25);
+  border-bottom: 1px solid rgba(24, 38, 29, 0.25);
+  border-left: 1px solid rgba(24, 38, 29, 0.25);
+  background: #f5efe3;
 }
 .dossier-card {
-  background: #fffdf8;
-  border: 1px solid rgba(22, 37, 28, 0.13);
-  border-radius: 12px;
-  overflow: hidden;
   display: grid;
-  grid-template-columns: 196px minmax(0, 1fr);
-  min-height: 256px;
-  box-shadow: 0 10px 28px rgba(22, 37, 28, 0.06);
-  transition: transform 0.28s var(--mt-ease), box-shadow 0.28s ease, border-color 0.25s ease;
+  grid-template-columns: 162px minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
+  padding: 28px;
+  border-right: 1px solid rgba(24, 38, 29, 0.25);
+  background: #f5efe3;
+  transition: background 0.18s ease;
 }
 .dossier-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(232, 98, 70, 0.45);
-  box-shadow: 0 18px 40px rgba(22, 37, 28, 0.11);
+  background: #fffdf8;
 }
 
-/* Archival Dossier Sleeve showing complete uncropped Page 1 peeking cleanly out */
+/* Flat Sharp-Cornered Real Page 1 Sheet (Zero tilt, zero shadow, zero dark box) */
 .dossier-sleeve {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 16px;
-  background: linear-gradient(155deg, #1b3828 0%, #102218 100%);
-  text-decoration: none;
-  overflow: hidden;
-}
-.dossier-tech .dossier-sleeve {
-  background: linear-gradient(155deg, #1a334e 0%, #0f1e30 100%);
-}
-.dossier-index {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  z-index: 3;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: rgba(246, 242, 233, 0.72);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
-  padding: 2px 7px;
-}
-.dossier-page {
-  position: relative;
-  z-index: 2;
   display: block;
-  width: 148px;
+  width: 162px;
   aspect-ratio: 8.5 / 11;
   background: #ffffff;
-  border-radius: 3px;
+  border: 1px solid rgba(24, 38, 29, 0.28);
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.35);
-  transform: rotate(-1.5deg);
-  transition: transform 0.34s var(--mt-ease), box-shadow 0.34s ease;
+  text-decoration: none;
+  transition: border-color 0.18s ease;
 }
-.dossier-tech .dossier-page {
-  transform: rotate(1.5deg);
+.dossier-card:hover .dossier-sleeve {
+  border-color: #18261d;
 }
-.dossier-card:hover .dossier-page {
-  transform: rotate(0deg) translateY(-4px) scale(1.03);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.65);
-}
-.dossier-page img {
+.dossier-sleeve img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1338,103 +1287,90 @@ section[id], footer[id] {
 }
 
 .dossier-body {
-  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-width: 0;
+  height: 100%;
 }
 .dossier-meta {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--mt-coral-dark);
-  margin: 0 0 8px;
+  color: #f2684e;
+  margin: 0 0 10px;
 }
 .dossier-body h3 {
   font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(19px, 1.55vw, 22px);
+  font-size: clamp(22px, 1.9vw, 27px);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--mt-arch-ink);
-  margin: 0 0 10px;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: #18261d;
+  margin: 0 0 12px;
 }
 .dossier-desc {
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--mt-arch-muted);
-  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.56;
+  color: #3f4e45;
+  margin: 0 0 22px;
   flex: 1;
 }
 .dossier-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px 16px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(22, 37, 28, 0.1);
+  gap: 14px 20px;
 }
 .dossier-btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 17px;
-  border-radius: 999px;
-  background: var(--mt-arch-ink);
+  gap: 10px;
+  padding: 10px 18px;
+  border: 1px solid #213c2b;
+  border-radius: 0;
+  background: #213c2b;
   color: #fffdf8;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.22s ease, transform 0.22s var(--mt-ease);
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
 .dossier-btn:hover {
-  background: var(--mt-coral);
-  transform: translateY(-1px);
+  background: #f2684e;
+  border-color: #f2684e;
 }
 .dossier-open {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--mt-arch-ink);
+  color: #18261d;
   text-decoration: none;
-  border-bottom: 1px solid rgba(22, 37, 28, 0.35);
-  padding-bottom: 2px;
+  border-bottom: 1px solid #18261d;
+  padding-bottom: 3px;
   white-space: nowrap;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 .dossier-open:hover {
-  color: var(--mt-coral-dark);
-  border-color: var(--mt-coral-dark);
+  color: #f2684e;
+  border-color: #f2684e;
 }
 
 .shelf-notice {
-  margin-top: 20px;
-  padding: 12px 18px;
-  border-radius: 8px;
-  border: 1px solid rgba(22, 37, 28, 0.12);
-  background: rgba(255, 253, 248, 0.72);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 12.5px;
-  color: var(--mt-arch-muted);
-}
-.shelf-notice-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--mt-coral);
-  flex-shrink: 0;
+  margin: 18px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #526054;
 }
 
 /* ─── Responsive Adjustments ─── */
 @media (max-width: 1080px) {
-  .about-header, .awards-top { grid-template-columns: 1fr; align-items: start; }
-  .awards-intro { justify-self: start; }
-  .about-grid, .awards-stage-grid, .brief-shelf { grid-template-columns: 1fr; }
+  .about-header { grid-template-columns: 1fr; align-items: start; }
+  .about-grid, .brief-shelf { grid-template-columns: 1fr; }
+  .awards-ledger { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dossier-card { border-bottom: 1px solid rgba(24, 38, 29, 0.25); }
+  .dossier-card:last-child { border-bottom: 0; }
   .about-rail { order: 2; }
   .about-narrative { order: 1; }
   .examples-atlas .examples-content { grid-template-columns: 1fr !important; }
@@ -1443,9 +1379,9 @@ section[id], footer[id] {
   .sources-grid, .footer-sources-list { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
-  .dossier-card { grid-template-columns: 1fr; }
-  .dossier-sleeve { padding: 22px 16px; }
-  .dossier-page { width: 156px; }
+  .awards-ledger { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dossier-card { grid-template-columns: 1fr; padding: 22px; }
+  .dossier-sleeve { width: 152px; }
 }
 @media (max-width: 850px) {
   .site-header nav {

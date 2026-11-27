@@ -35,10 +35,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,500..900;1,500..700&display=swap" rel="stylesheet">
     <link rel="preload" as="image" href="./assets/archive/01-un-general-assembly.webp" fetchpriority="high">
-    <link rel="stylesheet" href="./final_IPC_website_files/styles.css?v=20261127e">
-    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css?v=20261127e">
-    <link rel="stylesheet" href="./final_IPC_website_files/extended.css?v=20261127e">
-    <link rel="stylesheet" href="./final_IPC_website_files/archive-lander.css?v=20261127e">
+    <link rel="stylesheet" href="./final_IPC_website_files/styles.css?v=20261127g">
+    <link rel="stylesheet" href="./final_IPC_website_files/refinements.css?v=20261127g">
+    <link rel="stylesheet" href="./final_IPC_website_files/extended.css?v=20261127g">
+    <link rel="stylesheet" href="./final_IPC_website_files/archive-lander.css?v=20261127g">
     <style>
       .hero-copy.reveal { opacity: 1; transform: none; }
       html.ipc-loading .site-header {
@@ -658,73 +658,52 @@
       </section>
 
       <section id="awards" class="awards awards-rotational section">
+        <div class="awards-pyramid-band">
+          <canvas id="ipc-awards-canvas" aria-label="Flat rotating inverted cylinder pyramid of six award tiers from Distinction (Top 25%) at the top down to Gold Medal (Top 1) at the bottom"></canvas>
+        </div>
+
         <div class="awards-shell">
           <div class="awards-top reveal">
             <div>
               <p class="eyebrow">Recognition</p>
-              <h2>Award <em>Tiers</em></h2>
+              <h2>Award <em>tiers</em></h2>
             </div>
             <p class="awards-intro">Six recognition levels narrowing from the top quarter of submissions down to the session champion, determined by composite scores across judged stages.</p>
           </div>
 
-          <div class="awards-stage-grid reveal">
-            <div class="awards-pyramid-wrap">
-              <canvas id="ipc-awards-canvas" width="600" height="500" aria-label="Rotating 3D inverted pyramid of six cylindrical award tiers from Distinction (Top 25%) at the top down to Gold Medal (Top Team) at the bottom"></canvas>
-              <p class="awards-canvas-hint">Hover or click any rotating cylinder to inspect tier details</p>
-            </div>
-
-            <div class="awards-ledger" id="awards-ledger">
-              <button type="button" class="award-row" data-tier="0">
-                <span class="award-dot" style="--dot:#439a86"></span>
-                <span class="award-row-main">
-                  <strong>Distinction</strong>
-                  <span>Commended for quality of work</span>
-                </span>
-                <span class="award-pct">Top 25%</span>
-              </button>
-              <button type="button" class="award-row" data-tier="1">
-                <span class="award-dot" style="--dot:#7c86d9"></span>
-                <span class="award-row-main">
-                  <strong>Honorable Mention</strong>
-                  <span>Strong performance across stages</span>
-                </span>
-                <span class="award-pct">Top 15%</span>
-              </button>
-              <button type="button" class="award-row" data-tier="2">
-                <span class="award-dot" style="--dot:#e86246"></span>
-                <span class="award-row-main">
-                  <strong>Finalist</strong>
-                  <span>Invited to the live finals round</span>
-                </span>
-                <span class="award-pct">Top 8</span>
-              </button>
-              <button type="button" class="award-row" data-tier="3">
-                <span class="award-dot" style="--dot:#c68152"></span>
-                <span class="award-row-main">
-                  <strong>Bronze Medal</strong>
-                  <span>Third-place team of the session</span>
-                </span>
-                <span class="award-pct">Top 3</span>
-              </button>
-              <button type="button" class="award-row" data-tier="4">
-                <span class="award-dot" style="--dot:#c2cbd4"></span>
-                <span class="award-row-main">
-                  <strong>Silver Medal</strong>
-                  <span>Runner-up team of the session</span>
-                </span>
-                <span class="award-pct">Top 2</span>
-              </button>
-              <button type="button" class="award-row is-active" data-tier="5">
-                <span class="award-dot" style="--dot:#e4be5c"></span>
-                <span class="award-row-main">
-                  <strong>Gold Medal</strong>
-                  <span>Champion team of the session</span>
-                </span>
-                <span class="award-pct">Top 1</span>
-              </button>
-              <p class="awards-footnote">All recognized teams receive an official certificate of achievement following integrated paper, video, and live adjudication.</p>
-            </div>
+          <div class="awards-ledger reveal" id="awards-ledger">
+            <button type="button" class="award-row" data-tier="0">
+              <span class="award-pct">Top 25%</span>
+              <strong>Distinction</strong>
+              <span class="award-desc">Commended for quality of work</span>
+            </button>
+            <button type="button" class="award-row" data-tier="1">
+              <span class="award-pct">Top 15%</span>
+              <strong>Honorable Mention</strong>
+              <span class="award-desc">Strong performance across stages</span>
+            </button>
+            <button type="button" class="award-row" data-tier="2">
+              <span class="award-pct">Top 8</span>
+              <strong>Finalist</strong>
+              <span class="award-desc">Invited to the live finals round</span>
+            </button>
+            <button type="button" class="award-row" data-tier="3">
+              <span class="award-pct">Top 3</span>
+              <strong>Bronze Medal</strong>
+              <span class="award-desc">Third-place team of the session</span>
+            </button>
+            <button type="button" class="award-row" data-tier="4">
+              <span class="award-pct">Top 2</span>
+              <strong>Silver Medal</strong>
+              <span class="award-desc">Runner-up team of the session</span>
+            </button>
+            <button type="button" class="award-row is-active" data-tier="5">
+              <span class="award-pct">Top 1</span>
+              <strong>Gold Medal</strong>
+              <span class="award-desc">Champion team of the session</span>
+            </button>
           </div>
+          <p class="awards-footnote reveal">All recognized teams receive an official certificate of achievement following integrated paper, video, and live adjudication.</p>
         </div>
       </section>
 
@@ -739,12 +718,9 @@
           </div>
 
           <div class="brief-shelf reveal">
-            <article class="dossier-card dossier-health">
+            <article class="dossier-card">
               <a class="dossier-sleeve" href="./documents/Health Team Fall 2025 Final Brief.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open Health Policy Final Brief PDF">
-                <span class="dossier-index">01</span>
-                <span class="dossier-page">
-                  <img src="./assets/briefs/health-brief-p1.webp" alt="Page 1 of Combatting Medical Debt in Massachusetts policy brief" loading="lazy" decoding="async">
-                </span>
+                <img src="./assets/briefs/health-brief-p1.webp" alt="Page 1 of Combatting Medical Debt in Massachusetts policy brief" loading="lazy" decoding="async">
               </a>
               <div class="dossier-body">
                 <p class="dossier-meta">Fall 2025 · Health Policy · 3.6 MB</p>
@@ -757,12 +733,9 @@
               </div>
             </article>
 
-            <article class="dossier-card dossier-tech">
+            <article class="dossier-card">
               <a class="dossier-sleeve" href="./documents/Tech Team Spring 2026 Final Brief.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open Technology Policy Final Brief PDF">
-                <span class="dossier-index">02</span>
-                <span class="dossier-page">
-                  <img src="./assets/briefs/tech-brief-p1.webp" alt="Page 1 of Genomic Data Privacy Regulations and Governance under Frontier LLM Use policy brief" loading="lazy" decoding="async">
-                </span>
+                <img src="./assets/briefs/tech-brief-p1.webp" alt="Page 1 of Genomic Data Privacy Regulations and Governance under Frontier LLM Use policy brief" loading="lazy" decoding="async">
               </a>
               <div class="dossier-body">
                 <p class="dossier-meta">Spring 2026 · AI &amp; Technology · 1.4 MB</p>
@@ -776,10 +749,7 @@
             </article>
           </div>
 
-          <div class="shelf-notice reveal">
-            <span class="shelf-notice-dot" aria-hidden="true"></span>
-            <span>Additional competition guidelines, research templates, and submission instructions will be published ahead of the 2027 cycle.</span>
-          </div>
+          <p class="shelf-notice reveal">Additional competition guidelines, research templates, and submission instructions will be published ahead of the 2027 cycle.</p>
         </div>
       </section>
 
@@ -927,8 +897,8 @@
       </details>
       <p class="footer-bottom">© 2026 International Policy Conference <a href="#top">Back to top ↑</a></p>
     </footer>
-    <script src="./final_IPC_website_files/world-data.js?v=20261127e" defer></script>
-    <script src="./final_IPC_website_files/script.js?v=20261127e" defer></script>
+    <script src="./final_IPC_website_files/world-data.js?v=20261127g" defer></script>
+    <script src="./final_IPC_website_files/script.js?v=20261127g" defer></script>
   
 
 </body></html>
