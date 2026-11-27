@@ -1692,21 +1692,21 @@
 
   if (awardsCanvas) {
     const actx = awardsCanvas.getContext("2d");
-    // Longer, taller matte-3D drums anchored flush to the top border (y = 0), strictly in the original IPC palette
+    // Tall, clean graphic-3D drums anchored flush to the top border (y = 0), strictly in the original IPC palette
     const TIERS = [
-      { name: "DISTINCTION",       pct: "TOP 25%", rDesk: 0.44,  rMob: 0.47,  speed:  0.105, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.55)", isDark: true },
-      { name: "HONORABLE MENTION", pct: "TOP 15%", rDesk: 0.375, rMob: 0.415, speed: -0.12,  bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.32)",   isDark: false },
-      { name: "FINALIST",          pct: "TOP 8",   rDesk: 0.312, rMob: 0.36,  speed:  0.135, bg: "#f5efe3", text: "#18261d", pctColor: "#f2684e", sepColor: "rgba(24, 38, 29, 0.32)",   isDark: false },
-      { name: "BRONZE MEDAL",      pct: "TOP 3",   rDesk: 0.252, rMob: 0.305, speed: -0.15,  bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.55)", isDark: true },
-      { name: "SILVER MEDAL",      pct: "TOP 2",   rDesk: 0.196, rMob: 0.255, speed:  0.165, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.32)",   isDark: false },
-      { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.145, rMob: 0.21,  speed: -0.18,  bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8", sepColor: "rgba(255, 253, 248, 0.65)", isDark: true }
+      { name: "DISTINCTION",       pct: "TOP 25%", rDesk: 0.425, rMob: 0.465, speed:  0.105, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.5)" },
+      { name: "HONORABLE MENTION", pct: "TOP 15%", rDesk: 0.36,  rMob: 0.41,  speed: -0.12,  bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.28)" },
+      { name: "FINALIST",          pct: "TOP 8",   rDesk: 0.298, rMob: 0.355, speed:  0.135, bg: "#f5efe3", text: "#18261d", pctColor: "#f2684e", sepColor: "rgba(24, 38, 29, 0.28)" },
+      { name: "BRONZE MEDAL",      pct: "TOP 3",   rDesk: 0.24,  rMob: 0.30,  speed: -0.15,  bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.5)" },
+      { name: "SILVER MEDAL",      pct: "TOP 2",   rDesk: 0.186, rMob: 0.25,  speed:  0.165, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.28)" },
+      { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.136, rMob: 0.205, speed: -0.18,  bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8", sepColor: "rgba(255, 253, 248, 0.6)" }
     ];
 
-    // Pre-render crisp matte cylindrical wrap strips matched 1:1 to each drum's real circumference & taller height
+    // Pre-render crisp flat-color cylindrical wrap strips with generous vertical breathing room inside taller drums
     const buildCylTexture = (tier, bandR, visH, isMob) => {
-      const th = 148;
+      const th = 208;
       const circumference = 2 * Math.PI * bandR;
-      const tw = Math.max(1100, Math.round(circumference * (th / visH)));
+      const tw = Math.max(1200, Math.round(circumference * (th / visH)));
       const off = document.createElement("canvas");
       off.width = tw;
       off.height = th;
@@ -1715,8 +1715,8 @@
       g.fillStyle = tier.bg;
       g.fillRect(0, 0, tw, th);
 
-      let titlePx = Math.round(th * (isMob ? 0.34 : 0.37));
-      let pctPx = Math.round(th * (isMob ? 0.2 : 0.22));
+      let titlePx = Math.round(th * (isMob ? 0.27 : 0.29));
+      let pctPx = Math.round(th * (isMob ? 0.16 : 0.17));
       const sep = "   ·   ";
       const measure = () => {
         g.font = `600 ${titlePx}px "Playfair Display", Georgia, serif`;
@@ -1727,12 +1727,11 @@
         return { wT, wS, wP, total: wT + wS + wP };
       };
 
-      const pad = isMob ? 110 : 250;
+      const pad = isMob ? 130 : 300;
       let m = measure();
-      // Ensure at least 2 repeats fit cleanly around 360° so no drum face ever spins blank
-      while (m.total + pad > tw / 2 && titlePx > 32) {
+      while (m.total + pad > tw / 2 && titlePx > 34) {
         titlePx -= 2;
-        pctPx = Math.max(20, Math.round(titlePx * 0.59));
+        pctPx = Math.max(22, Math.round(titlePx * 0.58));
         m = measure();
       }
       const repeats = Math.max(2, Math.floor(tw / (m.total + pad)));
@@ -1754,9 +1753,9 @@
         g.fillStyle = tier.pctColor;
         g.fillText(sep + tier.pct, x, th * 0.53);
 
-        // Minimal architectural vertical divider tick
+        // Minimal editorial vertical tick
         g.fillStyle = tier.sepColor;
-        g.fillRect(Math.round(i * segW) - 1, Math.round(th * 0.33), 2, Math.round(th * 0.34));
+        g.fillRect(Math.round(i * segW) - 1, Math.round(th * 0.37), 2, Math.round(th * 0.26));
       }
       return { canvas: off, repeats };
     };
@@ -1831,10 +1830,10 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const W = Math.max(320, Math.round(rect.width));
       const isMob = W < 640;
-      const visH = isMob ? 60 : 78; // Longer, substantial architectural drums
+      const visH = isMob ? 74 : 106; // Taller downward architectural drums
       const radii = TIERS.map(t => W * (isMob ? t.rMob : t.rDesk));
-      // Restrained elliptical 3D curvature (tactile cylinder depth, anchored cleanly to top edge)
-      const rys = radii.map(r => Math.min(isMob ? 15 : 24, Math.max(10, r * 0.075)));
+      // Clean graphic elliptical 3D bottom arcs (no realistic CGI lighting or heavy shadows)
+      const rys = radii.map(r => Math.min(isMob ? 15 : 24, Math.max(11, r * 0.082)));
 
       const frontBots = [];
       const edgeBots = [];
@@ -1843,7 +1842,7 @@
         frontBots.push(fb);
         edgeBots.push(fb - rys[k]);
       }
-      const H = Math.ceil(frontBots[TIERS.length - 1] + 10);
+      const H = Math.ceil(frontBots[TIERS.length - 1] + 8);
 
       if (awardsCanvas.width !== Math.round(W * dpr) || awardsCanvas.height !== Math.round(H * dpr)) {
         awardsCanvas.width = Math.round(W * dpr);
@@ -1867,7 +1866,7 @@
       }
 
       cylHitBands = [];
-      // Paint bottom (Gold apex) → top (Distinction anchored flush to y = 0) so each wider drum naturally overlaps & casts a curved contact shadow onto the narrower drum beneath it
+      // Paint bottom (Gold apex) → top (Distinction anchored flush to y = 0) in crisp pure solid fills (graphic 3D, zero realistic shading grime)
       for (let k = TIERS.length - 1; k >= 0; k--) {
         const tier = TIERS[k];
         const tex = textures[k];
@@ -1879,27 +1878,7 @@
         const hitTop = k === 0 ? 0 : frontBots[k - 1] - rys[k - 1] * 0.4;
         cylHitBands.push({ idx: k, cx, R, yTop: hitTop, yBot: frontBots[k] });
 
-        // Curved contact shadow cast directly along this drum's overhang onto the narrower drum below (strictly clipped inside the child drum)
-        if (k < TIERS.length - 1) {
-          const childR = radii[k + 1];
-          actx.save();
-          actx.beginPath();
-          actx.rect(cx - childR, edgeBot - 2, childR * 2, ry + 20);
-          actx.clip();
-          actx.strokeStyle = "rgba(24, 38, 29, 0.15)";
-          actx.lineWidth = 14;
-          actx.beginPath();
-          actx.ellipse(cx, edgeBot + 6, R, ry, 0, 0, Math.PI, false);
-          actx.stroke();
-          actx.strokeStyle = "rgba(24, 38, 29, 0.24)";
-          actx.lineWidth = 5;
-          actx.beginPath();
-          actx.ellipse(cx, edgeBot + 2, R, ry, 0, 0, Math.PI, false);
-          actx.stroke();
-          actx.restore();
-        }
-
-        // Clip cleanly to the exact 3D cylindrical silhouette (k=0 connects 100% flush to y = 0; k>0 tucks smoothly behind the wider drum above)
+        // Clip cleanly to the exact graphic 3D cylindrical silhouette (k=0 flush to y = 0; k>0 tucked behind upper drum)
         const tuckTop = k === 0 ? 0 : edgeBots[k - 1] - 4;
         actx.save();
         actx.beginPath();
@@ -1913,7 +1892,7 @@
         actx.fillStyle = tier.bg;
         actx.fillRect(leftX - 1, tuckTop - 1, R * 2 + 2, frontBots[k] - tuckTop + 4);
 
-        // Curved cylindrical vertical strips (opaque texture wrap, zero seam banding)
+        // Clean curved cylindrical typography projection (pure color, zero muddy flank gradient or drop-shadow)
         const slices = Math.max(108, Math.round(R * 0.6));
         const dTheta = Math.PI / slices;
         for (let s = 0; s < slices; s++) {
@@ -1936,25 +1915,11 @@
 
           actx.drawImage(tex, srcX, 0, safeSrcW, tex.height, x0, texDrawY, sw + 0.7, visH);
         }
-
-        // Single smooth horizontal matte cylindrical gradient across the drum (silky-smooth, zero vertical striping, zero glossy chrome)
-        const wrapGrad = actx.createLinearGradient(leftX, 0, cx + R, 0);
-        const edgeA = tier.isDark ? 0.36 : 0.22;
-        const midA = tier.isDark ? 0.1 : 0.06;
-        const liftA = tier.isDark ? 0.08 : 0.03;
-        wrapGrad.addColorStop(0.0, `rgba(24, 38, 29, ${edgeA})`);
-        wrapGrad.addColorStop(0.14, `rgba(24, 38, 29, ${midA})`);
-        wrapGrad.addColorStop(0.36, `rgba(255, 253, 248, ${liftA})`);
-        wrapGrad.addColorStop(0.58, "rgba(255, 253, 248, 0)");
-        wrapGrad.addColorStop(0.84, `rgba(24, 38, 29, ${midA})`);
-        wrapGrad.addColorStop(1.0, `rgba(24, 38, 29, ${(edgeA + 0.06).toFixed(2)})`);
-        actx.fillStyle = wrapGrad;
-        actx.fillRect(leftX - 1, tuckTop - 1, R * 2 + 2, frontBots[k] - tuckTop + 4);
         actx.restore();
 
-        // Crisp architectural ink outline along the left/right vertical silhouettes and curved 3D bottom lip
-        actx.strokeStyle = isFocus ? "#18261d" : "rgba(24, 38, 29, 0.68)";
-        actx.lineWidth = isFocus ? 1.85 : 1.25;
+        // Clean graphic ink contour along vertical sides and curved 3D lower lip
+        actx.strokeStyle = isFocus ? "#18261d" : "rgba(24, 38, 29, 0.72)";
+        actx.lineWidth = isFocus ? 1.8 : 1.25;
         actx.beginPath();
         actx.moveTo(leftX + 0.5, tuckTop);
         actx.lineTo(leftX + 0.5, edgeBot);
