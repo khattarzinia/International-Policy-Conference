@@ -1686,69 +1686,77 @@
     requestAnimationFrame(drawGlobe);
   }
 
-  // ─── 5. Flat Architectural Rotating Cylinder Pyramid for Award Tiers (#awards — Original IPC Palette) ───
+  // ─── 5. Top-Connected Editorial 3D Rotating Cylinder Pyramid for Award Tiers (#awards — Original IPC Palette) ───
   const awardsCanvas = document.getElementById("ipc-awards-canvas");
   const awardRows = [...document.querySelectorAll("#awards-ledger .award-row")];
 
   if (awardsCanvas) {
     const actx = awardsCanvas.getContext("2d");
-    // Connected flush to the top border (100% width at top → 34% Gold apex at bottom), 100% flat original IPC palette
+    // Longer, taller matte-3D drums anchored flush to the top border (y = 0), strictly in the original IPC palette
     const TIERS = [
-      { name: "DISTINCTION",       pct: "TOP 25%", rDesk: 0.50,  rMob: 0.50,  repeats: 5, speed:  0.11, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.55)" },
-      { name: "HONORABLE MENTION", pct: "TOP 15%", rDesk: 0.425, rMob: 0.44,  repeats: 4, speed: -0.125, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.32)" },
-      { name: "FINALIST",          pct: "TOP 8",   rDesk: 0.355, rMob: 0.385, repeats: 4, speed:  0.14, bg: "#f5efe3", text: "#18261d", pctColor: "#f2684e", sepColor: "rgba(24, 38, 29, 0.32)" },
-      { name: "BRONZE MEDAL",      pct: "TOP 3",   rDesk: 0.29,  rMob: 0.33,  repeats: 3, speed: -0.155, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.55)" },
-      { name: "SILVER MEDAL",      pct: "TOP 2",   rDesk: 0.23,  rMob: 0.28,  repeats: 3, speed:  0.17, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.32)" },
-      { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.175, rMob: 0.235, repeats: 2, speed: -0.185, bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8", sepColor: "rgba(255, 253, 248, 0.65)" }
+      { name: "DISTINCTION",       pct: "TOP 25%", rDesk: 0.44,  rMob: 0.47,  speed:  0.105, bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.55)", isDark: true },
+      { name: "HONORABLE MENTION", pct: "TOP 15%", rDesk: 0.375, rMob: 0.415, speed: -0.12,  bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.32)",   isDark: false },
+      { name: "FINALIST",          pct: "TOP 8",   rDesk: 0.312, rMob: 0.36,  speed:  0.135, bg: "#f5efe3", text: "#18261d", pctColor: "#f2684e", sepColor: "rgba(24, 38, 29, 0.32)",   isDark: false },
+      { name: "BRONZE MEDAL",      pct: "TOP 3",   rDesk: 0.252, rMob: 0.305, speed: -0.15,  bg: "#213c2b", text: "#fffdf8", pctColor: "#f1c0ad", sepColor: "rgba(241, 192, 173, 0.55)", isDark: true },
+      { name: "SILVER MEDAL",      pct: "TOP 2",   rDesk: 0.196, rMob: 0.255, speed:  0.165, bg: "#fffdf8", text: "#18261d", pctColor: "#213c2b", sepColor: "rgba(24, 38, 29, 0.32)",   isDark: false },
+      { name: "GOLD MEDAL",        pct: "TOP 1",   rDesk: 0.145, rMob: 0.21,  speed: -0.18,  bg: "#f2684e", text: "#fffdf8", pctColor: "#fffdf8", sepColor: "rgba(255, 253, 248, 0.65)", isDark: true }
     ];
 
-    // Pre-render crisp flat editorial cylindrical wrap strips matched to true cylinder circumference
-    // Dynamically computes repeat count from real measured label width so text NEVER overlaps on mobile or desktop
-    const buildFlatCylTexture = (tier, bandR, cylH) => {
-      const th = 112;
+    // Pre-render crisp matte cylindrical wrap strips matched 1:1 to each drum's real circumference & taller height
+    const buildCylTexture = (tier, bandR, visH, isMob) => {
+      const th = 148;
       const circumference = 2 * Math.PI * bandR;
-      const tw = Math.max(1000, Math.round(circumference * (th / cylH)));
+      const tw = Math.max(1100, Math.round(circumference * (th / visH)));
       const off = document.createElement("canvas");
       off.width = tw;
       off.height = th;
       const g = off.getContext("2d");
 
-      // Pure flat solid fill (original IPC color, zero gradient)
       g.fillStyle = tier.bg;
       g.fillRect(0, 0, tw, th);
 
-      const titlePx = Math.round(th * 0.4);
-      const pctPx = Math.round(th * 0.24);
+      let titlePx = Math.round(th * (isMob ? 0.34 : 0.37));
+      let pctPx = Math.round(th * (isMob ? 0.2 : 0.22));
       const sep = "   ·   ";
-      g.font = `600 ${titlePx}px "Playfair Display", Georgia, serif`;
-      const wTitle = g.measureText(tier.name).width;
-      g.font = `700 ${pctPx}px "DM Sans", Arial, sans-serif`;
-      const wSep = g.measureText(sep).width;
-      const wPct = g.measureText(tier.pct).width;
-      const labelW = wTitle + wSep + wPct;
-      const repeats = Math.max(1, Math.floor(tw / (labelW + 220)));
+      const measure = () => {
+        g.font = `600 ${titlePx}px "Playfair Display", Georgia, serif`;
+        const wT = g.measureText(tier.name).width;
+        g.font = `700 ${pctPx}px "DM Sans", Arial, sans-serif`;
+        const wS = g.measureText(sep).width;
+        const wP = g.measureText(tier.pct).width;
+        return { wT, wS, wP, total: wT + wS + wP };
+      };
 
-      // Evenly space "[AWARD]  ·  [TOP %]" around the 360° circumference
+      const pad = isMob ? 110 : 250;
+      let m = measure();
+      // Ensure at least 2 repeats fit cleanly around 360° so no drum face ever spins blank
+      while (m.total + pad > tw / 2 && titlePx > 32) {
+        titlePx -= 2;
+        pctPx = Math.max(20, Math.round(titlePx * 0.59));
+        m = measure();
+      }
+      const repeats = Math.max(2, Math.floor(tw / (m.total + pad)));
+
       const segW = tw / repeats;
       g.textBaseline = "middle";
 
       for (let i = 0; i < repeats; i++) {
         const mid = i * segW + segW * 0.5;
-        let x = mid - labelW / 2;
+        let x = mid - m.total / 2;
 
         g.textAlign = "left";
         g.font = `600 ${titlePx}px "Playfair Display", Georgia, serif`;
         g.fillStyle = tier.text;
         g.fillText(tier.name, x, th * 0.52);
-        x += wTitle;
+        x += m.wT;
 
         g.font = `700 ${pctPx}px "DM Sans", Arial, sans-serif`;
         g.fillStyle = tier.pctColor;
         g.fillText(sep + tier.pct, x, th * 0.53);
 
-        // Minimal editorial vertical tick between circumference repeats
+        // Minimal architectural vertical divider tick
         g.fillStyle = tier.sepColor;
-        g.fillRect(Math.round(i * segW) - 1, Math.round(th * 0.32), 2, Math.round(th * 0.36));
+        g.fillRect(Math.round(i * segW) - 1, Math.round(th * 0.33), 2, Math.round(th * 0.34));
       }
       return { canvas: off, repeats };
     };
@@ -1757,9 +1765,9 @@
     let textures = [];
     const angles = TIERS.map(() => 0);
     let anglesInitialized = false;
-    const rebuildTextures = (W, cylH, isMob) => {
+    const rebuildTextures = (W, visH, isMob) => {
       texWCache = W;
-      const built = TIERS.map(t => buildFlatCylTexture(t, W * (isMob ? t.rMob : t.rDesk), cylH));
+      const built = TIERS.map(t => buildCylTexture(t, W * (isMob ? t.rMob : t.rDesk), visH, isMob));
       textures = built.map(b => b.canvas);
       if (!anglesInitialized) {
         built.forEach((b, i) => { angles[i] = Math.PI / b.repeats; });
@@ -1823,8 +1831,19 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const W = Math.max(320, Math.round(rect.width));
       const isMob = W < 640;
-      const cylH = isMob ? 46 : 56;
-      const H = cylH * TIERS.length + 2;
+      const visH = isMob ? 60 : 78; // Longer, substantial architectural drums
+      const radii = TIERS.map(t => W * (isMob ? t.rMob : t.rDesk));
+      // Restrained elliptical 3D curvature (tactile cylinder depth, anchored cleanly to top edge)
+      const rys = radii.map(r => Math.min(isMob ? 15 : 24, Math.max(10, r * 0.075)));
+
+      const frontBots = [];
+      const edgeBots = [];
+      for (let k = 0; k < TIERS.length; k++) {
+        const fb = k === 0 ? visH + rys[0] * 0.72 : frontBots[k - 1] + visH;
+        frontBots.push(fb);
+        edgeBots.push(fb - rys[k]);
+      }
+      const H = Math.ceil(frontBots[TIERS.length - 1] + 10);
 
       if (awardsCanvas.width !== Math.round(W * dpr) || awardsCanvas.height !== Math.round(H * dpr)) {
         awardsCanvas.width = Math.round(W * dpr);
@@ -1832,7 +1851,7 @@
         awardsCanvas.style.height = `${H}px`;
       }
       if (Math.abs(texWCache - W) > 24 || textures.length !== TIERS.length) {
-        rebuildTextures(W, cylH, isMob);
+        rebuildTextures(W, visH, isMob);
       }
 
       actx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1848,24 +1867,54 @@
       }
 
       cylHitBands = [];
-      // Draw strictly top (y = 0, connected flush to top edge) → bottom apex, zero gaps, 100% flat orthographic cylinders
-      for (let k = 0; k < TIERS.length; k++) {
+      // Paint bottom (Gold apex) → top (Distinction anchored flush to y = 0) so each wider drum naturally overlaps & casts a curved contact shadow onto the narrower drum beneath it
+      for (let k = TIERS.length - 1; k >= 0; k--) {
         const tier = TIERS[k];
         const tex = textures[k];
-        const R = W * (isMob ? tier.rMob : tier.rDesk);
-        const topY = k * cylH;
+        const R = radii[k];
+        const ry = rys[k];
+        const edgeBot = edgeBots[k];
         const leftX = cx - R;
-        const bandW = R * 2;
         const isFocus = k === hoveredTier || k === activeTier;
+        const hitTop = k === 0 ? 0 : frontBots[k - 1] - rys[k - 1] * 0.4;
+        cylHitBands.push({ idx: k, cx, R, yTop: hitTop, yBot: frontBots[k] });
 
-        cylHitBands.push({ idx: k, cx, R, yTop: topY, yBot: topY + cylH });
+        // Curved contact shadow cast directly along this drum's overhang onto the narrower drum below (strictly clipped inside the child drum)
+        if (k < TIERS.length - 1) {
+          const childR = radii[k + 1];
+          actx.save();
+          actx.beginPath();
+          actx.rect(cx - childR, edgeBot - 2, childR * 2, ry + 20);
+          actx.clip();
+          actx.strokeStyle = "rgba(24, 38, 29, 0.15)";
+          actx.lineWidth = 14;
+          actx.beginPath();
+          actx.ellipse(cx, edgeBot + 6, R, ry, 0, 0, Math.PI, false);
+          actx.stroke();
+          actx.strokeStyle = "rgba(24, 38, 29, 0.24)";
+          actx.lineWidth = 5;
+          actx.beginPath();
+          actx.ellipse(cx, edgeBot + 2, R, ry, 0, 0, Math.PI, false);
+          actx.stroke();
+          actx.restore();
+        }
 
-        // Flat solid band base
+        // Clip cleanly to the exact 3D cylindrical silhouette (k=0 connects 100% flush to y = 0; k>0 tucks smoothly behind the wider drum above)
+        const tuckTop = k === 0 ? 0 : edgeBots[k - 1] - 4;
+        actx.save();
+        actx.beginPath();
+        actx.moveTo(leftX, tuckTop);
+        actx.lineTo(cx + R, tuckTop);
+        actx.lineTo(cx + R, edgeBot);
+        actx.ellipse(cx, edgeBot, R, ry, 0, 0, Math.PI, false);
+        actx.closePath();
+        actx.clip();
+
         actx.fillStyle = tier.bg;
-        actx.fillRect(leftX, topY, bandW, cylH);
+        actx.fillRect(leftX - 1, tuckTop - 1, R * 2 + 2, frontBots[k] - tuckTop + 4);
 
-        // Orthographic cylindrical rotation (flat horizontal projection x = cx + R*sin(θ), zero 3D ellipse bow, zero gloss)
-        const slices = Math.max(96, Math.round(R * 0.55));
+        // Curved cylindrical vertical strips (opaque texture wrap, zero seam banding)
+        const slices = Math.max(108, Math.round(R * 0.6));
         const dTheta = Math.PI / slices;
         for (let s = 0; s < slices; s++) {
           const t0 = -Math.PI / 2 + s * dTheta;
@@ -1876,34 +1925,41 @@
           const sw = x1 - x0;
           if (sw <= 0.15) continue;
 
+          const curveBot = edgeBot + ry * Math.cos(tm);
+          const texDrawY = curveBot - visH;
+
           let u = ((tm + angles[k]) / (Math.PI * 2)) % 1;
           if (u < 0) u += 1;
           const srcX = u * tex.width;
           const srcW = Math.max(1, (dTheta / (Math.PI * 2)) * tex.width);
           const safeSrcW = Math.min(srcW, tex.width - srcX);
 
-          actx.drawImage(tex, srcX, 0, safeSrcW, tex.height, x0, topY, sw + 0.65, cylH);
-
-          // Subtle flat edge-turn ink shading only at the very outer curve so cylindrical turn reads naturally without 3D gloss
-          const edgeTurn = Math.pow(1 - Math.cos(tm), 2.1) * 0.16;
-          if (edgeTurn > 0.01) {
-            actx.fillStyle = `rgba(24, 38, 29, ${edgeTurn.toFixed(3)})`;
-            actx.fillRect(x0, topY, sw + 0.65, cylH);
-          }
+          actx.drawImage(tex, srcX, 0, safeSrcW, tex.height, x0, texDrawY, sw + 0.7, visH);
         }
 
-        // Crisp flat architectural 1.5px ink rules (left, right, bottom; top tier connects flush at y = 0)
-        actx.strokeStyle = isFocus ? "#18261d" : "rgba(24, 38, 29, 0.55)";
-        actx.lineWidth = isFocus ? 2 : 1.25;
+        // Single smooth horizontal matte cylindrical gradient across the drum (silky-smooth, zero vertical striping, zero glossy chrome)
+        const wrapGrad = actx.createLinearGradient(leftX, 0, cx + R, 0);
+        const edgeA = tier.isDark ? 0.36 : 0.22;
+        const midA = tier.isDark ? 0.1 : 0.06;
+        const liftA = tier.isDark ? 0.08 : 0.03;
+        wrapGrad.addColorStop(0.0, `rgba(24, 38, 29, ${edgeA})`);
+        wrapGrad.addColorStop(0.14, `rgba(24, 38, 29, ${midA})`);
+        wrapGrad.addColorStop(0.36, `rgba(255, 253, 248, ${liftA})`);
+        wrapGrad.addColorStop(0.58, "rgba(255, 253, 248, 0)");
+        wrapGrad.addColorStop(0.84, `rgba(24, 38, 29, ${midA})`);
+        wrapGrad.addColorStop(1.0, `rgba(24, 38, 29, ${(edgeA + 0.06).toFixed(2)})`);
+        actx.fillStyle = wrapGrad;
+        actx.fillRect(leftX - 1, tuckTop - 1, R * 2 + 2, frontBots[k] - tuckTop + 4);
+        actx.restore();
+
+        // Crisp architectural ink outline along the left/right vertical silhouettes and curved 3D bottom lip
+        actx.strokeStyle = isFocus ? "#18261d" : "rgba(24, 38, 29, 0.68)";
+        actx.lineWidth = isFocus ? 1.85 : 1.25;
         actx.beginPath();
-        if (k > 0) {
-          actx.moveTo(leftX + 0.5, topY);
-          actx.lineTo(leftX + 0.5, topY + cylH);
-          actx.moveTo(leftX + bandW - 0.5, topY);
-          actx.lineTo(leftX + bandW - 0.5, topY + cylH);
-        }
-        actx.moveTo(leftX, topY + cylH - 0.5);
-        actx.lineTo(leftX + bandW, topY + cylH - 0.5);
+        actx.moveTo(leftX + 0.5, tuckTop);
+        actx.lineTo(leftX + 0.5, edgeBot);
+        actx.ellipse(cx, edgeBot, R - 0.5, ry, 0, Math.PI, 0, true);
+        actx.lineTo(cx + R - 0.5, tuckTop);
         actx.stroke();
       }
     };
